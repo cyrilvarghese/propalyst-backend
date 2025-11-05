@@ -1,0 +1,26 @@
+# FastAPI - Modern web framework
+fastapi>=0.109.0
+
+# Uvicorn - ASGI server
+uvicorn>=0.27.0
+
+# LangGraph - Agent workflows (Core technology)
+langgraph>=0.0.40
+
+# LangChain - LLM framework
+langchain>=0.1.6
+langchain-openai>=0.0.5
+langchain-google-genai>=0.0.6
+
+# Pydantic - Data validation
+pydantic>=2.5.3
+pydantic-settings>=2.1.0
+
+# Python-dotenv - Environment variables
+python-dotenv>=1.0.0
+
+# HTTP client
+httpx>=0.26.0
+
+# JSON parsing and validation
+python-multipart>=0.0.6
