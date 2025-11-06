@@ -575,7 +575,7 @@ async def propalyst_summary(request: PropalystSummaryRequest):
             temperature=0.7
         )
 
-        prompt = f"""You are a helpful real estate assistant. Generate a friendly, detailed summary of the user's property search preferences.
+        prompt = f"""You are a helpful real estate assistant. Generate a friendly, detailed summary that introduces the AREAS we're recommending based on the user's requirements.
 
 User's preferences:
 - Work Location: {work_location}
@@ -585,10 +585,11 @@ User's preferences:
 - Maximum Budget: ₹{budget_max:,}
 
 Generate a 2-3 sentence summary that:
-1. Acknowledges their preferences naturally
-2. Highlights the key requirements
-3. Shows understanding of their needs
-4. Sounds warm and personalized
+1. Briefly acknowledges their key requirements (work location, family needs, budget, commute)
+2. Explicitly states "Here are the areas we suggest based on your requirements" or similar phrasing
+3. Sounds warm and personalized
+
+Important: Emphasize that these are AREA recommendations, not individual properties. The summary should introduce the areas shown below.
 
 Do not use bullet points. Write in paragraph form. Be conversational and friendly."""
 
