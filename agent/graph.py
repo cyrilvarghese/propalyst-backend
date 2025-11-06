@@ -36,6 +36,7 @@ from .nodes.propalyst_qa import (
     ask_property_type,
     ask_budget
 )
+from .nodes.calculate_areas import calculate_recommended_areas
 
 
 # ============================================================================
@@ -342,8 +343,13 @@ def route_propalyst(state: PropalystState) -> str:
         print("   → Missing budget_max, going to ask_budget")
         return "ask_budget"
 
-    # All questions answered!
-    print("   → All questions answered! Going to END")
+    # All questions answered - calculate recommended areas
+    if not state.get("calculated"):
+        print("   → All questions answered! Calculating areas...")
+        return "calculate_areas"
+
+    # All done (areas calculated)
+    print("   → Areas calculated! Going to END")
     return "end"
 
 
@@ -397,6 +403,9 @@ def create_propalyst_graph() -> Callable:
     workflow.add_node("ask_property_type", ask_property_type)
     workflow.add_node("ask_budget", ask_budget)
 
+    # Add calculation node
+    workflow.add_node("calculate_areas", calculate_recommended_areas)
+
     # Set entry point with conditional routing
     # Router decides which node to run based on what's missing
     workflow.set_conditional_entry_point(
@@ -407,6 +416,7 @@ def create_propalyst_graph() -> Callable:
             "ask_commute": "ask_commute",
             "ask_property_type": "ask_property_type",
             "ask_budget": "ask_budget",
+            "calculate_areas": "calculate_areas",
             "end": END
         }
     )
@@ -418,6 +428,7 @@ def create_propalyst_graph() -> Callable:
     workflow.add_edge("ask_commute", END)
     workflow.add_edge("ask_property_type", END)
     workflow.add_edge("ask_budget", END)
+    workflow.add_edge("calculate_areas", END)
 
     # Compile the graph
     app = workflow.compile()

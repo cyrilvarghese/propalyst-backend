@@ -252,6 +252,49 @@ class PropalystSummaryResponse(BaseModel):
     session_id: str
 
 
+class PropalystAreasRequest(BaseModel):
+    """
+    Request model for fetching recommended areas.
+
+    Attributes:
+        session_id (str): Unique session identifier
+
+    Example:
+        {
+            "session_id": "abc-123"
+        }
+    """
+    session_id: str
+
+
+class PropalystAreasResponse(BaseModel):
+    """
+    Response model for recommended areas.
+
+    Attributes:
+        areas (list): List of recommended area objects
+        session_id (str): Session identifier
+
+    Example:
+        {
+            "areas": [
+                {
+                    "areaName": "Whitefield",
+                    "image": "https://...",
+                    "childFriendlyScore": 9,
+                    "schoolsNearby": 12,
+                    "averageCommute": "15-20 min",
+                    "budgetRange": "₹60K - ₹85K",
+                    "highlights": ["IT Hub", "Great Schools", "Metro Access"]
+                }
+            ],
+            "session_id": "abc-123"
+        }
+    """
+    areas: list
+    session_id: str
+
+
 # ============================================================================
 # LANGGRAPH WORKFLOW INSTANCES
 # ============================================================================
@@ -611,6 +654,84 @@ Do not use bullet points. Write in paragraph form. Be conversational and friendl
 
     except Exception as e:
         error_message = f"Summary generation error: {str(e)}"
+        print(f"   ❌ {error_message}")
+
+        raise HTTPException(
+            status_code=500,
+            detail=error_message
+        )
+
+
+@app.post("/api/propalyst/areas", response_model=PropalystAreasResponse)
+async def propalyst_areas(request: PropalystAreasRequest):
+    """
+    Get recommended areas for a completed session.
+
+    This endpoint:
+    1. Retrieves the session state
+    2. If areas not yet calculated, triggers the calculate_areas node
+    3. Returns recommended areas from state
+
+    Args:
+        request (PropalystAreasRequest): Request with session_id
+
+    Returns:
+        PropalystAreasResponse: List of recommended areas
+
+    Example:
+        Request:
+        POST /api/propalyst/areas
+        {
+            "session_id": "abc-123"
+        }
+
+        Response:
+        {
+            "areas": [
+                {
+                    "areaName": "Whitefield",
+                    "image": "https://...",
+                    "childFriendlyScore": 9,
+                    ...
+                }
+            ],
+            "session_id": "abc-123"
+        }
+    """
+
+    print(f"\n🏘️  Fetching areas for session: {request.session_id}")
+
+    # Add delay to test skeleton loader (3 seconds)
+    import asyncio
+    await asyncio.sleep(3)
+
+    try:
+        # Step 1: Get session state
+        state = get_session(request.session_id)
+
+        # Step 2: Check if areas already calculated
+        if not state.get("calculated"):
+            print("   ⚠️  Areas not yet calculated, triggering calculate_areas node...")
+
+            # Run graph to trigger calculate_areas node
+            updated_state = await propalyst_graph.ainvoke(state)
+
+            # Save updated state
+            update_session(request.session_id, updated_state)
+            state = updated_state
+
+        # Step 3: Extract recommended areas
+        recommended_areas = state.get("recommended_areas", [])
+
+        print(f"   ✅ Returning {len(recommended_areas)} recommended areas")
+
+        return PropalystAreasResponse(
+            areas=recommended_areas,
+            session_id=request.session_id
+        )
+
+    except Exception as e:
+        error_message = f"Areas fetch error: {str(e)}"
         print(f"   ❌ {error_message}")
 
         raise HTTPException(
