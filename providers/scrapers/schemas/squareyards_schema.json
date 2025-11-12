@@ -1,0 +1,89 @@
+{
+  "name": "Squareyards Property Listing",
+  "baseSelector": "article.listing-card",
+  "fields": [
+    {
+      "name": "title",
+      "selector": "h2.heading",
+      "type": "text"
+    },
+    {
+      "name": "url",
+      "selector": "h2.heading",
+      "type": "attribute",
+      "attribute": "data-href"
+    },
+    {
+      "name": "location",
+      "selector": "p.location span",
+      "type": "text"
+    },
+    {
+      "name": "price",
+      "selector": "p.listing-price strong",
+      "type": "text"
+    },
+    {
+      "name": "bedrooms_bathrooms",
+      "selector": "ul.listing-information li:first-child span",
+      "type": "text"
+    },
+    {
+      "name": "area",
+      "selector": "ul.listing-information .unit-value.avail-area",
+      "type": "text"
+    },
+    {
+      "name": "area_unit",
+      "selector": "ul.listing-information .unit-value.avail-area .unit-label",
+      "type": "text"
+    },
+    {
+      "name": "facing",
+      "selector": "ul.listing-information li:nth-child(3) span",
+      "type": "text"
+    },
+    {
+      "name": "parking",
+      "selector": "ul.listing-information li:nth-child(4) span",
+      "type": "text"
+    },
+    {
+      "name": "flooring",
+      "selector": "ul.listing-information li:nth-child(5) span",
+      "type": "text"
+    },
+    {
+      "name": "furnishing",
+      "selector": "ul.listing-information li:nth-child(6) span",
+      "type": "text"
+    },
+    {
+      "name": "description",
+      "selector": "div.description p",
+      "type": "text"
+    },
+    {
+      "name": "image_url",
+      "selector": "figure.listing-img img",
+      "type": "attribute",
+      "attribute": "src"
+    },
+    {
+      "name": "agent_name",
+      "selector": "div.listing-footer strong.agent-name",
+      "type": "text"
+    },
+    {
+      "name": "agent_rating",
+      "selector": "div.listing-footer strong.agent-name span.rating",
+      "type": "text"
+    },
+    {
+      "name": "agent_url",
+      "selector": "div.listing-footer div.listing-agent",
+      "type": "attribute",
+      "attribute": "data-href"
+    }
+  ]
+}

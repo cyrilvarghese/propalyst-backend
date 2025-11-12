@@ -12,13 +12,13 @@ from agent.graph import create_propalyst_graph
 # Initialize graphs at module level
 # These will be created when the module is first imported
 
-print("🔄 Initializing UI Generator workflow...")
+print("[INIT] Initializing UI Generator workflow...")
 ui_generator_graph = create_ui_generator_graph()
-print("✅ UI Generator workflow ready!")
+print("[INIT] UI Generator workflow ready!")
 
-print("🔄 Initializing Propalyst Q&A workflow...")
+print("[INIT] Initializing Propalyst Q&A workflow...")
 propalyst_graph = create_propalyst_graph()
-print("✅ Propalyst Q&A workflow ready!")
+print("[INIT] Propalyst Q&A workflow ready!")
 
 
 

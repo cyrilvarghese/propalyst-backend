@@ -1,11 +1,17 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(test:*)",
+      "Bash(python providers/scrapers/generate_squareyards_schema.py:*)",
+      "Bash(python -m uvicorn:*)",
+      "Bash(curl:*)",
+      "Bash(timeout /t 3)",
+      "Bash(nul)",
+      "Bash(playwright install:*)"
+    ]
+  },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "shadcn"
-  ],
-  "permissions": {
-    "allow": [
-      "Bash(test:*)"
-    ]
-  }
+  ]
 }

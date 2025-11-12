@@ -36,7 +36,7 @@ from dotenv import load_dotenv
 from graphs import ui_generator_graph, propalyst_graph
 
 # Import routers
-from routers import ui_router, propalyst_router, search_router
+from routers import ui_router, propalyst_router, search_router, scraping_router
 
 # Load environment variables from .env file
 load_dotenv()
@@ -79,6 +79,7 @@ app.add_middleware(
 app.include_router(ui_router)
 app.include_router(propalyst_router)
 app.include_router(search_router)
+app.include_router(scraping_router)
 
 # ============================================================================
 # HEALTH CHECK ENDPOINTS
