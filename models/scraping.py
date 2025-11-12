@@ -46,11 +46,17 @@ class ScrapeRequest(BaseModel):
     source: str = "squareyards"
 
 
+class PropertyWithAgent(BaseModel):
+    """Single property with its agent"""
+    property: PropertyDetails
+    agent: PropertyAgent
+
+
 class ScrapeResponse(BaseModel):
     """API response with scraped data"""
     success: bool
-    property: Optional[PropertyDetails] = None
-    agent: Optional[PropertyAgent] = None
+    properties: List[PropertyWithAgent] = []  # List of properties with agents
+    count: int = 0  # Total number of properties found
     source: str
     scraped_at: str
     error: Optional[str] = None

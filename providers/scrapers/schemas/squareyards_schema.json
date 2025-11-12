@@ -1,17 +1,17 @@
 {
-  "name": "Squareyards Property Listing",
+  "name": "Property Listing",
   "baseSelector": "article.listing-card",
   "fields": [
+    {
+      "name": "property_id",
+      "selector": "article.listing-card",
+      "type": "attribute",
+      "attribute": "propertyid"
+    },
     {
       "name": "title",
       "selector": "h2.heading",
       "type": "text"
-    },
-    {
-      "name": "url",
-      "selector": "h2.heading",
-      "type": "attribute",
-      "attribute": "data-href"
     },
     {
       "name": "location",
@@ -24,38 +24,38 @@
       "type": "text"
     },
     {
-      "name": "bedrooms_bathrooms",
-      "selector": "ul.listing-information li:first-child span",
+      "name": "bedrooms",
+      "selector": "li:has(em.icon-bed) span",
+      "type": "text"
+    },
+    {
+      "name": "bathrooms",
+      "selector": "li:has(em.icon-bed) span",
       "type": "text"
     },
     {
       "name": "area",
-      "selector": "ul.listing-information .unit-value.avail-area",
-      "type": "text"
-    },
-    {
-      "name": "area_unit",
-      "selector": "ul.listing-information .unit-value.avail-area .unit-label",
+      "selector": "li.unit-drop span.unit-value",
       "type": "text"
     },
     {
       "name": "facing",
-      "selector": "ul.listing-information li:nth-child(3) span",
+      "selector": "li:has(em.icon-remedies) span",
       "type": "text"
     },
     {
       "name": "parking",
-      "selector": "ul.listing-information li:nth-child(4) span",
+      "selector": "li:has(em.icon-parking) span",
       "type": "text"
     },
     {
       "name": "flooring",
-      "selector": "ul.listing-information li:nth-child(5) span",
+      "selector": "li:has(em.icon-floor) span",
       "type": "text"
     },
     {
       "name": "furnishing",
-      "selector": "ul.listing-information li:nth-child(6) span",
+      "selector": "li:has(em.icon-semi-furnished) span",
       "type": "text"
     },
     {
@@ -65,25 +65,55 @@
     },
     {
       "name": "image_url",
-      "selector": "figure.listing-img img",
+      "selector": "figure.listing-img div.single-image img.img-responsive",
       "type": "attribute",
       "attribute": "src"
     },
     {
       "name": "agent_name",
-      "selector": "div.listing-footer strong.agent-name",
+      "selector": "div.listing-agent strong.agent-name",
       "type": "text"
     },
     {
       "name": "agent_rating",
-      "selector": "div.listing-footer strong.agent-name span.rating",
+      "selector": "div.listing-agent span.rating",
       "type": "text"
     },
     {
-      "name": "agent_url",
-      "selector": "div.listing-footer div.listing-agent",
+      "name": "property_url",
+      "selector": "div.listing-body",
       "type": "attribute",
-      "attribute": "data-href"
+      "attribute": "data-url"
+    },
+    {
+      "name": "price_crore",
+      "selector": "div.favorite-btn",
+      "type": "attribute",
+      "attribute": "data-totalprice"
+    },
+    {
+      "name": "city",
+      "selector": "div.favorite-btn",
+      "type": "attribute",
+      "attribute": "data-city"
+    },
+    {
+      "name": "sublocality",
+      "selector": "div.favorite-btn",
+      "type": "attribute",
+      "attribute": "data-sublocalityname"
+    },
+    {
+      "name": "unit_type",
+      "selector": "div.favorite-btn",
+      "type": "attribute",
+      "attribute": "data-unittype"
+    },
+    {
+      "name": "property_type",
+      "selector": "div.favorite-btn",
+      "type": "attribute",
+      "attribute": "data-propertytype"
     }
   ]
 }
