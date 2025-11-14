@@ -9,7 +9,8 @@
       "Bash(nul)",
       "Bash(playwright install:*)",
       "Bash(chmod:*)",
-      "Bash(python split_chat_file.py:*)"
+      "Bash(python split_chat_file.py:*)",
+      "Bash(python migrate_cache_schema.py:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -220,7 +220,8 @@ async def get_listing_details_batch(
         persistence_result = await DataPersistenceService.save_scraped_properties(
             url=decoded_url,
             properties=scored_properties,
-            merge=True  # Merge with existing data
+            merge=True,  # Merge with existing data
+            source="squareyards"
         )
 
         print(f"[API-Batch] Persistence result: {persistence_result}")
@@ -245,6 +246,117 @@ async def get_listing_details_batch(
             "properties": [],
             "count": 0,
             "source": "squareyards",
+            "scraped_at": datetime.now().isoformat(),
+            "error": str(e)
+        }
+
+
+@router.get("/get_listing_details_batch_magicbricks")
+async def get_listing_details_batch_magicbricks(
+    url: str = Query(..., description="Property listing URL (MagicBricks)"),
+    orig_query: str = Query(..., description="Original search query for relevance scoring"),
+    batch_size: int = Query(10, description="Number of properties to score per API call (default: 10)"),
+    use_cache: bool = Query(True, description="Use cached data if available (default: true)")
+):
+    """
+    Get property listing details from MagicBricks with batch relevance scoring (non-streaming).
+
+    This endpoint collects all properties first, then scores them in batches to reduce API calls.
+    For example, 15 properties will be scored in 2 API calls (10 + 5) instead of 15 individual calls.
+
+    If the URL has been previously scraped, returns cached data (unless use_cache=false).
+
+    Parameters:
+    - url: Property listing URL (MagicBricks)
+    - orig_query: User's search query for relevance scoring (required)
+    - batch_size: Properties per API call (default: 10)
+    - use_cache: Use cached data if available (default: true)
+
+    Returns:
+    - JSON response with all scored properties
+
+    Example:
+    ```
+    GET /api/get_listing_details_batch_magicbricks?url=https://www.magicbricks.com/office-space-for-rent-in-church-street-bangalore&orig_query=2bhk with east facing 2 car parking&batch_size=10
+    ```
+    """
+    try:
+        print(f"[API-MagicBricks] === Incoming MagicBricks Batch Request ===")
+        print(f"[API-MagicBricks] URL parameter (raw): {url}")
+        print(f"[API-MagicBricks] orig_query parameter: {orig_query}")
+        print(f"[API-MagicBricks] batch_size: {batch_size}")
+        print(f"[API-MagicBricks] use_cache: {use_cache}")
+
+        # Decode URL in case it's double-encoded
+        decoded_url = unquote(url)
+        print(f"[API-MagicBricks] URL parameter (decoded): {decoded_url}")
+
+        # Check cache first if enabled
+        if use_cache:
+            print(f"[API-MagicBricks] Checking cache for URL: {decoded_url}")
+            cached_properties = await DataPersistenceService.get_properties_by_url(decoded_url)
+
+            if cached_properties is not None:
+                print(f"[API-MagicBricks] ✓ Cache hit! Found {len(cached_properties)} properties in cache")
+                return {
+                    "success": True,
+                    "properties": cached_properties,
+                    "count": len(cached_properties),
+                    "source": "magicbricks",
+                    "from_cache": True,
+                    "api_calls_made": 0
+                }
+            else:
+                print(f"[API-MagicBricks] Cache miss - will scrape and score fresh data")
+
+        print(f"[API-MagicBricks] Fetching listing details for URL: {decoded_url}")
+
+        # Get raw data from scraper
+        properties_data = await PropertyScrapingService.scrape_magicbricks(decoded_url)
+        print(f"[API-MagicBricks] Scraped {len(properties_data)} properties")
+
+        # Batch score all properties using MagicBricks-specific scoring
+        # (MagicBricks has different field names than SquareYards)
+        scoring_service = RelevanceScoringService()
+        scored_properties = await scoring_service.score_properties_batch_magicbricks(
+            properties_data,
+            orig_query,
+            batch_size=batch_size
+        )
+
+        print(f"[API-MagicBricks] Returning {len(scored_properties)} scored properties")
+
+        # Save properties to JSON file
+        api_calls_made = (len(scored_properties) + batch_size - 1) // batch_size
+        persistence_result = await DataPersistenceService.save_scraped_properties(
+            url=decoded_url,
+            properties=scored_properties,
+            merge=True,  # Merge with existing data
+            source="magicbricks"
+        )
+
+        print(f"[API-MagicBricks] Persistence result: {persistence_result}")
+
+        return {
+            "success": True,
+            "properties": scored_properties,
+            "count": len(scored_properties),
+            "source": "magicbricks",
+            "scraped_at": datetime.now().isoformat(),
+            "from_cache": False,
+            "api_calls_made": api_calls_made,
+            "persistence": persistence_result
+        }
+
+    except Exception as e:
+        print(f"[API-MagicBricks] Error fetching listing details: {str(e)}")
+        import traceback
+        print(f"[API-MagicBricks] Traceback: {traceback.format_exc()}")
+        return {
+            "success": False,
+            "properties": [],
+            "count": 0,
+            "source": "magicbricks",
             "scraped_at": datetime.now().isoformat(),
             "error": str(e)
         }

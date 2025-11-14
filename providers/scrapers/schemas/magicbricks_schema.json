@@ -1,0 +1,125 @@
+{
+  "name": "Real Estate Listing",
+  "baseSelector": "//div[@class='mb-srp__card']",
+  "fields": [
+    {
+      "name": "photo_count",
+      "selector": ".//span[contains(@class, 'mb-srp__card__photo__fig--count')]",
+      "type": "text"
+    },
+    {
+      "name": "posted_date",
+      "selector": ".//div[contains(@class, 'mb-srp__card__photo__fig--post')]",
+      "type": "text"
+    },
+    {
+      "name": "agent_name",
+      "selector": ".//div[contains(@class, 'mb-srp__card__ads__info--name')]",
+      "type": "text"
+    },
+    {
+      "name": "buyers_served",
+      "selector": ".//div[contains(@class, 'mb-srp__card__ads__info--served')]",
+      "type": "text"
+    },
+    {
+      "name": "title",
+      "selector": ".//h2[contains(@class, 'mb-srp__card--title')]",
+      "type": "text"
+    },
+    {
+      "name": "society_name",
+      "selector": ".//a[contains(@class, 'mb-srp__card__society--name')]",
+      "type": "text"
+    },
+    {
+      "name": "society_url",
+      "selector": ".//a[contains(@class, 'mb-srp__card__society--name')]",
+      "type": "attribute",
+      "attribute": "href"
+    },
+    {
+      "name": "super_area",
+      "selector": ".//div[@data-summary='super-area']//div[contains(@class, 'mb-srp__card__summary--value')]",
+      "type": "text"
+    },
+    {
+      "name": "status",
+      "selector": ".//div[@data-summary='status']//div[contains(@class, 'mb-srp__card__summary--value')]",
+      "type": "text"
+    },
+    {
+      "name": "floor",
+      "selector": ".//div[@data-summary='floor']//div[contains(@class, 'mb-srp__card__summary--value')]",
+      "type": "text"
+    },
+    {
+      "name": "transaction",
+      "selector": ".//div[@data-summary='transaction']//div[contains(@class, 'mb-srp__card__summary--value')]",
+      "type": "text"
+    },
+    {
+      "name": "furnishing",
+      "selector": ".//div[@data-summary='furnishing']//div[contains(@class, 'mb-srp__card__summary--value')]",
+      "type": "text"
+    },
+    {
+      "name": "facing",
+      "selector": ".//div[@data-summary='facing']//div[contains(@class, 'mb-srp__card__summary--value')]",
+      "type": "text"
+    },
+    {
+      "name": "overlooking",
+      "selector": ".//div[@data-summary='overlooking']//div[contains(@class, 'mb-srp__card__summary--value')]",
+      "type": "text"
+    },
+    {
+      "name": "ownership",
+      "selector": ".//div[@data-summary='ownership']//div[contains(@class, 'mb-srp__card__summary--value')]",
+      "type": "text"
+    },
+    {
+      "name": "parking",
+      "selector": ".//div[@data-summary='parking']//div[contains(@class, 'mb-srp__card__summary--value')]",
+      "type": "text"
+    },
+    {
+      "name": "bathroom",
+      "selector": ".//div[@data-summary='bathroom']//div[contains(@class, 'mb-srp__card__summary--value')]",
+      "type": "text"
+    },
+    {
+      "name": "balcony",
+      "selector": ".//div[@data-summary='balcony']//div[contains(@class, 'mb-srp__card__summary--value')]",
+      "type": "text"
+    },
+    {
+      "name": "description",
+      "selector": ".//div[contains(@class, 'mb-srp__card--desc--text')]//p",
+      "type": "text"
+    },
+    {
+      "name": "price",
+      "selector": ".//div[contains(@class, 'mb-srp__card__price--amount')]",
+      "type": "text"
+    },
+    {
+      "name": "price_per_sqft",
+      "selector": ".//div[contains(@class, 'mb-srp__card__price--size')]",
+      "type": "text"
+    },
+    {
+      "name": "property_url",
+      "selector": ".//script[@type='application/ld+json']",
+      "type": "nested",
+      "fields": [
+        {
+          "name": "url",
+          "selector": ".",
+          "type": "regex",
+          "pattern": "\"url\":\"(.*?)\""
+        }
+      ]
+    }
+  ]
+}
