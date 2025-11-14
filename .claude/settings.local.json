@@ -10,7 +10,13 @@
       "Bash(playwright install:*)",
       "Bash(chmod:*)",
       "Bash(python split_chat_file.py:*)",
-      "Bash(python migrate_cache_schema.py:*)"
+      "Bash(python migrate_cache_schema.py:*)",
+      "Bash(__NEW_LINE__ python -m py_compile )",
+      "Bash(services/property_scraping_service.py )",
+      "Bash(services/relevance_scoring_service.py )",
+      "Bash(providers/scrapers/squareyards/squareyards_scraper.py )",
+      "Bash(providers/scrapers/magicbricks/magicbricks_scraper.py )",
+      "Bash(routers/scraping_router.py)"
     ]
   },
   "enableAllProjectMcpServers": true,

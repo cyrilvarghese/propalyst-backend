@@ -2,8 +2,8 @@
 Property scraping service supporting multiple providers
 """
 from typing import List, Dict, Any
-from providers.scrapers.squareyards_scraper import SquareYardsScraper
-from providers.scrapers.magicbricks_scraper import MagicBricksScraper
+from providers.scrapers.squareyards.squareyards_scraper import SquareYardsScraper
+from providers.scrapers.magicbricks.magicbricks_scraper import MagicBricksScraper
 
 
 class PropertyScrapingService:

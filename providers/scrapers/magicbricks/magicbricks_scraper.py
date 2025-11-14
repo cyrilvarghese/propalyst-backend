@@ -16,13 +16,46 @@ load_dotenv(find_dotenv(filename=".env"))
 class MagicBricksScraper:
     """MagicBricks property scraper"""
 
-    SCHEMA_PATH = Path(__file__).parent / "schemas" / "magicbricks_schema.json"
+    SCHEMA_PATH = Path(__file__).parent / "schemas" / "schema.json"
     SAMPLE_HTML_PATH = Path(__file__).parent / "sample_html" / "magicbricks_residential_sale_sample.html"
-    SCHEMA_PROMPT_PATH = Path(__file__).parent / "prompts" / "magicbricks_schema_generation_prompt.txt"
+    SCHEMA_PROMPT_PATH = Path(__file__).parent / "prompts" / "schema_generation_prompt.txt"
 
     def __init__(self):
         """Initialize scraper"""
         self.schema = None
+
+    def _post_process_properties(self, properties: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Post-process extracted properties to parse JSON-LD and extract URLs
+
+        Args:
+            properties: List of extracted property dictionaries
+
+        Returns:
+            List of properties with parsed URLs
+        """
+        for prop in properties:
+            # Parse JSON-LD from property_url field if it contains JSON
+            if "property_url" in prop and isinstance(prop["property_url"], str):
+                try:
+                    # Try to parse the JSON-LD
+                    json_ld = json.loads(prop["property_url"])
+                    # Extract the URL from the JSON-LD
+                    if isinstance(json_ld, dict) and "url" in json_ld:
+                        prop["property_url"] = json_ld["url"]
+                        print(f"[MagicBricks] Extracted URL from JSON-LD: {prop['property_url'][:80]}...")
+                    elif isinstance(json_ld, dict) and "@id" in json_ld:
+                        # Fallback to @id if url not found
+                        prop["property_url"] = json_ld["@id"]
+                        print(f"[MagicBricks] Extracted @id from JSON-LD: {prop['property_url'][:80]}...")
+                    if isinstance(json_ld, dict) and "numberOfRooms" in json_ld:
+                        prop["bedrooms"] = json_ld["numberOfRooms"]
+                        print(f"[MagicBricks] Extracted bedrooms from JSON-LD: {prop['bedrooms'][:80]}...")
+                except (json.JSONDecodeError, KeyError) as e:
+                    # If parsing fails, leave property_url as is
+                    print(f"[MagicBricks] Warning: Could not parse JSON-LD for property_url: {str(e)[:100]}")
+
+        return properties
 
     async def _load_or_generate_schema(self):
         """Load existing schema or generate if not exists"""
@@ -54,20 +87,22 @@ class MagicBricksScraper:
         if not api_key:
             raise ValueError("GEMINI_API_KEY or GEMINI_AI_API_KEY not found in environment")
 
-        # self.schema = JsonCssExtractionStrategy.generate_schema(
-        #     html=sample_html,
-        #     llm_config=LLMConfig(
-        #         provider="gemini/gemini-2.5-flash",
-        #         api_token=api_key,
-        #     ),
-        #     query=schema_prompt
-        # )
-        # Option 1: Using OpenAI (requires API token)
-        self.schema= JsonXPathExtractionStrategy.generate_schema(
+        self.schema = JsonCssExtractionStrategy.generate_schema(
             html=sample_html,
-            schema_type="xpath",
-            llm_config = LLMConfig(provider="openai/gpt-4o",api_token=os.getenv("OPENAI_API_KEY"))
+            llm_config=LLMConfig(
+                provider="openai/gpt-4o",
+                api_token=os.getenv("OPENAI_API_KEY"),
+            ),
+            query=schema_prompt
+           
         )
+        # Option 1: Using OpenAI (requires API token)
+        # self.schema= JsonXPathExtractionStrategy.generate_schema(
+        #     html=sample_html,
+        #     schema_type="xpath",
+        #     llm_config = LLMConfig(provider="openai/gpt-4o",api_token=os.getenv("OPENAI_API_KEY"),)
+            
+        # )
         # Save schema
         self.SCHEMA_PATH.parent.mkdir(exist_ok=True)
         with open(self.SCHEMA_PATH, 'w') as f:
@@ -96,7 +131,7 @@ class MagicBricksScraper:
             print("[MagicBricks] Using cached schema")
 
         # Create extraction strategy
-        extraction_strategy = JsonXPathExtractionStrategy(self.schema)
+        extraction_strategy = JsonCssExtractionStrategy(self.schema)
         print("[MagicBricks] Created extraction strategy")
 
         # Scrape the page
@@ -121,15 +156,18 @@ class MagicBricksScraper:
                         # Response wrapped in object
                         properties = data["property_data_array"]
                         print(f"[MagicBricks] Data is dict with property_data_array containing {len(properties)} items")
+                        properties = self._post_process_properties(properties)
                         return properties
                     elif isinstance(data, list):
                         # Direct array response
                         print(f"[MagicBricks] Data is list with {len(data)} items")
+                        data = self._post_process_properties(data)
                         return data
                     else:
                         # Single property
                         print("[MagicBricks] Data is single property object")
-                        return [data]
+                        data = self._post_process_properties([data])
+                        return data
                 else:
                     error_msg = getattr(result, 'error_message', 'Unknown error')
                     print(f"[MagicBricks] Extraction failed: {error_msg}")

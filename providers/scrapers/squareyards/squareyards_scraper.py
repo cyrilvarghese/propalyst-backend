@@ -17,7 +17,7 @@ load_dotenv(find_dotenv(filename=".env"))
 class SquareYardsScraper:
     """Simple SquareYards scraper"""
 
-    SCHEMA_PATH = Path(__file__).parent / "schemas" / "squareyards_schema.json"
+    SCHEMA_PATH = Path(__file__).parent / "schemas" / "schema.json"
     SAMPLE_HTML_PATH = Path(__file__).parent / "sample_html" / "squareyards_sample.html"
     SCHEMA_PROMPT_PATH = Path(__file__).parent / "prompts" / "schema_generation_prompt.txt"
 

@@ -1,0 +1,72 @@
+You are a real estate expert. Score how well this property matches the user's search query by analyzing each requirement.
+
+User Query: "{user_query}"
+
+Property Details:
+{property_summary}
+
+IMPORTANT: When evaluating fields, if information appears in EITHER the structured fields OR the description, consider it valid.
+- If "facing" field OR description mentions the facing direction, use that for scoring
+- If there are different values in both places, give benefit of doubt - if EITHER matches the user's query, mark it as a match
+
+Evaluation Criteria - Analyze each parameter:
+
+1. BEDROOMS/BHK:
+   - Extract number of bedrooms from user query (e.g., "2bhk" = 2 bedrooms)
+   - Exact match = high score, mismatch = significant penalty
+   - Example: User wants 2 BHK but property is 5 BHK = major mismatch
+
+2. AREA/SIZE:
+   - Extract square footage from query (e.g., "200 square feet", "1200 sqft")
+   - Within ±20% = good match, outside range = penalty
+   - If not specified in query, don't penalize
+
+3. FACING/DIRECTION:
+   - Extract direction from query (e.g., "east facing", "north facing")
+   - Exact match = bonus, opposite direction = penalty
+   - If not specified in query, don't penalize
+
+4. PARKING:
+   - Extract parking requirements (e.g., "2 car parking", "covered parking")
+   - Count covered and open parking separately
+   - Exact match or more = good, less than required = penalty
+   - If not specified in query, don't penalize
+
+5. PRICE:
+   - Extract budget from query if mentioned (e.g., "under 5 crores")
+   - Within budget = good, significantly over = penalty
+   - If not specified in query, don't penalize
+
+6. LOCATION:
+   - Check if user specified locality/area
+   - Same locality = bonus, nearby = acceptable
+   - If not specified in query, don't penalize
+
+7. FURNISHING:
+   - Extract furnishing preference (e.g., "furnished", "unfurnished")
+   - Match = bonus, mismatch = minor penalty
+   - If not specified in query, don't penalize
+
+8. PROPERTY TYPE:
+   - Check if user wants specific type (e.g., "villa", "apartment", "house")
+   - Match = bonus, mismatch = minor penalty
+   - If not specified in query, don't penalize
+
+Scoring Guidelines:
+- 10 = Perfect match on all specified requirements
+- 8-9 = Matches all major requirements (bedrooms, area, facing), minor differences on others
+- 6-7 = Matches some major requirements, misses others (e.g., correct facing but wrong bedrooms)
+- 4-5 = Matches only 1-2 requirements, significant mismatches on major parameters
+- 2-3 = Matches almost nothing, major mismatches on bedrooms, area, or facing
+- 1 = Complete mismatch, opposite of what user wants
+
+IMPORTANT: In your reason, be SPECIFIC about what matches and what doesn't:
+- Start with matches: "Matches: east facing ✓, 2 car parking ✓"
+- Then mismatches: "Mismatches: 5 BHK instead of 2 BHK ✗, 1200 sqft instead of 200 sqft ✗"
+- Format: "Matches: [list matching criteria]. Mismatches: [list non-matching criteria]."
+
+Respond ONLY with valid JSON in this exact format (no markdown, no additional text):
+{
+  "relevance_score": 8,
+  "relevance_reason": "Matches: east facing ✓, 2 parking spots ✓. Mismatches: 5 BHK instead of 2 BHK ✗, 1200 sqft vs 200 sqft ✗."
+}

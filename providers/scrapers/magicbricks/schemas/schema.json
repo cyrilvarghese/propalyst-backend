@@ -1,0 +1,81 @@
+{
+  "name": "MagicBricks Property Listings",
+  "baseSelector": ".mb-srp__card",
+  "fields": [
+    {
+      "name": "title",
+      "selector": ".mb-srp__card--title",
+      "type": "text"
+    },
+    {
+      "name": "price",
+      "selector": ".mb-srp__card__price--amount",
+      "type": "text"
+    },
+    {
+      "name": "location",
+      "selector": ".mb-srp__card__society--name",
+      "type": "text"
+    },
+    {
+      "name": "bedrooms",
+      "selector": "script[type='application/ld+json']",
+      "type": "text"
+    },
+    {
+      "name": "bathrooms",
+      "selector": ".mb-srp__card__summary__list--item[data-summary='bathroom'] .mb-srp__card__summary--value",
+      "type": "text"
+    },
+    {
+      "name": "area",
+      "selector": ".mb-srp__card__summary__list--item[data-summary='super-area'] .mb-srp__card__summary--value",
+      "type": "text"
+    },
+    {
+      "name": "facing",
+      "selector": ".mb-srp__card__summary__list--item[data-summary='facing'] .mb-srp__card__summary--value",
+      "type": "text"
+    },
+    {
+      "name": "parking",
+      "selector": ".mb-srp__card__summary__list--item[data-summary='parking'] .mb-srp__card__summary--value",
+      "type": "text"
+    },
+    {
+      "name": "furnishing",
+      "selector": ".mb-srp__card__summary__list--item[data-summary='furnishing'] .mb-srp__card__summary--value",
+      "type": "text"
+    },
+    {
+      "name": "description",
+      "selector": ".mb-srp__card--desc--text p",
+      "type": "text"
+    },
+    {
+      "name": "agent_name",
+      "selector": ".mb-srp__card__ads__info--name",
+      "type": "text"
+    },
+    {
+      "name": "agent_rating",
+      "selector": ".mb-srp__card__ads__info--served",
+      "type": "text"
+    },
+    {
+      "name": "posted_date",
+      "selector": ".mb-srp__card__photo__fig--post",
+      "type": "text"
+    },
+    {
+      "name": "photo_count",
+      "selector": ".mb-srp__card__photo__fig--count",
+      "type": "text"
+    },
+    {
+      "name": "property_url",
+      "selector": "script[type='application/ld+json']",
+      "type": "text"
+    }
+  ]
+}

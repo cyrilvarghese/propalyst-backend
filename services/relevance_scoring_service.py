@@ -16,7 +16,11 @@ load_dotenv()
 class RelevanceScoringService:
     """Service for scoring property relevance using LLM"""
 
-    # ACTIVE: Structured prompt with matches/mismatches arrays and weighted scoring
+    # Provider-specific prompts
+    PROMPT_PATH_SQUAREYARDS = Path(__file__).parent.parent / "providers" / "scrapers" / "squareyards" / "prompts" / "relevance_scoring_prompt_structured.txt"
+    PROMPT_PATH_MAGICBRICKS = Path(__file__).parent.parent / "providers" / "scrapers" / "magicbricks" / "prompts" / "relevance_scoring_prompt_structured.txt"
+
+    # Default: Structured prompt with matches/mismatches arrays and weighted scoring
     PROMPT_PATH = Path(__file__).parent.parent / "providers" / "scrapers" / "prompts" / "relevance_scoring_prompt_structured.txt"
 
     # INACTIVE: Simple prompt with just relevance_score and relevance_reason
@@ -104,7 +108,7 @@ class RelevanceScoringService:
 
                 # Validate score is between 1-10
                 score = scoring_result.get("relevance_score", 5)
-                if not isinstance(score, int) or score < 1 or score > 10:
+                if not isinstance(score, (int, float)) or score < 1 or score > 10:
                     print(f"[RelevanceScoring] WARNING: Invalid score {score}, defaulting to 5")
                     score = 5
 
@@ -269,18 +273,22 @@ class RelevanceScoringService:
                 "bathroom": prop.get("bathroom", ""),
                 "floor": prop.get("floor", ""),
                 "balcony": prop.get("balcony", ""),
-                "description": prop.get("description", "")[:500]  # Limit description length
+                "description": prop.get("description", "")
             }
             properties_summaries.append(summary)
 
-        # Build batch prompt from file with MagicBricks adaptation
-        batch_prompt_template = self.prompt_template
+        # Load MagicBricks-specific prompt template
+        if self.PROMPT_PATH_MAGICBRICKS.exists():
+            with open(self.PROMPT_PATH_MAGICBRICKS, 'r', encoding='utf-8') as f:
+                magicbricks_prompt_template = f.read().strip()
+        else:
+            magicbricks_prompt_template = self.prompt_template
 
-        # Replace single property placeholder with batch properties array
-        batch_prompt = batch_prompt_template.replace(
-            "{property_summary}",
-            f"Array of MagicBricks properties to evaluate:\n{json.dumps(properties_summaries, indent=2)}\n\nFor EACH property in this array, calculate a relevance_score (1-10) and provide matches/mismatches arrays.\n\nNOTE: MagicBricks properties have limited field availability (no bedrooms, no location, no property_type). Evaluate based on available fields."
-        ).format(user_query=user_query)
+        # Build batch prompt from file with MagicBricks adaptation
+        batch_prompt = magicbricks_prompt_template.format(
+            user_query=user_query,
+            property_summary=f"Array of MagicBricks properties to evaluate:\n{json.dumps(properties_summaries, indent=2)}\n\nFor EACH property in this array, calculate a relevance_score (1-10) and provide matches/mismatches arrays.\n\nIMPORTANT: Return ONLY a JSON array with one object per property, where each object contains property_id, relevance_score, matches, and mismatches."
+        )
 
         # Retry logic for rate limiting
         max_retries = 3
@@ -318,33 +326,32 @@ class RelevanceScoringService:
                     score = result.get("relevance_score", 5)
 
                     # Validate score
-                    if not isinstance(score, int) or score < 1 or score > 10:
+                    if not isinstance(score, (int, float)) or score < 1 or score > 10:
                         score = 5
 
                     # Add to property
-                    if 0 <= prop_id < len(properties):
-                        properties[prop_id]["relevance_score"] = score
+                    properties[prop_id]["relevance_score"] = score
 
-                        # Support both simple prompt format (relevance_reason) and structured format (matches/mismatches)
-                        if "relevance_reason" in result:
-                            # Simple prompt format
-                            properties[prop_id]["relevance_reason"] = result.get("relevance_reason", "")
-                        elif "matches" in result or "mismatches" in result:
-                            # Structured prompt format - convert arrays to readable reason
-                            matches = result.get("matches", [])
-                            mismatches = result.get("mismatches", [])
+                    # Support both simple prompt format (relevance_reason) and structured format (matches/mismatches)
+                    if "relevance_reason" in result:
+                        # Simple prompt format
+                        properties[prop_id]["relevance_reason"] = result.get("relevance_reason", "")
+                    elif "matches" in result or "mismatches" in result:
+                        # Structured prompt format - convert arrays to readable reason
+                        matches = result.get("matches", [])
+                        mismatches = result.get("mismatches", [])
 
-                            reason_parts = []
-                            if matches:
-                                reason_parts.append("Matches: " + "; ".join(matches))
-                            if mismatches:
-                                reason_parts.append("Mismatches: " + "; ".join(mismatches))
+                        reason_parts = []
+                        if matches:
+                            reason_parts.append("Matches: " + "; ".join(matches))
+                        if mismatches:
+                            reason_parts.append("Mismatches: " + "; ".join(mismatches))
 
-                            properties[prop_id]["relevance_reason"] = ". ".join(reason_parts) if reason_parts else ""
-                            properties[prop_id]["matches"] = matches
-                            properties[prop_id]["mismatches"] = mismatches
-                        else:
-                            properties[prop_id]["relevance_reason"] = ""
+                        properties[prop_id]["relevance_reason"] = ". ".join(reason_parts) if reason_parts else ""
+                        properties[prop_id]["matches"] = matches
+                        properties[prop_id]["mismatches"] = mismatches
+                    else:
+                        properties[prop_id]["relevance_reason"] = ""
 
                 print(f"[RelevanceScoring] ✓ Successfully scored MagicBricks batch of {len(properties)} properties")
                 return properties
@@ -415,16 +422,20 @@ class RelevanceScoringService:
             }
             properties_summaries.append(summary)
 
+        # Load SquareYards-specific prompt template
+        if self.PROMPT_PATH_SQUAREYARDS.exists():
+            with open(self.PROMPT_PATH_SQUAREYARDS, 'r', encoding='utf-8') as f:
+                squareyards_prompt_template = f.read().strip()
+        else:
+            squareyards_prompt_template = self.prompt_template
+
         # Build batch prompt from file
         # ACTIVE: Loading structured prompt from relevance_scoring_prompt_structured.txt
         # For batch evaluation, format as array of properties with property_id field
-        batch_prompt_template = self.prompt_template
-
-        # Replace single property placeholder with batch properties array
-        batch_prompt = batch_prompt_template.replace(
-            "{property_summary}",
-            f"Array of properties to evaluate:\n{json.dumps(properties_summaries, indent=2)}\n\nFor EACH property in this array, calculate a relevance_score (1-10) and provide matches/mismatches arrays."
-        ).format(user_query=user_query)
+        batch_prompt = squareyards_prompt_template.format(
+            user_query=user_query,
+            property_summary=f"Array of properties to evaluate:\n{json.dumps(properties_summaries, indent=2)}\n\nFor EACH property in this array, calculate a relevance_score (1-10) and provide matches/mismatches arrays.\n\nIMPORTANT: Return ONLY a JSON array with one object per property, where each object contains property_id, relevance_score, matches, and mismatches."
+        )
 
         # Retry logic for rate limiting
         max_retries = 3
@@ -462,33 +473,32 @@ class RelevanceScoringService:
                     score = result.get("relevance_score", 5)
 
                     # Validate score
-                    if not isinstance(score, int) or score < 1 or score > 10:
+                    if not isinstance(score, (int, float)) or score < 1 or score > 10:
                         score = 5
 
                     # Add to property
-                    if 0 <= prop_id < len(properties):
-                        properties[prop_id]["relevance_score"] = score
+                    properties[prop_id]["relevance_score"] = score
 
-                        # Support both simple prompt format (relevance_reason) and structured format (matches/mismatches)
-                        if "relevance_reason" in result:
-                            # Simple prompt format
-                            properties[prop_id]["relevance_reason"] = result.get("relevance_reason", "")
-                        elif "matches" in result or "mismatches" in result:
-                            # Structured prompt format - convert arrays to readable reason
-                            matches = result.get("matches", [])
-                            mismatches = result.get("mismatches", [])
+                    # Support both simple prompt format (relevance_reason) and structured format (matches/mismatches)
+                    if "relevance_reason" in result:
+                        # Simple prompt format
+                        properties[prop_id]["relevance_reason"] = result.get("relevance_reason", "")
+                    elif "matches" in result or "mismatches" in result:
+                        # Structured prompt format - convert arrays to readable reason
+                        matches = result.get("matches", [])
+                        mismatches = result.get("mismatches", [])
 
-                            reason_parts = []
-                            if matches:
-                                reason_parts.append("Matches: " + "; ".join(matches))
-                            if mismatches:
-                                reason_parts.append("Mismatches: " + "; ".join(mismatches))
+                        reason_parts = []
+                        if matches:
+                            reason_parts.append("Matches: " + "; ".join(matches))
+                        if mismatches:
+                            reason_parts.append("Mismatches: " + "; ".join(mismatches))
 
-                            properties[prop_id]["relevance_reason"] = ". ".join(reason_parts) if reason_parts else ""
-                            properties[prop_id]["matches"] = matches
-                            properties[prop_id]["mismatches"] = mismatches
-                        else:
-                            properties[prop_id]["relevance_reason"] = ""
+                        properties[prop_id]["relevance_reason"] = ". ".join(reason_parts) if reason_parts else ""
+                        properties[prop_id]["matches"] = matches
+                        properties[prop_id]["mismatches"] = mismatches
+                    else:
+                        properties[prop_id]["relevance_reason"] = ""
 
                 print(f"[RelevanceScoring] ✓ Successfully scored batch of {len(properties)} properties")
                 return properties

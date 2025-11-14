@@ -110,16 +110,8 @@
     },
     {
       "name": "property_url",
-      "selector": ".//script[@type='application/ld+json']",
-      "type": "nested",
-      "fields": [
-        {
-          "name": "url",
-          "selector": ".",
-          "type": "regex",
-          "pattern": "\"url\":\"(.*?)\""
-        }
-      ]
+      "selector": ".//script[@type='application/ld+json']/text()",
+      "type": "text"
     }
   ]
 }
