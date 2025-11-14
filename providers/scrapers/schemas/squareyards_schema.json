@@ -65,7 +65,7 @@
     },
     {
       "name": "image_url",
-      "selector": "figure.listing-img div.single-image img.img-responsive",
+      "selector": "figure.listing-img img.img-responsive",
       "type": "attribute",
       "attribute": "src"
     },
@@ -78,6 +78,12 @@
       "name": "agent_rating",
       "selector": "div.listing-agent span.rating",
       "type": "text"
+    },
+    {
+      "name": "agent_url",
+      "selector": "div.listing-agent",
+      "type": "attribute",
+      "attribute": "data-href"
     },
     {
       "name": "property_url",
@@ -114,6 +120,16 @@
       "selector": "div.favorite-btn",
       "type": "attribute",
       "attribute": "data-propertytype"
+    },
+    {
+      "name": "road_view",
+      "selector": "li:has(em.icon-camera) span",
+      "type": "text"
+    },
+    {
+      "name": "stairs",
+      "selector": "li:has(em.icon-stairs) span",
+      "type": "text"
     }
   ]
 }
