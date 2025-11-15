@@ -12,7 +12,12 @@ Property Details:
 For each evaluation criterion below, you will first extract the user's requirement and the corresponding property value. Then, determine the status (Match, Mismatch, or Not Specified).
 
 **Evaluation Criteria & Rules:**
-- **Source of Truth:** If information appears in EITHER the structured fields OR the property description, consider it valid. If there are conflicting values, give the benefit of the doubt—if either one matches the user's query, it is a "Match".
+- **Source of Truth - Union of All Data:** Property information is the UNION of structured fields AND the description text. Extract data from BOTH sources:
+  - Check structured fields (bedrooms, area, facing, parking, furnishing, etc.)
+  - Check description text for any additional information
+  - If information appears in EITHER source, consider it valid
+  - If there are conflicting values between sources, give the benefit of the doubt—if EITHER value matches the user's query, it is a "Match"
+  - Example: If structured field says "2 BHK" but description mentions "3 bedrooms", consider BOTH values when matching against user query
 
 1.  **BEDROOMS/BHK:**
     - User Requirement: Extract the number of bedrooms (e.g., "3bhk" = 3).
@@ -97,7 +102,7 @@ Include two string arrays listing the reasons:
 - Include two arrays: `matches` (reasons why the property matches) and `mismatches` (reasons why it doesn't match).
 
 ```json
-{
+{{
   "relevance_score": 3.0,
   "matches": [
     "Location matches: Koramangala",
@@ -108,7 +113,7 @@ Include two string arrays listing the reasons:
     "Bedrooms don't match: 3 BHK vs 2 BHK required",
     "Area is too large: 1500 sqft vs 1200 sqft (outside ±20% range)"
   ]
-}
+}}
 ```
 
 IMPORTANT: Always respond with ONLY the JSON object. No markdown code blocks, no additional text.

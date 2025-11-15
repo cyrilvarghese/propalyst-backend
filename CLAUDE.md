@@ -427,6 +427,196 @@ chore: update dependencies
 
 ---
 
+## Performance & Optimization - Teaching Moments
+
+**When files get too large, use it as a teaching opportunity**
+
+As a senior developer and mentor, recognize code smells and scalability issues proactively. When you notice performance problems or growing file sizes, suggest optimizations using the core programming principles.
+
+### Recognizing Scalability Issues
+
+**File Size Warning Signs:**
+- JSON data files > 500KB
+- Loading entire dataset into memory for every operation
+- Linear growth in file size with usage
+- Performance degradation as data grows
+- No pagination or data expiry strategy
+
+**Example: `scraped_properties.json` at 305KB and growing**
+
+```bash
+# Check file size
+ls -lh data/scraped_properties.json
+# Output: -rw-r--r-- 1 user user 305K Nov 15 12:01 scraped_properties.json
+
+# Check line count
+wc -l data/scraped_properties.json
+# Output: 4279 data/scraped_properties.json
+```
+
+### Teaching Moment: Apply Core Principles
+
+**1. KISS (Keep It Simple, Stupid)**
+- **Problem**: Loading 300KB+ JSON into memory for every API call
+- **Solution**: Add pagination, implement lazy loading, or switch to a database
+- **Teaching**: "We're keeping it simple now, but at 500KB+ we should consider SQLite for better performance"
+
+**2. DRY (Don't Repeat Yourself)**
+- **Problem**: Duplicate property entries for same URL/scrape
+- **Solution**: Add deduplication logic, use URL as unique key
+- **Teaching**: "Notice we're storing the same property multiple times? Let's deduplicate by property_url"
+
+**3. Separation of Concerns**
+- **Problem**: Data persistence mixed with business logic
+- **Solution**: Already using DataPersistenceService - good! Now consider data archiving service
+- **Teaching**: "Our service layer is clean, but now we need an archival strategy"
+
+### Optimization Strategies (Progressive)
+
+**Stage 1: Simple JSON (0-500KB) ✓ Current**
+```python
+# Keep current approach - simple and works
+data = json.load(f)  # Load all into memory
+```
+- **Pros**: Simple, no dependencies, easy to debug
+- **Cons**: Doesn't scale, slow for large datasets
+- **When to move on**: File > 500KB or performance issues
+
+**Stage 2: Indexed JSON (500KB-5MB)**
+```python
+# Split into separate files by date or source
+data/
+  scraped_properties_2025_01.json
+  scraped_properties_2025_02.json
+  index.json  # Maps URLs to file locations
+```
+- **Pros**: Still simple, better performance
+- **Cons**: More file management complexity
+- **When to move on**: Multiple files getting large
+
+**Stage 3: SQLite (5MB-100MB)**
+```python
+# Add SQLite with proper indexes
+import sqlite3
+
+CREATE TABLE properties (
+    id INTEGER PRIMARY KEY,
+    url TEXT UNIQUE,
+    source TEXT,
+    scraped_at TIMESTAMP,
+    data JSON
+);
+CREATE INDEX idx_url ON properties(url);
+CREATE INDEX idx_scraped_at ON properties(scraped_at);
+```
+- **Pros**: Fast queries, ACID compliance, still file-based
+- **Cons**: Need migration, slightly more complex
+- **When to move on**: Need concurrent writes or distributed access
+
+**Stage 4: PostgreSQL/MySQL (100MB+)**
+- Full database with connection pooling
+- Proper normalization and relationships
+- Backup and replication strategies
+
+### Suggesting Optimizations - Communication Template
+
+**When you notice a file getting large:**
+
+```
+🔍 **Performance Note**: I notice `scraped_properties.json` is now 305KB with 4,279 lines.
+
+**Current Status**: ✅ Working fine for now
+
+**Future Optimization** (when file reaches ~500KB):
+We should consider one of these approaches:
+
+1. **Add Data Expiry** (Simplest - KISS principle)
+   - Auto-delete entries older than 30 days
+   - Keeps file size manageable
+   - Pros: Simple, no architecture change
+   - Cons: Lose historical data
+
+2. **Switch to SQLite** (Recommended for growth)
+   - Better performance with indexing
+   - Query by date, source, or URL efficiently
+   - Pros: Scales to 100MB+, fast queries
+   - Cons: Need migration script
+
+3. **Implement Pagination** (Medium complexity)
+   - Load data in chunks instead of all at once
+   - Better memory usage
+   - Pros: Works with current JSON approach
+   - Cons: More complex API logic
+
+**Recommendation**: Monitor file size. When it hits 500KB, let's implement #1 (expiry) first (KISS), then move to #2 (SQLite) if we need better query performance.
+
+Would you like me to implement data expiry now, or wait until we hit the threshold?
+```
+
+### Key Teaching Points
+
+1. **Premature Optimization is Evil**
+   - Don't optimize before you have a problem
+   - JSON files < 500KB are perfectly fine
+   - Measure first, optimize later
+
+2. **Progressive Enhancement**
+   - Start simple (JSON files)
+   - Add complexity only when needed
+   - Each stage solves specific problems
+
+3. **Trade-offs Matter**
+   - Simple JSON: Easy to debug, doesn't scale
+   - SQLite: Better performance, more complexity
+   - PostgreSQL: Best performance, much more complexity
+
+4. **Use Principles as Guide**
+   - **KISS**: Start with simplest solution
+   - **AHA**: Don't abstract until 3rd use case
+   - **WET**: Write it twice before optimizing
+   - **DRY**: Remove duplication once pattern is clear
+
+### Monitoring & Metrics
+
+**Add to your service:**
+```python
+class DataPersistenceService:
+    @classmethod
+    async def get_file_stats(cls) -> Dict[str, Any]:
+        """Get statistics about data file size and growth"""
+        if not cls.DATA_FILE_PATH.exists():
+            return {"size_kb": 0, "entry_count": 0}
+
+        file_size = cls.DATA_FILE_PATH.stat().st_size / 1024  # KB
+        data = cls._load_existing_data()
+
+        return {
+            "size_kb": round(file_size, 2),
+            "size_mb": round(file_size / 1024, 2),
+            "entry_count": len(data),
+            "warning": file_size > 500,  # Warn at 500KB
+            "critical": file_size > 5000  # Critical at 5MB
+        }
+```
+
+### Summary: Be Proactive But Not Premature
+
+✅ **DO:**
+- Monitor file sizes and performance
+- Suggest optimizations when thresholds are reached
+- Explain trade-offs using programming principles
+- Use it as a teaching moment
+
+❌ **DON'T:**
+- Optimize before there's a problem
+- Jump straight to complex solutions
+- Ignore warning signs of scaling issues
+- Leave the user confused about why changes are needed
+
+**Remember**: Every optimization suggestion is an opportunity to teach software engineering principles in a real-world context.
+
+---
+
 ## Summary
 
 **Golden Rules:**

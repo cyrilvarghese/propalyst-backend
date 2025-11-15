@@ -33,6 +33,11 @@
       "type": "text"
     },
     {
+      "name": "carpet_area",
+      "selector": ".mb-srp__card__summary__list--item[data-summary='carpet-area'] .mb-srp__card__summary--value",
+      "type": "text"
+    },
+    {
       "name": "facing",
       "selector": ".mb-srp__card__summary__list--item[data-summary='facing'] .mb-srp__card__summary--value",
       "type": "text"
@@ -50,6 +55,11 @@
     {
       "name": "description",
       "selector": ".mb-srp__card--desc--text p",
+      "type": "text"
+    },
+    {
+      "name": "description2",
+      "selector": ".mb-srp__card--desc-lux--text p",
       "type": "text"
     },
     {

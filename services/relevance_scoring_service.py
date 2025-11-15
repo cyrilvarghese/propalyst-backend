@@ -33,7 +33,7 @@ class RelevanceScoringService:
             raise ValueError("GEMINI_API_KEY or GEMINI_AI_API_KEY not found in environment")
 
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-2.0-flash-exp')
+        self.model = genai.GenerativeModel('gemini-2.5-flash-lite')
 
         # Load prompt template
         if self.PROMPT_PATH.exists():
