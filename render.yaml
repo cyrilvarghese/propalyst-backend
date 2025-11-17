@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: propalyst-backend
+    env: docker
+    region: oregon
+    plan: starter
+    branch: master
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+
+    # Environment variables
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: OPENAI_API_KEY
+        sync: false  # Set this in Render dashboard (secret)
+      - key: GEMINI_API_KEY
+        sync: false  # Set this in Render dashboard (secret)
+      - key: GEMINI_AI_API_KEY
+        sync: false  # Set this in Render dashboard (secret)
+      - key: CORS_ORIGINS
+        value: http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003
+
+    # Health check endpoint
+    healthCheckPath: /health
+
+    # Auto-deploy on push to master branch
+    autoDeploy: true
+
+    # Disk storage for data files (optional - recommended for persistence)
+    disk:
+      name: propalyst-data
+      mountPath: /app/data
+      sizeGB: 1
