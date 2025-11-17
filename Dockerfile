@@ -37,10 +37,5 @@ ENV PORT=8000
 # Expose the port your FastAPI app runs on (Render uses 10000)
 EXPOSE 8000
 
-# Command to run the app
-# Use RELOAD_MODE=true for development, default to production
-CMD sh -c "if [ \"$RELOAD_MODE\" = \"true\" ]; then \
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload; \
-else \
-gunicorn main:app -k uvicorn.workers.UvicornWorker --workers 2 --bind 0.0.0.0:10000 --timeout 600 --graceful-timeout 600 --max-requests 1000 --max-requests-jitter 100; \
-fi"
+# Command to run the app with uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
