@@ -16,7 +16,8 @@
       "Bash(services/relevance_scoring_service.py )",
       "Bash(providers/scrapers/squareyards/squareyards_scraper.py )",
       "Bash(providers/scrapers/magicbricks/magicbricks_scraper.py )",
-      "Bash(routers/scraping_router.py)"
+      "Bash(routers/scraping_router.py)",
+      "Bash(docker build:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
