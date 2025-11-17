@@ -1,0 +1,45 @@
+name: propalyst-env
+channels:
+  - conda-forge
+dependencies:
+  # Python
+  - python=3.11
+
+  # FastAPI and server
+  - fastapi>=0.109.0
+  - uvicorn>=0.27.0
+  - gunicorn
+
+  # LangGraph and LangChain
+  - langgraph>=0.0.40
+  - langchain>=0.1.6
+  - langchain-openai>=0.0.5
+  - langchain-google-genai>=0.0.6
+  - langsmith
+
+  # Pydantic
+  - pydantic>=2.5.3
+  - pydantic-settings>=2.1.0
+
+  # Environment and utilities
+  - python-dotenv>=1.0.0
+  - httpx>=0.26.0
+  - python-multipart>=0.0.6
+
+  # Data handling
+  - numpy
+  - pyyaml
+
+  # HTTP and networking
+  - requests
+  - urllib3
+  - certifi
+
+  # Pip packages (not available via conda or need specific versions)
+  - pip
+  - pip:
+      - google-generativeai>=0.8.0
+      - google-genai>=0.8.0
+      - crawl4ai>=0.2.0
+
+prefix: /opt/conda/envs/propalyst-env
