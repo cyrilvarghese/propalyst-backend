@@ -34,7 +34,7 @@ RUN mkdir -p /app/data
 ENV PYTHONUNBUFFERED=1
 ENV PORT=8000
 
-# Expose the port your FastAPI app runs on (Render uses 10000)
+# Expose the port your FastAPI app runs on
 EXPOSE 8000
 
 # Command to run the app with uvicorn
