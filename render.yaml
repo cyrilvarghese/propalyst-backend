@@ -21,7 +21,7 @@ services:
       - key: GEMINI_AI_API_KEY
         sync: false  # Set this in Render dashboard (secret)
       - key: CORS_ORIGINS
-        value: http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003
+        value: https://propalyst-mxcore57t-cyrilvargheses-projects.vercel.app,http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003
 
     # Health check endpoint
     healthCheckPath: /health
