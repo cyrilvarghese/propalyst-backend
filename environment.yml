@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   # Python
-  - python=3.11
+  - python=3.12.8
 
   # FastAPI and server
   - fastapi>=0.109.0
