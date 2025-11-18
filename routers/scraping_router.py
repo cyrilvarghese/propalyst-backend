@@ -73,7 +73,7 @@ async def get_listing_details(
             """Generate Server-Sent Events with batch-scored properties"""
             scoring_service = RelevanceScoringService()
             scraped_at = datetime.now().isoformat()
-            batch_size = 10  # Score 10 properties per API call
+            batch_size = 5  # Score 5 properties per API call
 
             try:
                 total_properties = len(properties_data)
@@ -135,6 +135,126 @@ async def get_listing_details(
             "properties": [],
             "count": 0,
             "source": "squareyards",
+            "scraped_at": datetime.now().isoformat(),
+            "error": str(e)
+        }
+
+
+@router.get("/get_listing_details_magicbricks")
+async def get_listing_details_magicbricks(
+    url: str = Query(..., description="Property listing URL (MagicBricks)"),
+    orig_query: Optional[str] = Query(None, description="Original search query for relevance scoring")
+):
+    """
+    Get property listing details from MagicBricks URL with streaming support
+
+    Returns multiple properties if URL is a search results page.
+
+    If orig_query is provided, returns Server-Sent Events stream with relevance scores.
+    Otherwise returns regular JSON response.
+
+    Examples:
+    ```
+    # Regular response:
+    GET /api/get_listing_details_magicbricks?url=https://www.magicbricks.com/3-bhk-flats-for-rent-in-indira-nagar-bangalore-pppfr
+
+    # Streaming with relevance scoring:
+    GET /api/get_listing_details_magicbricks?url=https://www.magicbricks.com/3-bhk-flats-for-rent-in-indira-nagar-bangalore-pppfr&orig_query=3bhk apartment in Indiranagar Bangalore 1875-3125 sqft
+    ```
+    """
+    try:
+        print(f"[API-MagicBricks] === Incoming Request ===")
+        print(f"[API-MagicBricks] URL parameter (raw): {url}")
+        print(f"[API-MagicBricks] orig_query parameter: {orig_query}")
+
+        # Decode URL in case it's double-encoded
+        decoded_url = unquote(url)
+        print(f"[API-MagicBricks] URL parameter (decoded): {decoded_url}")
+        print(f"[API-MagicBricks] Fetching listing details for URL: {decoded_url}")
+
+        # Get raw data from MagicBricks scraper
+        properties_data = await PropertyScrapingService.scrape_magicbricks(decoded_url)
+
+        # If no orig_query, return regular JSON response
+        if not orig_query:
+            print(f"[API-MagicBricks] No orig_query provided, returning regular response")
+            return {
+                "success": True,
+                "properties": properties_data,
+                "count": len(properties_data),
+                "source": "magicbricks",
+                "scraped_at": datetime.now().isoformat()
+            }
+
+        # With orig_query, return streaming response with batch relevance scoring
+        print(f"[API-MagicBricks] orig_query provided: '{orig_query}', streaming with batch relevance scores")
+
+        async def generate_sse_events():
+            """Generate Server-Sent Events with batch-scored properties"""
+            scoring_service = RelevanceScoringService()
+            scraped_at = datetime.now().isoformat()
+            batch_size = 5  # Score 5 properties per API call
+
+            try:
+                total_properties = len(properties_data)
+                print(f"[API-MagicBricks] Streaming {total_properties} properties in batches of {batch_size}")
+
+                # Process properties in batches
+                for i in range(0, total_properties, batch_size):
+                    # Get batch slice (e.g., 0:10, then 10:20)
+                    batch = properties_data[i:i + batch_size]
+                    batch_num = (i // batch_size) + 1
+                    total_batches = (total_properties + batch_size - 1) // batch_size
+
+                    print(f"[API-MagicBricks] Processing batch {batch_num}/{total_batches} ({len(batch)} properties)...")
+
+                    # Score entire batch in ONE API call using MagicBricks-specific scoring
+                    scored_batch = await scoring_service._score_batch_magicbricks(batch, orig_query)
+
+                    # Stream each scored property from this batch immediately
+                    for scored_property in scored_batch:
+                        yield f"event: property\n"
+                        yield f"data: {json.dumps(scored_property)}\n\n"
+
+                    print(f"[API-MagicBricks] ✓ Streamed batch {batch_num}/{total_batches}")
+
+                # Send completion event
+                completion_data = {
+                    "count": total_properties,
+                    "source": "magicbricks",
+                    "scraped_at": scraped_at,
+                    "api_calls_made": (total_properties + batch_size - 1) // batch_size
+                }
+                yield f"event: complete\n"
+                yield f"data: {json.dumps(completion_data)}\n\n"
+
+                print(f"[API-MagicBricks] ✓ Streaming complete. Made {completion_data['api_calls_made']} API calls for {total_properties} properties")
+
+            except Exception as e:
+                print(f"[API-MagicBricks] Error during scoring: {e}")
+                import traceback
+                print(f"[API-MagicBricks] Traceback: {traceback.format_exc()}")
+                error_data = {"error": str(e)}
+                yield f"event: error\n"
+                yield f"data: {json.dumps(error_data)}\n\n"
+
+        return StreamingResponse(
+            generate_sse_events(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no"  # Disable nginx buffering
+            }
+        )
+
+    except Exception as e:
+        print(f"[API-MagicBricks] Error fetching listing details: {str(e)}")
+        return {
+            "success": False,
+            "properties": [],
+            "count": 0,
+            "source": "magicbricks",
             "scraped_at": datetime.now().isoformat(),
             "error": str(e)
         }

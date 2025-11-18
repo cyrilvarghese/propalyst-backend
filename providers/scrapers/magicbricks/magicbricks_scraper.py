@@ -60,6 +60,9 @@ class MagicBricksScraper:
     async def _load_or_generate_schema(self):
         """Load existing schema or generate if not exists"""
         # Try to load existing schema
+        print(f"[MagicBricks] Checking for schema at: {self.SCHEMA_PATH}")
+        print(f"[MagicBricks] Schema exists: {self.SCHEMA_PATH.exists()}")
+
         if self.SCHEMA_PATH.exists():
             print("[MagicBricks] Using existing schema")
             with open(self.SCHEMA_PATH, 'r') as f:
@@ -67,7 +70,7 @@ class MagicBricksScraper:
             return
 
         # Generate schema (first time only)
-        print("[MagicBricks] Generating schema (first time)...")
+        print("[MagicBricks] Schema not found, generating schema (first time)...")
 
         # Load sample HTML from file
         if not self.SAMPLE_HTML_PATH.exists():

@@ -30,6 +30,8 @@ uvicorn main:app --reload --port 8000
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from pathlib import Path
 from dotenv import load_dotenv
 
 # Import graph instances (initialized in graphs.py)
@@ -157,6 +159,17 @@ async def health_check():
         },
         "warnings": [] if has_api_key else ["OPENAI_API_KEY not set"]
     }
+
+
+@app.get("/test")
+async def test_page():
+    """
+    Serve the streaming test page
+
+    Access at: http://localhost:8000/test
+    """
+    html_path = Path(__file__).parent / "test_streaming.html"
+    return FileResponse(html_path)
 
 
 # ============================================================================

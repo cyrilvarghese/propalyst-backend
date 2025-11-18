@@ -28,6 +28,9 @@ class SquareYardsScraper:
     async def _load_or_generate_schema(self):
         """Load existing schema or generate if not exists"""
         # Try to load existing schema
+        print(f"[SquareYards] Checking for schema at: {self.SCHEMA_PATH}")
+        print(f"[SquareYards] Schema exists: {self.SCHEMA_PATH.exists()}")
+
         if self.SCHEMA_PATH.exists():
             print("[SquareYards] Using existing schema")
             with open(self.SCHEMA_PATH, 'r') as f:
@@ -35,7 +38,7 @@ class SquareYardsScraper:
             return
 
         # Generate schema (first time only)
-        print("[SquareYards] Generating schema (first time)...")
+        print("[SquareYards] Schema not found, generating schema (first time)...")
 
         # Load sample HTML from file
         if not self.SAMPLE_HTML_PATH.exists():
