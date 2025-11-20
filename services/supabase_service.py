@@ -126,6 +126,7 @@ class SupabaseService:
         location: Optional[str] = None,
         property_type: Optional[str] = None,
         configuration: Optional[str] = None,
+        listing_type: Optional[str] = None,
         transaction_type: Optional[str] = None,
         min_price: Optional[float] = None,
         max_price: Optional[float] = None,
@@ -139,6 +140,7 @@ class SupabaseService:
             location: Filter by location (partial match)
             property_type: Filter by property type
             configuration: Filter by BHK configuration
+            listing_type: Filter by listing type (Sale, Rent, Requirement)
             transaction_type: Filter by transaction type (Sale, Rent, etc.)
             min_price: Minimum price filter
             max_price: Maximum price filter
@@ -166,6 +168,9 @@ class SupabaseService:
 
             if configuration:
                 query = query.eq("configuration", configuration)
+
+            if listing_type:
+                query = query.eq("listing_type", listing_type)
 
             if transaction_type:
                 query = query.eq("transaction_type", transaction_type)

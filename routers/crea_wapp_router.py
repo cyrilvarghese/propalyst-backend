@@ -56,6 +56,7 @@ async def search_listings(
     location: Optional[str] = Query(None, description="Filter by location (partial match)"),
     property_type: Optional[str] = Query(None, description="Filter by property type"),
     configuration: Optional[str] = Query(None, description="Filter by BHK configuration"),
+    listing_type: Optional[str] = Query(None, description="Filter by listing type (Sale, Rent, Requirement)"),
     transaction_type: Optional[str] = Query(None, description="Filter by transaction type (Sale, Rent, etc.)"),
     min_price: Optional[float] = Query(None, description="Minimum price filter"),
     max_price: Optional[float] = Query(None, description="Maximum price filter"),
@@ -71,6 +72,7 @@ async def search_listings(
         location: Property location (supports partial matching, e.g., 'Indiranagar')
         property_type: Property type (e.g., 'Apartment', 'Villa', 'Plot')
         configuration: BHK configuration (e.g., '3 BHK', '4 BHK')
+        listing_type: Listing type (e.g., 'Sale', 'Rent', 'Requirement')
         transaction_type: Transaction type (e.g., 'Sale', 'Rent')
         min_price: Minimum price in numeric format
         max_price: Maximum price in numeric format
@@ -83,11 +85,14 @@ async def search_listings(
         # Search by agent
         GET /api/crea/listings/search?agent_name=Tajamul
 
+        # With listing type
+        GET /api/crea/listings/search?listing_type=Rent&location=Indiranagar
+
         # Multiple filters (AND condition)
-        GET /api/crea/listings/search?agent_name=TREND%20SHELTERS&location=Indiranagar&configuration=3%20BHK
+        GET /api/crea/listings/search?agent_name=TREND%20SHELTERS&location=Indiranagar&configuration=3%20BHK&listing_type=Sale
 
         # With price range
-        GET /api/crea/listings/search?location=Indiranagar&transaction_type=Sale&min_price=5000000&max_price=10000000
+        GET /api/crea/listings/search?location=Indiranagar&listing_type=Sale&min_price=5000000&max_price=10000000
     """
     try:
         print(f"[API-CREA] Searching listings with filters:")
@@ -95,6 +100,7 @@ async def search_listings(
         print(f"[API-CREA] - location: {location}")
         print(f"[API-CREA] - property_type: {property_type}")
         print(f"[API-CREA] - configuration: {configuration}")
+        print(f"[API-CREA] - listing_type: {listing_type}")
         print(f"[API-CREA] - transaction_type: {transaction_type}")
         print(f"[API-CREA] - price range: {min_price} - {max_price}")
 
@@ -103,6 +109,7 @@ async def search_listings(
             location=location,
             property_type=property_type,
             configuration=configuration,
+            listing_type=listing_type,
             transaction_type=transaction_type,
             min_price=min_price,
             max_price=max_price,
