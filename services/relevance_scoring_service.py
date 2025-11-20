@@ -26,21 +26,41 @@ class RelevanceScoringService:
     # INACTIVE: Simple prompt with just relevance_score and relevance_reason
     # PROMPT_PATH = Path(__file__).parent.parent / "providers" / "scrapers" / "prompts" / "relevance_scoring_prompt.txt"
 
+    # Shared Gemini model instance (singleton pattern)
+    _model_instance = None
+    _prompt_template = None
+
+    @classmethod
+    def _get_model(cls):
+        """Get or create shared Gemini model instance (singleton)"""
+        if cls._model_instance is None:
+            api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI_AI_API_KEY")
+            if not api_key:
+                raise ValueError("GEMINI_API_KEY or GEMINI_AI_API_KEY not found in environment")
+
+            genai.configure(api_key=api_key)
+            cls._model_instance = genai.GenerativeModel('gemini-2.5-flash-lite')
+            print("[RelevanceScoring] ✓ Created shared Gemini model instance")
+
+        return cls._model_instance
+
+    @classmethod
+    def _get_prompt_template(cls):
+        """Get or load prompt template (singleton)"""
+        if cls._prompt_template is None:
+            if cls.PROMPT_PATH.exists():
+                with open(cls.PROMPT_PATH, 'r', encoding='utf-8') as f:
+                    cls._prompt_template = f.read().strip()
+                print("[RelevanceScoring] ✓ Loaded prompt template")
+            else:
+                raise FileNotFoundError(f"Prompt template not found: {cls.PROMPT_PATH}")
+
+        return cls._prompt_template
+
     def __init__(self):
-        """Initialize Gemini API and load prompt"""
-        api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GEMINI_AI_API_KEY")
-        if not api_key:
-            raise ValueError("GEMINI_API_KEY or GEMINI_AI_API_KEY not found in environment")
-
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-2.5-flash-lite')
-
-        # Load prompt template
-        if self.PROMPT_PATH.exists():
-            with open(self.PROMPT_PATH, 'r', encoding='utf-8') as f:
-                self.prompt_template = f.read().strip()
-        else:
-            raise FileNotFoundError(f"Prompt template not found: {self.PROMPT_PATH}")
+        """Initialize service using shared model instance"""
+        self.model = self._get_model()
+        self.prompt_template = self._get_prompt_template()
 
     async def score_single_property(self, property_data: Dict[str, Any], user_query: str) -> Dict[str, Any]:
         """

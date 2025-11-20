@@ -50,10 +50,21 @@ async def get_listing_details(
         # Decode URL in case it's double-encoded
         decoded_url = unquote(url)
         print(f"[API] URL parameter (decoded): {decoded_url}")
-        print(f"[API] Fetching listing details for URL: {decoded_url}")
 
-        # Get raw data from scraper (already well-formatted by schema)
-        properties_data = await PropertyScrapingService.scrape_squareyards(decoded_url)
+        # Check cache first
+        print(f"[API] Checking cache for URL: {decoded_url}")
+        cached_properties = await DataPersistenceService.get_properties_by_url(decoded_url)
+
+        if cached_properties is not None:
+            print(f"[API] ✓ Cache hit! Found {len(cached_properties)} properties in cache")
+            properties_data = cached_properties
+            from_cache = True
+        else:
+            print(f"[API] Cache miss - will scrape and score fresh data")
+            print(f"[API] Fetching listing details for URL: {decoded_url}")
+            # Get raw data from scraper (already well-formatted by schema)
+            properties_data = await PropertyScrapingService.scrape_squareyards(decoded_url)
+            from_cache = False
 
         # If no orig_query, return regular JSON response
         if not orig_query:
@@ -63,52 +74,96 @@ async def get_listing_details(
                 "properties": properties_data,
                 "count": len(properties_data),
                 "source": "squareyards",
+                "from_cache": from_cache,
                 "scraped_at": datetime.now().isoformat()
             }
 
-        # With orig_query, return streaming response with batch relevance scoring
-        print(f"[API] orig_query provided: '{orig_query}', streaming with batch relevance scores")
+        # With orig_query, return streaming response (works for both cache hit and miss)
+        print(f"[API] orig_query provided: '{orig_query}', streaming response")
+        print(f"[API] Data source: {'cache' if from_cache else 'fresh scrape'}")
 
         async def generate_sse_events():
             """Generate Server-Sent Events with batch-scored properties"""
-            scoring_service = RelevanceScoringService()
             scraped_at = datetime.now().isoformat()
             batch_size = 5  # Score 5 properties per API call
 
             try:
                 total_properties = len(properties_data)
-                print(f"[API] Streaming {total_properties} properties in batches of {batch_size}")
 
-                # Process properties in batches
-                for i in range(0, total_properties, batch_size):
-                    # Get batch slice (e.g., 0:10, then 10:20)
-                    batch = properties_data[i:i + batch_size]
-                    batch_num = (i // batch_size) + 1
-                    total_batches = (total_properties + batch_size - 1) // batch_size
+                if from_cache:
+                    # Stream cached properties directly (already scored)
+                    print(f"[API] Streaming {total_properties} cached properties")
 
-                    print(f"[API] Processing batch {batch_num}/{total_batches} ({len(batch)} properties)...")
+                    # Stream in batches for consistent UX
+                    for i in range(0, total_properties, batch_size):
+                        batch = properties_data[i:i + batch_size]
 
-                    # Score entire batch in ONE API call
-                    scored_batch = await scoring_service._score_batch(batch, orig_query)
+                        for property in batch:
+                            yield f"event: property\n"
+                            yield f"data: {json.dumps(property)}\n\n"
 
-                    # Stream each scored property from this batch immediately
-                    for scored_property in scored_batch:
-                        yield f"event: property\n"
-                        yield f"data: {json.dumps(scored_property)}\n\n"
+                    # Send completion event
+                    completion_data = {
+                        "count": total_properties,
+                        "source": "squareyards",
+                        "scraped_at": scraped_at,
+                        "from_cache": True,
+                        "api_calls_made": 0
+                    }
+                    yield f"event: complete\n"
+                    yield f"data: {json.dumps(completion_data)}\n\n"
 
-                    print(f"[API] ✓ Streamed batch {batch_num}/{total_batches}")
+                    print(f"[API] ✓ Streamed {total_properties} cached properties")
 
-                # Send completion event
-                completion_data = {
-                    "count": total_properties,
-                    "source": "squareyards",
-                    "scraped_at": scraped_at,
-                    "api_calls_made": (total_properties + batch_size - 1) // batch_size
-                }
-                yield f"event: complete\n"
-                yield f"data: {json.dumps(completion_data)}\n\n"
+                else:
+                    # Fresh scrape - score and stream
+                    print(f"[API] Streaming {total_properties} properties in batches of {batch_size}")
+                    scoring_service = RelevanceScoringService()
+                    all_scored_properties = []
 
-                print(f"[API] ✓ Streaming complete. Made {completion_data['api_calls_made']} API calls for {total_properties} properties")
+                    # Process properties in batches
+                    for i in range(0, total_properties, batch_size):
+                        # Get batch slice (e.g., 0:5, then 5:10)
+                        batch = properties_data[i:i + batch_size]
+                        batch_num = (i // batch_size) + 1
+                        total_batches = (total_properties + batch_size - 1) // batch_size
+
+                        print(f"[API] Processing batch {batch_num}/{total_batches} ({len(batch)} properties)...")
+
+                        # Score entire batch in ONE API call
+                        scored_batch = await scoring_service._score_batch(batch, orig_query)
+
+                        # Collect scored properties for caching
+                        all_scored_properties.extend(scored_batch)
+
+                        # Stream each scored property from this batch immediately
+                        for scored_property in scored_batch:
+                            yield f"event: property\n"
+                            yield f"data: {json.dumps(scored_property)}\n\n"
+
+                        print(f"[API] ✓ Streamed batch {batch_num}/{total_batches}")
+
+                    # Save all scored properties to cache
+                    print(f"[API] Saving {len(all_scored_properties)} scored properties to cache")
+                    await DataPersistenceService.save_scraped_properties(
+                        url=decoded_url,
+                        properties=all_scored_properties,
+                        merge=True,
+                        source="squareyards"
+                    )
+
+                    # Send completion event
+                    completion_data = {
+                        "count": total_properties,
+                        "source": "squareyards",
+                        "scraped_at": scraped_at,
+                        "from_cache": False,
+                        "api_calls_made": (total_properties + batch_size - 1) // batch_size
+                    }
+                    yield f"event: complete\n"
+                    yield f"data: {json.dumps(completion_data)}\n\n"
+
+                    print(f"[API] ✓ Streaming complete. Made {completion_data['api_calls_made']} API calls for {total_properties} properties")
 
             except Exception as e:
                 print(f"[API] Error during scoring: {e}")
@@ -170,10 +225,21 @@ async def get_listing_details_magicbricks(
         # Decode URL in case it's double-encoded
         decoded_url = unquote(url)
         print(f"[API-MagicBricks] URL parameter (decoded): {decoded_url}")
-        print(f"[API-MagicBricks] Fetching listing details for URL: {decoded_url}")
 
-        # Get raw data from MagicBricks scraper
-        properties_data = await PropertyScrapingService.scrape_magicbricks(decoded_url)
+        # Check cache first
+        print(f"[API-MagicBricks] Checking cache for URL: {decoded_url}")
+        cached_properties = await DataPersistenceService.get_properties_by_url(decoded_url)
+
+        if cached_properties is not None:
+            print(f"[API-MagicBricks] ✓ Cache hit! Found {len(cached_properties)} properties in cache")
+            properties_data = cached_properties
+            from_cache = True
+        else:
+            print(f"[API-MagicBricks] Cache miss - will scrape and score fresh data")
+            print(f"[API-MagicBricks] Fetching listing details for URL: {decoded_url}")
+            # Get raw data from MagicBricks scraper
+            properties_data = await PropertyScrapingService.scrape_magicbricks(decoded_url)
+            from_cache = False
 
         # If no orig_query, return regular JSON response
         if not orig_query:
@@ -183,52 +249,96 @@ async def get_listing_details_magicbricks(
                 "properties": properties_data,
                 "count": len(properties_data),
                 "source": "magicbricks",
+                "from_cache": from_cache,
                 "scraped_at": datetime.now().isoformat()
             }
 
-        # With orig_query, return streaming response with batch relevance scoring
-        print(f"[API-MagicBricks] orig_query provided: '{orig_query}', streaming with batch relevance scores")
+        # With orig_query, return streaming response (works for both cache hit and miss)
+        print(f"[API-MagicBricks] orig_query provided: '{orig_query}', streaming response")
+        print(f"[API-MagicBricks] Data source: {'cache' if from_cache else 'fresh scrape'}")
 
         async def generate_sse_events():
             """Generate Server-Sent Events with batch-scored properties"""
-            scoring_service = RelevanceScoringService()
             scraped_at = datetime.now().isoformat()
             batch_size = 5  # Score 5 properties per API call
 
             try:
                 total_properties = len(properties_data)
-                print(f"[API-MagicBricks] Streaming {total_properties} properties in batches of {batch_size}")
 
-                # Process properties in batches
-                for i in range(0, total_properties, batch_size):
-                    # Get batch slice (e.g., 0:10, then 10:20)
-                    batch = properties_data[i:i + batch_size]
-                    batch_num = (i // batch_size) + 1
-                    total_batches = (total_properties + batch_size - 1) // batch_size
+                if from_cache:
+                    # Stream cached properties directly (already scored)
+                    print(f"[API-MagicBricks] Streaming {total_properties} cached properties")
 
-                    print(f"[API-MagicBricks] Processing batch {batch_num}/{total_batches} ({len(batch)} properties)...")
+                    # Stream in batches for consistent UX
+                    for i in range(0, total_properties, batch_size):
+                        batch = properties_data[i:i + batch_size]
 
-                    # Score entire batch in ONE API call using MagicBricks-specific scoring
-                    scored_batch = await scoring_service._score_batch_magicbricks(batch, orig_query)
+                        for property in batch:
+                            yield f"event: property\n"
+                            yield f"data: {json.dumps(property)}\n\n"
 
-                    # Stream each scored property from this batch immediately
-                    for scored_property in scored_batch:
-                        yield f"event: property\n"
-                        yield f"data: {json.dumps(scored_property)}\n\n"
+                    # Send completion event
+                    completion_data = {
+                        "count": total_properties,
+                        "source": "magicbricks",
+                        "scraped_at": scraped_at,
+                        "from_cache": True,
+                        "api_calls_made": 0
+                    }
+                    yield f"event: complete\n"
+                    yield f"data: {json.dumps(completion_data)}\n\n"
 
-                    print(f"[API-MagicBricks] ✓ Streamed batch {batch_num}/{total_batches}")
+                    print(f"[API-MagicBricks] ✓ Streamed {total_properties} cached properties")
 
-                # Send completion event
-                completion_data = {
-                    "count": total_properties,
-                    "source": "magicbricks",
-                    "scraped_at": scraped_at,
-                    "api_calls_made": (total_properties + batch_size - 1) // batch_size
-                }
-                yield f"event: complete\n"
-                yield f"data: {json.dumps(completion_data)}\n\n"
+                else:
+                    # Fresh scrape - score and stream
+                    print(f"[API-MagicBricks] Streaming {total_properties} properties in batches of {batch_size}")
+                    scoring_service = RelevanceScoringService()
+                    all_scored_properties = []
 
-                print(f"[API-MagicBricks] ✓ Streaming complete. Made {completion_data['api_calls_made']} API calls for {total_properties} properties")
+                    # Process properties in batches
+                    for i in range(0, total_properties, batch_size):
+                        # Get batch slice (e.g., 0:5, then 5:10)
+                        batch = properties_data[i:i + batch_size]
+                        batch_num = (i // batch_size) + 1
+                        total_batches = (total_properties + batch_size - 1) // batch_size
+
+                        print(f"[API-MagicBricks] Processing batch {batch_num}/{total_batches} ({len(batch)} properties)...")
+
+                        # Score entire batch in ONE API call using MagicBricks-specific scoring
+                        scored_batch = await scoring_service._score_batch_magicbricks(batch, orig_query)
+
+                        # Collect scored properties for caching
+                        all_scored_properties.extend(scored_batch)
+
+                        # Stream each scored property from this batch immediately
+                        for scored_property in scored_batch:
+                            yield f"event: property\n"
+                            yield f"data: {json.dumps(scored_property)}\n\n"
+
+                        print(f"[API-MagicBricks] ✓ Streamed batch {batch_num}/{total_batches}")
+
+                    # Save all scored properties to cache
+                    print(f"[API-MagicBricks] Saving {len(all_scored_properties)} scored properties to cache")
+                    await DataPersistenceService.save_scraped_properties(
+                        url=decoded_url,
+                        properties=all_scored_properties,
+                        merge=True,
+                        source="magicbricks"
+                    )
+
+                    # Send completion event
+                    completion_data = {
+                        "count": total_properties,
+                        "source": "magicbricks",
+                        "scraped_at": scraped_at,
+                        "from_cache": False,
+                        "api_calls_made": (total_properties + batch_size - 1) // batch_size
+                    }
+                    yield f"event: complete\n"
+                    yield f"data: {json.dumps(completion_data)}\n\n"
+
+                    print(f"[API-MagicBricks] ✓ Streaming complete. Made {completion_data['api_calls_made']} API calls for {total_properties} properties")
 
             except Exception as e:
                 print(f"[API-MagicBricks] Error during scoring: {e}")

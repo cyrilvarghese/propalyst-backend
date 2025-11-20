@@ -3,7 +3,7 @@ services:
     name: propalyst-backend
     env: docker
     region: oregon
-    plan: starter
+    plan: standard  # Upgraded from starter (512MB → 2GB) to handle Playwright/Chromium
     branch: master
     dockerfilePath: ./Dockerfile
     dockerContext: .
