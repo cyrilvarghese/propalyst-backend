@@ -18,7 +18,8 @@
       "Bash(providers/scrapers/magicbricks/magicbricks_scraper.py )",
       "Bash(routers/scraping_router.py)",
       "Bash(docker build:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(python -m py_compile:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
