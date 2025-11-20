@@ -50,45 +50,9 @@ async def get_all_listings(
         raise HTTPException(status_code=500, detail=f"Error retrieving listings: {str(e)}")
 
 
-@router.get("/listings/{listing_id}", response_model=CreaWappResponse)
-async def get_listing_by_id(listing_id: str):
-    """
-    Get a specific listing by ID
-
-    Args:
-        listing_id: UUID of the listing
-
-    Returns:
-        CreaWappResponse with single listing data
-
-    Example:
-        GET /api/crea/listings/550e8400-e29b-41d4-a716-446655440000
-    """
-    try:
-        print(f"[API-CREA] Retrieving listing: {listing_id}")
-
-        result = await SupabaseService.get_listing_by_id(listing_id)
-
-        if not result["success"]:
-            raise HTTPException(status_code=404, detail=result["message"])
-
-        # Wrap single listing in array for consistent response format
-        return {
-            "success": True,
-            "data": [result["data"]] if result["data"] else [],
-            "count": 1 if result["data"] else 0,
-            "message": result["message"]
-        }
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        print(f"[API-CREA] ✗ Error retrieving listing: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error retrieving listing: {str(e)}")
-
-
 @router.get("/listings/search", response_model=CreaWappResponse)
 async def search_listings(
+    agent_name: Optional[str] = Query(None, description="Filter by agent name or company (partial match)"),
     location: Optional[str] = Query(None, description="Filter by location (partial match)"),
     property_type: Optional[str] = Query(None, description="Filter by property type"),
     configuration: Optional[str] = Query(None, description="Filter by BHK configuration"),
@@ -98,11 +62,12 @@ async def search_listings(
     limit: int = Query(100, description="Maximum number of results")
 ):
     """
-    Search listings with filters
+    Search listings with filters (exact match, no fuzzy)
 
-    Query parameters allow filtering by multiple criteria.
+    Query parameters allow filtering by multiple criteria with AND logic.
 
     Args:
+        agent_name: Agent or company name (partial match, e.g., 'Tajamul', 'TREND SHELTERS')
         location: Property location (supports partial matching, e.g., 'Indiranagar')
         property_type: Property type (e.g., 'Apartment', 'Villa', 'Plot')
         configuration: BHK configuration (e.g., '3 BHK', '4 BHK')
@@ -114,11 +79,19 @@ async def search_listings(
     Returns:
         CreaWappResponse with filtered listings
 
-    Example:
-        GET /api/crea/listings/search?location=Indiranagar&configuration=3 BHK&transaction_type=Sale&max_price=50000000
+    Examples:
+        # Search by agent
+        GET /api/crea/listings/search?agent_name=Tajamul
+
+        # Multiple filters (AND condition)
+        GET /api/crea/listings/search?agent_name=TREND%20SHELTERS&location=Indiranagar&configuration=3%20BHK
+
+        # With price range
+        GET /api/crea/listings/search?location=Indiranagar&transaction_type=Sale&min_price=5000000&max_price=10000000
     """
     try:
         print(f"[API-CREA] Searching listings with filters:")
+        print(f"[API-CREA] - agent_name: {agent_name}")
         print(f"[API-CREA] - location: {location}")
         print(f"[API-CREA] - property_type: {property_type}")
         print(f"[API-CREA] - configuration: {configuration}")
@@ -126,6 +99,7 @@ async def search_listings(
         print(f"[API-CREA] - price range: {min_price} - {max_price}")
 
         result = await SupabaseService.search_listings(
+            agent_name=agent_name,
             location=location,
             property_type=property_type,
             configuration=configuration,
@@ -220,7 +194,47 @@ async def fuzzy_search_location(
         raise HTTPException(status_code=500, detail=f"Error in fuzzy location search: {str(e)}")
 
 
-@router.post("/format-message", response_model=MessageFormatResponse)
+@router.get("/listings/{listing_id}", response_model=CreaWappResponse)
+async def get_listing_by_id(listing_id: str):
+    """
+    Get a specific listing by ID
+
+    IMPORTANT: This route must be defined AFTER all /listings/search/* routes
+    to avoid FastAPI matching "search" as a listing_id parameter.
+
+    Args:
+        listing_id: UUID of the listing
+
+    Returns:
+        CreaWappResponse with single listing data
+
+    Example:
+        GET /api/crea/listings/550e8400-e29b-41d4-a716-446655440000
+    """
+    try:
+        print(f"[API-CREA] Retrieving listing: {listing_id}")
+
+        result = await SupabaseService.get_listing_by_id(listing_id)
+
+        if not result["success"]:
+            raise HTTPException(status_code=404, detail=result["message"])
+
+        # Wrap single listing in array for consistent response format
+        return {
+            "success": True,
+            "data": [result["data"]] if result["data"] else [],
+            "count": 1 if result["data"] else 0,
+            "message": result["message"]
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[API-CREA] ✗ Error retrieving listing: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error retrieving listing: {str(e)}")
+
+
+@router.post("/get-whatsapp-message", response_model=MessageFormatResponse)
 async def format_broker_message(request: MessageFormatRequest):
     """
     Format a raw property listing into a friendly WhatsApp outreach message
@@ -278,3 +292,145 @@ async def format_broker_message(request: MessageFormatRequest):
     except Exception as e:
         print(f"[API-CREA] ✗ Error formatting message: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error formatting message: {str(e)}")
+
+
+@router.get("/listings/search/agent", response_model=CreaWappResponse)
+async def fuzzy_search_agent(
+    agent_name: str = Query(..., description="Agent name to search (handles typos and variations)"),
+    limit: int = Query(100, description="Maximum number of results")
+):
+    """
+    Fuzzy search for properties by agent name (typo-tolerant)
+
+    Searches across agent_name, company_name, and raw_message fields.
+    Handles common spelling variations and typos in agent/company names.
+
+    Args:
+        agent_name: Agent or company name (e.g., "Tajamul", "TREND SHELTERS")
+        limit: Maximum number of results (default: 100)
+
+    Returns:
+        CreaWappResponse with matching listings
+
+    Examples:
+        # Search for agent Tajamul
+        GET /api/crea/listings/search/agent?agent_name=Tajamul
+
+        # Search for company (also matches variations)
+        GET /api/crea/listings/search/agent?agent_name=TREND%20SHELTERS
+
+        # Handles typos
+        GET /api/crea/listings/search/agent?agent_name=Tajmul
+    """
+    try:
+        print(f"[API-CREA] Fuzzy searching agent: '{agent_name}'")
+
+        result = await SupabaseService.fuzzy_search_agent_name(agent_name=agent_name, limit=limit)
+        return result
+
+    except Exception as e:
+        print(f"[API-CREA] ✗ Error in fuzzy agent search: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error in fuzzy agent search: {str(e)}")
+
+
+@router.get("/listings/search/property", response_model=CreaWappResponse)
+async def fuzzy_search_property(
+    property_query: str = Query(..., description="Property search term (type, configuration, or project name)"),
+    limit: int = Query(100, description="Maximum number of results")
+):
+    """
+    Fuzzy search for properties by type, configuration, or project (typo-tolerant)
+
+    Searches across property_type, configuration, project_name, and raw_message fields.
+    Handles variations like "3BHK", "3 BHK", "three bhk", "Apartment", "Villa", etc.
+
+    Args:
+        property_query: Property search term (e.g., "3BHK", "Villa", "Apartment", "Prestige")
+        limit: Maximum number of results (default: 100)
+
+    Returns:
+        CreaWappResponse with matching listings
+
+    Examples:
+        # Search for 3 BHK (matches "3BHK", "3 BHK", etc.)
+        GET /api/crea/listings/search/property?property_query=3BHK
+
+        # Search for property type
+        GET /api/crea/listings/search/property?property_query=Villa
+
+        # Search for project name
+        GET /api/crea/listings/search/property?property_query=Prestige
+
+        # Handles typos
+        GET /api/crea/listings/search/property?property_query=Apartmnt
+    """
+    try:
+        print(f"[API-CREA] Fuzzy searching property: '{property_query}'")
+
+        result = await SupabaseService.fuzzy_search_property(property_query=property_query, limit=limit)
+        return result
+
+    except Exception as e:
+        print(f"[API-CREA] ✗ Error in fuzzy property search: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error in fuzzy property search: {str(e)}")
+
+
+@router.get("/search", response_model=CreaWappResponse)
+async def unified_search(
+    agent_name: Optional[str] = Query(None, description="Agent or company name filter"),
+    property_query: Optional[str] = Query(None, description="Property type, configuration, or project filter"),
+    location: Optional[str] = Query(None, description="Location filter"),
+    limit: int = Query(100, description="Maximum number of results")
+):
+    """
+    Unified search with AND logic across agent, property, and location
+
+    Accepts 1, 2, or 3 search parameters. All provided parameters are combined with AND logic.
+    Uses hybrid strategy: exact database matching + fuzzy matching for comprehensive results.
+
+    Args:
+        agent_name: Filter by agent or company name (optional)
+        property_query: Filter by property type, configuration, or project (optional)
+        location: Filter by location (optional)
+        limit: Maximum results (default: 100)
+
+    Returns:
+        CreaWappResponse with listings matching ALL provided filters
+
+    Examples:
+        # All 3 filters (AND condition)
+        GET /api/crea/search?agent_name=Tajamul&property_query=3BHK&location=Indiranagar
+
+        # 2 filters
+        GET /api/crea/search?property_query=Villa&location=Whitefield
+
+        # 1 filter
+        GET /api/crea/search?location=Koramangala
+
+        # With limit
+        GET /api/crea/search?agent_name=TREND%20SHELTERS&limit=50
+    """
+    try:
+        # Validate at least one parameter is provided
+        if not any([agent_name, property_query, location]):
+            raise HTTPException(
+                status_code=400,
+                detail="At least one search parameter is required (agent_name, property_query, or location)"
+            )
+
+        print(f"[API-CREA] Unified search: agent={agent_name}, property={property_query}, location={location}")
+
+        result = await SupabaseService.unified_search(
+            agent_name=agent_name,
+            property_query=property_query,
+            location=location,
+            limit=limit
+        )
+
+        return result
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[API-CREA] ✗ Error in unified search: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error in unified search: {str(e)}")

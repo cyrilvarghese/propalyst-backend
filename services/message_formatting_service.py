@@ -72,27 +72,25 @@ class MessageFormattingService:
 
 CONTEXT:
 - Naresh is reaching OUT to the broker who posted this listing
-- The broker's name is: {agent_name}
 - He wants to express interest on behalf of his client
 - Goal: Request more details or schedule a viewing
 
 REQUIREMENTS:
 - Keep it VERY SHORT (under 100 words)
-- Start with "Hi {agent_name}!" to address the broker
 - {emoji_instruction}
 - Tone: {tone_description}
 - Format for WhatsApp (short and direct)
 
 TEMPLATE STRUCTURE:
-[Greeting with broker's name: "Hi {agent_name}!"]
+[Friendly greeting]
 [Express interest in their property - reference 2-3 key details from listing]
 [Mention having a matching client]
 [Request next steps - viewing/details]
-[Signature: Naresh, Real Broker]
+[Signature]
 
 EXAMPLE OUTPUT:
 ```
-Hi {agent_name}! 👋
+Hi! 👋
 
 I came across your 4 BHK apartment listing in Brunton Road, MG Road cross. The property looks like a great fit for one of my clients!
 
@@ -104,8 +102,9 @@ They're specifically looking for:
 Could we schedule a viewing? I'd love to discuss this further.
 
 Thanks!
-Naresh
+Mirza 
 Real Broker
+ 
 ```
 
 BROKER'S PROPERTY LISTING:
