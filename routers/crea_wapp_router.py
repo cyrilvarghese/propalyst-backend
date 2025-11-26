@@ -441,3 +441,82 @@ async def unified_search(
     except Exception as e:
         print(f"[API-CREA] ✗ Error in unified search: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error in unified search: {str(e)}")
+
+
+# ============================================================================
+# Agent Summary Endpoints
+# ============================================================================
+
+@router.get("/agents/summary")
+async def get_all_agents_summary(
+    limit: int = Query(100, description="Maximum number of agents to return"),
+    offset: int = Query(0, description="Number of agents to skip for pagination")
+):
+    """
+    Get aggregated summary for all agents
+
+    Returns one row per agent with all their activity aggregated including:
+    - Total posts, first/last seen dates
+    - Listing type breakdown (sale, rent, requirements)
+    - Property types and locations
+    - Price and size statistics
+    - BHK configurations
+
+    Args:
+        limit: Maximum number of agents (default: 100)
+        offset: Number of agents to skip (default: 0)
+
+    Returns:
+        List of agent summaries
+
+    Example:
+        GET /api/crea/agents/summary?limit=50&offset=0
+    """
+    try:
+        print(f"[API-CREA] Retrieving agent summaries (limit: {limit}, offset: {offset})")
+
+        result = await SupabaseService.get_agent_summaries(limit=limit, offset=offset)
+
+        return result
+
+    except Exception as e:
+        print(f"[API-CREA] ✗ Error retrieving agent summaries: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error retrieving agent summaries: {str(e)}")
+
+
+@router.get("/agents/summary/{agent_contact}")
+async def get_agent_summary_by_contact(agent_contact: str):
+    """
+    Get aggregated summary for a specific agent by contact number
+
+    Returns comprehensive statistics for the agent including:
+    - Total posts, activity date range
+    - Listing type breakdown
+    - Property types, locations, configurations
+    - Price and size ranges
+    - Sample raw messages
+
+    Args:
+        agent_contact: Agent phone number (e.g., +919876543210)
+
+    Returns:
+        Agent summary data
+
+    Example:
+        GET /api/crea/agents/summary/+919876543210
+    """
+    try:
+        print(f"[API-CREA] Retrieving summary for agent: {agent_contact}")
+
+        result = await SupabaseService.get_agent_summary_by_contact(agent_contact)
+
+        if not result or not result.get("data"):
+            raise HTTPException(status_code=404, detail=f"No data found for agent {agent_contact}")
+
+        return result
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[API-CREA] ✗ Error retrieving agent summary: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error retrieving agent summary: {str(e)}")

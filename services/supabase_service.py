@@ -164,16 +164,16 @@ class SupabaseService:
                 query = query.ilike("location", f"%{location}%")
 
             if property_type:
-                query = query.eq("property_type", property_type)
+                query = query.ilike("property_type", property_type)
 
             if configuration:
-                query = query.eq("configuration", configuration)
+                query = query.ilike("configuration", f"%{configuration}%")
 
             if listing_type:
-                query = query.eq("listing_type", listing_type)
+                query = query.ilike("listing_type", listing_type)
 
             if transaction_type:
-                query = query.eq("transaction_type", transaction_type)
+                query = query.ilike("transaction_type", transaction_type)
 
             if min_price is not None:
                 query = query.gte("price", min_price)
@@ -942,4 +942,241 @@ class SupabaseService:
                 "data": [],
                 "count": 0,
                 "message": f"Error in unified search: {str(e)}"
+            }
+
+    # ============================================================================
+    # Agent Profiling Methods
+    # ============================================================================
+
+    @classmethod
+    async def get_top_agents_grouped(cls, skip_recent_hours: int = 24) -> List[Dict[str, Any]]:
+        """
+        Get top agents with their grouped messages from the view
+
+        Args:
+            skip_recent_hours: Skip agents profiled within last N hours (default: 24)
+
+        Returns:
+            List of agent dictionaries with grouped messages
+        """
+        try:
+            client = cls._get_client()
+
+            # Query the grouped view
+            response = client.table("crea_top_agents_3m_msgs_grouped")\
+                .select("*")\
+                .execute()
+
+            agents = response.data if response.data else []
+
+            print(f"[Supabase] ✓ Retrieved {len(agents)} top agents from grouped view")
+
+            return agents
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error retrieving top agents: {e}")
+            raise Exception(f"Failed to retrieve top agents: {str(e)}")
+
+    @classmethod
+    async def upsert_agent_profile(cls, profile_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Upsert agent profile into agent_profiles_clean table
+
+        Args:
+            profile_data: Dictionary with all profile fields
+
+        Returns:
+            Result dictionary with success status
+        """
+        try:
+            client = cls._get_client()
+
+            agent_contact = profile_data.get("agent_contact")
+
+            # Upsert the profile (conflict on agent_contact primary key)
+            response = client.table("agent_profiles_clean")\
+                .upsert(profile_data, on_conflict="agent_contact")\
+                .execute()
+
+            if response.data:
+                print(f"[Supabase] ✓ Upserted profile for agent {agent_contact}")
+                return {
+                    "success": True,
+                    "data": response.data[0],
+                    "message": f"Profile saved for {agent_contact}"
+                }
+            else:
+                return {
+                    "success": False,
+                    "data": None,
+                    "message": f"Failed to upsert profile for {agent_contact}"
+                }
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error upserting agent profile: {e}")
+            return {
+                "success": False,
+                "data": None,
+                "message": f"Error upserting profile: {str(e)}"
+            }
+
+    @classmethod
+    async def get_agent_profile(cls, agent_contact: str) -> Optional[Dict[str, Any]]:
+        """
+        Get a specific agent profile by contact
+
+        Args:
+            agent_contact: Agent phone number
+
+        Returns:
+            Agent profile dictionary or None if not found
+        """
+        try:
+            client = cls._get_client()
+
+            response = client.table("agent_profiles_clean")\
+                .select("*")\
+                .eq("agent_contact", agent_contact)\
+                .execute()
+
+            if response.data and len(response.data) > 0:
+                print(f"[Supabase] ✓ Retrieved profile for agent {agent_contact}")
+                return response.data[0]
+            else:
+                print(f"[Supabase] No profile found for agent {agent_contact}")
+                return None
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error retrieving agent profile: {e}")
+            return None
+
+    @classmethod
+    async def get_all_agent_profiles(cls, limit: int = 100, offset: int = 0) -> Dict[str, Any]:
+        """
+        Get all agent profiles with pagination
+
+        Args:
+            limit: Maximum number of profiles to return
+            offset: Number of profiles to skip
+
+        Returns:
+            Dictionary with success status and profiles data
+        """
+        try:
+            client = cls._get_client()
+
+            response = client.table("agent_profiles_clean")\
+                .select("*")\
+                .order("generated_at", desc=True)\
+                .limit(limit)\
+                .offset(offset)\
+                .execute()
+
+            profiles = response.data if response.data else []
+
+            print(f"[Supabase] ✓ Retrieved {len(profiles)} agent profiles")
+
+            return {
+                "success": True,
+                "data": profiles,
+                "count": len(profiles),
+                "message": f"Retrieved {len(profiles)} agent profiles"
+            }
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error retrieving agent profiles: {e}")
+            return {
+                "success": False,
+                "data": [],
+                "count": 0,
+                "message": f"Error retrieving profiles: {str(e)}"
+            }
+
+    # ============================================================================
+    # Agent Summary Methods (from crea_agent_summary view)
+    # ============================================================================
+
+    @classmethod
+    async def get_agent_summaries(cls, limit: int = 100, offset: int = 0) -> Dict[str, Any]:
+        """
+        Get all agent summaries from crea_agent_summary view
+
+        Args:
+            limit: Maximum number of agents to return
+            offset: Number of agents to skip
+
+        Returns:
+            Dictionary with success status and agent summaries
+        """
+        try:
+            client = cls._get_client()
+
+            response = client.table("crea_agent_summary")\
+                .select("*")\
+                .order("total_posts", desc=True)\
+                .limit(limit)\
+                .offset(offset)\
+                .execute()
+
+            summaries = response.data if response.data else []
+
+            print(f"[Supabase] ✓ Retrieved {len(summaries)} agent summaries")
+
+            return {
+                "success": True,
+                "data": summaries,
+                "count": len(summaries),
+                "message": f"Retrieved {len(summaries)} agent summaries"
+            }
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error retrieving agent summaries: {e}")
+            return {
+                "success": False,
+                "data": [],
+                "count": 0,
+                "message": f"Error retrieving agent summaries: {str(e)}"
+            }
+
+    @classmethod
+    async def get_agent_summary_by_contact(cls, agent_contact: str) -> Dict[str, Any]:
+        """
+        Get summary for a specific agent by contact
+
+        Args:
+            agent_contact: Agent phone number
+
+        Returns:
+            Dictionary with success status and agent summary
+        """
+        try:
+            client = cls._get_client()
+
+            response = client.table("crea_agent_summary")\
+                .select("*")\
+                .eq("agent_contact", agent_contact)\
+                .execute()
+
+            if response.data and len(response.data) > 0:
+                summary = response.data[0]
+                print(f"[Supabase] ✓ Retrieved summary for agent {agent_contact}")
+                return {
+                    "success": True,
+                    "data": summary,
+                    "message": f"Summary found for {agent_contact}"
+                }
+            else:
+                print(f"[Supabase] No summary found for agent {agent_contact}")
+                return {
+                    "success": False,
+                    "data": None,
+                    "message": f"No data found for agent {agent_contact}"
+                }
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error retrieving agent summary: {e}")
+            return {
+                "success": False,
+                "data": None,
+                "message": f"Error retrieving agent summary: {str(e)}"
             }

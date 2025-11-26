@@ -11,11 +11,15 @@ from .search_router import router as search_router
 from .scraping_router import router as scraping_router
 from .crea_wapp_router import router as crea_wapp_router
 from .shortlist_router import router as shortlist_router
+from .agent_profile_router import router as agent_profile_router
+
 __all__ = [
     "ui_router",
     "propalyst_router",
     "search_router",
     "scraping_router",
     "crea_wapp_router",
-    "shortlist_router"
+    "shortlist_router",
+    "agent_profile_router"
+    
 ]

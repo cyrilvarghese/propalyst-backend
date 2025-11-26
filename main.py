@@ -38,7 +38,7 @@ from dotenv import load_dotenv
 from graphs import ui_generator_graph, propalyst_graph
 
 # Import routers
-from routers import ui_router, propalyst_router, search_router, scraping_router, shortlist_router, crea_wapp_router
+from routers import ui_router, propalyst_router, search_router, scraping_router, shortlist_router, crea_wapp_router, agent_profile_router
 
 # Load environment variables from .env file
 load_dotenv()
@@ -84,6 +84,7 @@ app.include_router(search_router)
 app.include_router(scraping_router)
 app.include_router(shortlist_router)
 app.include_router(crea_wapp_router)
+app.include_router(agent_profile_router)
 
 # ============================================================================
 # HEALTH CHECK ENDPOINTS
