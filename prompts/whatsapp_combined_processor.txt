@@ -1,0 +1,90 @@
+You are analyzing a WhatsApp property listing message to:
+1. Determine if it contains MULTIPLE DISTINCT property listings.
+2. Split them into individual text blocks.
+3. Extract structured data from each listing.
+
+---
+
+## TASK 1: SPLITTING STRATEGY
+
+**Determine if the message contains multiple separate property listings.**
+
+SPLIT ONLY IF:
+- Multiple DISTINCT properties (different addresses, projects, or units).
+- Clearly separated by numbers (1), 2), 3)) or headers ("Property 1:", "*Location X*").
+- Clear blank lines between distinct properties.
+
+DO NOT SPLIT IF:
+- Multiple features of ONE property.
+- Multiple rooms/floors in ONE building (e.g., "1st floor 3000sqft, 2nd floor 3000sqft" = ONE listing).
+- A list of amenities.
+- Different unit types in the SAME project (e.g., "2BHK and 3BHK available in Sobha City").
+
+CRITICAL CONTEXT RULES (Shared Info):
+1. **SHARED FOOTERS:** If the message ends with contact details (Name/Phone) that apply to the whole list, APPEND this footer to EVERY split listing.
+2. **SHARED HEADERS:** If the message starts with a location or project name (e.g., "Available properties in KORAMANGALA:") that applies to the whole list, PREPEND this header to EVERY split listing so the location data is not lost.
+3. **CLEANUP:** Remove WhatsApp metadata timestamps (e.g., "[20/10/25, 1:07:15 PM]") from the text.
+
+---
+
+## TASK 2: STRUCTURED DATA EXTRACTION
+
+For EACH listing (after splitting), extract the following fields. Return `null` if data is not found.
+
+### MESSAGE TYPE (Choose exactly one)
+- `greeting` (Hi/Hello only)
+- `garbage` (Spam/Irrelevant)
+- `supply_sale` (Property for sale)
+- `supply_rent` (Property for rent/lease)
+- `demand_buy` (Buyer requirement)
+- `demand_rent` (Tenant requirement)
+
+### CONTACT DETAILS
+- **agent_name**: Extract name from message/footer.
+- **agent_contact**: Extract phone number.
+
+### PROPERTY DETAILS
+- **property_type**: `apartment`, `villa`, `independent_house`, `plot`, `office`, `retail`, `warehouse`, `pg_hostel`, `farmhouse`.
+- **area_sqft**: Number only (e.g., 2500). If range (1200-1500), use average.
+- **price**: TOTAL numeric value in Rupees.
+  - Examples: "1.5 Cr" -> 15000000, "50k" -> 50000.
+  - **CRITICAL FOR Per sq foot:** If price is "Rs 90/sqft", CALCULATE the total (Rate * Area). If area is missing, use `null`.
+- **price_text**: Keep original text (e.g., "90/- per sqft negotiable" or "1.2 Cr + Reg").
+- **location**: Main locality (e.g., "Indiranagar").
+- **project_name**: Building/Society name.
+- **bhk_config**: Number of bedrooms (e.g., 2, 3, 4). `null` for plots/commercial.
+- **furnishing_status**: `unfurnished`, `semi_furnished`, `fully_furnished`, `bare_shell`.
+- **facing_direction**: `north`, `east`, `west`, `south`, `north_east`, etc.
+- **special_features**: Array of strings. Include keywords like: `["corner_plot", "gated_community", "khata_b", "negotiable", "metro_nearby"]`.
+
+---
+
+## INPUT MESSAGE:
+{message_text}
+
+---
+
+## RESPOND IN JSON FORMAT:
+
+{{
+  "contains_multiple": true/false,
+  "count": number_of_listings,
+  "listings": [
+    {{
+      "text": "Full split text with shared headers/footers included",
+      "message_type": "supply_sale",
+      "agent_name": "Name",
+      "agent_contact": "Number",
+      "property_type": "apartment",
+      "bhk_config": 2,
+      "area_sqft": 1200,
+      "price": 12500000,
+      "price_text": "1.25 Cr Negotiable",
+      "location": "Whitefield",
+      "project_name": "Prestige Shantiniketan",
+      "furnishing_status": "semi_furnished",
+      "facing_direction": "east",
+      "special_features": ["pool_view", "high_floor"]
+    }}
+  ]
+}}

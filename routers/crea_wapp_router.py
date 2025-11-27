@@ -104,7 +104,7 @@ async def search_listings(
         print(f"[API-CREA] - transaction_type: {transaction_type}")
         print(f"[API-CREA] - price range: {min_price} - {max_price}")
 
-        result = await SupabaseService.search_listings(
+        result = await SupabaseService.search_listings_exact_match(
             agent_name=agent_name,
             location=location,
             property_type=property_type,
@@ -162,11 +162,11 @@ async def search_raw_message(
         raise HTTPException(status_code=500, detail=f"Error searching raw messages: {str(e)}")
 
 
-@router.get("/listings/search/location", response_model=CreaWappResponse)
-async def fuzzy_search_location(
-    location: str = Query(..., description="Location name to search (handles typos and variations)"),
-    limit: int = Query(100, description="Maximum number of results")
-):
+# @router.get("/listings/search/location", response_model=CreaWappResponse)
+# async def fuzzy_search_location(
+#     location: str = Query(..., description="Location name to search (handles typos and variations)"),
+#     limit: int = Query(100, description="Maximum number of results")
+# ):
     """
     Fuzzy search for properties by location (typo-tolerant)
 
@@ -301,85 +301,85 @@ async def format_broker_message(request: MessageFormatRequest):
         raise HTTPException(status_code=500, detail=f"Error formatting message: {str(e)}")
 
 
-@router.get("/listings/search/agent", response_model=CreaWappResponse)
-async def fuzzy_search_agent(
-    agent_name: str = Query(..., description="Agent name to search (handles typos and variations)"),
-    limit: int = Query(100, description="Maximum number of results")
-):
-    """
-    Fuzzy search for properties by agent name (typo-tolerant)
+# @router.get("/listings/search/agent", response_model=CreaWappResponse)
+# async def fuzzy_search_agent(
+#     agent_name: str = Query(..., description="Agent name to search (handles typos and variations)"),
+#     limit: int = Query(100, description="Maximum number of results")
+# ):
+#     """
+#     Fuzzy search for properties by agent name (typo-tolerant)
 
-    Searches across agent_name, company_name, and raw_message fields.
-    Handles common spelling variations and typos in agent/company names.
+#     Searches across agent_name, company_name, and raw_message fields.
+#     Handles common spelling variations and typos in agent/company names.
 
-    Args:
-        agent_name: Agent or company name (e.g., "Tajamul", "TREND SHELTERS")
-        limit: Maximum number of results (default: 100)
+#     Args:
+#         agent_name: Agent or company name (e.g., "Tajamul", "TREND SHELTERS")
+#         limit: Maximum number of results (default: 100)
 
-    Returns:
-        CreaWappResponse with matching listings
+#     Returns:
+#         CreaWappResponse with matching listings
 
-    Examples:
-        # Search for agent Tajamul
-        GET /api/crea/listings/search/agent?agent_name=Tajamul
+#     Examples:
+#         # Search for agent Tajamul
+#         GET /api/crea/listings/search/agent?agent_name=Tajamul
 
-        # Search for company (also matches variations)
-        GET /api/crea/listings/search/agent?agent_name=TREND%20SHELTERS
+#         # Search for company (also matches variations)
+#         GET /api/crea/listings/search/agent?agent_name=TREND%20SHELTERS
 
-        # Handles typos
-        GET /api/crea/listings/search/agent?agent_name=Tajmul
-    """
-    try:
-        print(f"[API-CREA] Fuzzy searching agent: '{agent_name}'")
+#         # Handles typos
+#         GET /api/crea/listings/search/agent?agent_name=Tajmul
+#     """
+#     try:
+#         print(f"[API-CREA] Fuzzy searching agent: '{agent_name}'")
 
-        result = await SupabaseService.fuzzy_search_agent_name(agent_name=agent_name, limit=limit)
-        return result
+#         result = await SupabaseService.fuzzy_search_agent_name(agent_name=agent_name, limit=limit)
+#         return result
 
-    except Exception as e:
-        print(f"[API-CREA] ✗ Error in fuzzy agent search: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error in fuzzy agent search: {str(e)}")
+#     except Exception as e:
+#         print(f"[API-CREA] ✗ Error in fuzzy agent search: {str(e)}")
+#         raise HTTPException(status_code=500, detail=f"Error in fuzzy agent search: {str(e)}")
 
 
-@router.get("/listings/search/property", response_model=CreaWappResponse)
-async def fuzzy_search_property(
-    property_query: str = Query(..., description="Property search term (type, configuration, or project name)"),
-    limit: int = Query(100, description="Maximum number of results")
-):
-    """
-    Fuzzy search for properties by type, configuration, or project (typo-tolerant)
+# @router.get("/listings/search/property", response_model=CreaWappResponse)
+# async def fuzzy_search_property(
+#     property_query: str = Query(..., description="Property search term (type, configuration, or project name)"),
+#     limit: int = Query(100, description="Maximum number of results")
+# ):
+#     """
+#     Fuzzy search for properties by type, configuration, or project (typo-tolerant)
 
-    Searches across property_type, configuration, project_name, and raw_message fields.
-    Handles variations like "3BHK", "3 BHK", "three bhk", "Apartment", "Villa", etc.
+#     Searches across property_type, configuration, project_name, and raw_message fields.
+#     Handles variations like "3BHK", "3 BHK", "three bhk", "Apartment", "Villa", etc.
 
-    Args:
-        property_query: Property search term (e.g., "3BHK", "Villa", "Apartment", "Prestige")
-        limit: Maximum number of results (default: 100)
+#     Args:
+#         property_query: Property search term (e.g., "3BHK", "Villa", "Apartment", "Prestige")
+#         limit: Maximum number of results (default: 100)
 
-    Returns:
-        CreaWappResponse with matching listings
+#     Returns:
+#         CreaWappResponse with matching listings
 
-    Examples:
-        # Search for 3 BHK (matches "3BHK", "3 BHK", etc.)
-        GET /api/crea/listings/search/property?property_query=3BHK
+#     Examples:
+#         # Search for 3 BHK (matches "3BHK", "3 BHK", etc.)
+#         GET /api/crea/listings/search/property?property_query=3BHK
 
-        # Search for property type
-        GET /api/crea/listings/search/property?property_query=Villa
+#         # Search for property type
+#         GET /api/crea/listings/search/property?property_query=Villa
 
-        # Search for project name
-        GET /api/crea/listings/search/property?property_query=Prestige
+#         # Search for project name
+#         GET /api/crea/listings/search/property?property_query=Prestige
 
-        # Handles typos
-        GET /api/crea/listings/search/property?property_query=Apartmnt
-    """
-    try:
-        print(f"[API-CREA] Fuzzy searching property: '{property_query}'")
+#         # Handles typos
+#         GET /api/crea/listings/search/property?property_query=Apartmnt
+#     """
+#     try:
+#         print(f"[API-CREA] Fuzzy searching property: '{property_query}'")
 
-        result = await SupabaseService.fuzzy_search_property(property_query=property_query, limit=limit)
-        return result
+#         result = await SupabaseService.fuzzy_search_property(property_query=property_query, limit=limit)
+#         return result
 
-    except Exception as e:
-        print(f"[API-CREA] ✗ Error in fuzzy property search: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error in fuzzy property search: {str(e)}")
+#     except Exception as e:
+#         print(f"[API-CREA] ✗ Error in fuzzy property search: {str(e)}")
+#         raise HTTPException(status_code=500, detail=f"Error in fuzzy property search: {str(e)}")
 
 
 @router.get("/search", response_model=CreaWappResponse)

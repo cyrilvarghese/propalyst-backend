@@ -57,6 +57,56 @@ backend/
 - Flat is better than nested (avoid deep nesting)
 - Separate concerns: routes → services → models
 
+### LLM Prompts
+
+**ALWAYS store LLM prompts in external files**
+
+Never hardcode large prompts inline in service files. Store them in the `prompts/` folder for maintainability.
+
+```
+backend/
+  prompts/                # LLM prompt templates
+    feature_extraction.txt
+    agent_profiling.txt
+  services/
+    feature_service.py    # Load prompts from prompts/ folder
+```
+
+**Pattern:**
+
+```python
+# ✅ GOOD: Load prompt from external file
+from pathlib import Path
+
+class FeatureService:
+    PROMPT_FILE = Path(__file__).parent.parent / "prompts" / "feature_extraction.txt"
+    _prompt_cache: Optional[str] = None
+
+    @classmethod
+    def _load_prompt(cls) -> str:
+        """Load prompt from file (with caching)"""
+        if cls._prompt_cache is None:
+            with open(cls.PROMPT_FILE, 'r') as f:
+                cls._prompt_cache = f.read()
+        return cls._prompt_cache
+
+    @classmethod
+    async def process_with_llm(cls, data: str):
+        prompt = cls._load_prompt().format(input_data=data)
+        # Use prompt with LLM...
+
+# ❌ BAD: Hardcoded inline prompt
+class FeatureService:
+    PROMPT = """Very long prompt text here..."""  # Don't do this!
+```
+
+**Benefits:**
+- Easy to update prompts without touching code
+- Version control friendly (can track prompt changes)
+- Reusable across different services
+- Better organization and discoverability
+- Can be reviewed/edited by non-developers
+
 ---
 
 ## Services Layer (Business Logic)

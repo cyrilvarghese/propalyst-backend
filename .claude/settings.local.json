@@ -19,7 +19,9 @@
       "Bash(routers/scraping_router.py)",
       "Bash(docker build:*)",
       "Bash(git add:*)",
-      "Bash(python -m py_compile:*)"
+      "Bash(python -m py_compile:*)",
+      "Bash(rm:*)",
+      "Bash(python:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

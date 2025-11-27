@@ -1,0 +1,30 @@
+[
+{
+  "message_date": "2025-10-19T15:31:29",
+  "sender_name": "Indu Vittal CREAI Agent",
+  "message_text": "Assetz 63 degree east, Sarjapur A2147 measuring 1191 Sft, 3 bhk 2 toilets is for sale, it s completely vaastu compliant and our first preference is sale and second rent, it s bare shell and ready to move in, great view of Bangalore especially in the nights and is bright and airy,brokerage will be paid since it s self owned \n\nIndu 9886067670",
+  "is_deleted": false,
+  "is_media": false,
+  "source_file": "chunk_099.txt",
+  "line_number": 4,
+  "split_from_original": false,
+  "message_type": "supply_sale",
+  "extracted_agent_name": "Indu",
+  "extracted_agent_contact": "9886067670",
+  "property_type": "apartment",
+  "bhk_config": 3,
+  "area_sqft": 1191,
+  "price": null,
+  "price_text": null,
+  "location": "Sarjapur",
+  "project_name": "Assetz 63 degree east",
+  "furnishing_status": "bare_shell",
+  "parking_count": null,
+  "parking_text": null,
+  "facing_direction": null,
+  "special_features": [
+    "vaastu_compliant",
+    "ready_to_move"
+  ],
+  "llm_notes": null
+}

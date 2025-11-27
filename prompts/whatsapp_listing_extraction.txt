@@ -1,0 +1,130 @@
+You are analyzing a WhatsApp property listing message to extract structured data.
+
+**MESSAGE TYPE CLASSIFICATION** (choose exactly one):
+- `greeting` - Hi, hello, good morning, etc.
+- `garbage` - Spam, irrelevant, or unintelligible
+- `generic_info` - General property market info, tips, news
+- `supply_sale` - Property available for sale
+- `supply_rent` - Property available for rent/lease
+- `demand_buy` - Buyer requirement/looking to buy
+- `demand_rent` - Tenant requirement/looking to rent
+
+**AGENT NAME** (agent_name):
+- Extract the agent's name or company name if mentioned in the message
+- Examples: "Rajesh", "Priya Sharma", "Contact Ramesh"
+- Set to null if not mentioned
+
+**AGENT CONTACT** (agent_contact):
+- Extract the phone number if mentioned in the message
+- Format: Include country code if present (e.g., "+919876543210" or "9876543210")
+- Set to null if not mentioned
+
+**PROPERTY TYPE** (normalized values):
+- `apartment` - Flat, apartment, unit
+- `villa` - Villa, bungalow
+- `independent_house` - Independent house, standalone house
+- `plot` - Plot, site
+- `land` - Agricultural land, land parcel
+- `office` - Commercial office space
+- `retail` - Shop, retail space, showroom
+- `warehouse` - Warehouse, godown
+- `industrial` - Industrial property, factory
+- `other` - Other property types
+- `null` - Not specified or not applicable
+
+**AREA** (area_sqft):
+- Extract main area in square feet as a number
+- Examples: "2500 sft" → 2500, "1650 sqft" → 1650
+- For ranges like "2400-2600 sq ft", pick middle value: 2500
+- Set to null if not mentioned
+
+**PRICE** (price):
+- Convert to rupees (numeric):
+  * 2.4 Cr → 24000000
+  * 75L or 75 Lakh → 7500000
+  * 80k → 80000
+  * 1.8L → 180000
+- For sale: total price
+- For rent: monthly rent
+- Ignore "Price on request" → set to null
+- Set to null if not mentioned
+
+**PRICE TEXT** (price_text):
+- Human-readable phrase like:
+  * "2.3 Cr slightly negotiable"
+  * "Rent 80k"
+  * "Price on request"
+- Set to null if not mentioned
+
+**LOCATION** (location):
+- Main locality or micro market
+- Examples: "Whitefield", "Indiranagar", "HSR Layout", "Near Manyata Tech Park"
+- Set to null if not mentioned
+
+**PROJECT NAME** (project_name):
+- Building or project name if mentioned
+- Examples: "Sobha Lake Terrace", "Prestige Shantiniketan"
+- Set to null if not mentioned
+
+**FURNISHING STATUS** (furnishing_status):
+- `unfurnished` - No furniture
+- `semi_furnished` - Partially furnished
+- `fully_furnished` - Fully furnished
+- `bare_shell` - Bare shell
+- `warm_shell` - Warm shell
+- `unknown` - Unclear
+- `null` - Not mentioned
+
+**PARKING** (parking_count, parking_text):
+- parking_count: Integer number if explicitly stated (e.g., "2 car parks" → 2)
+- parking_text: Raw text describing parking
+- Set both to null if not mentioned
+
+**FACING DIRECTION** (facing_direction):
+- Normalized values:
+  * `north`, `south`, `east`, `west`
+  * `north_east`, `north_west`, `south_east`, `south_west`
+  * `road_facing`, `park_facing`, `lake_facing`
+  * `unknown` - Unclear
+  * `null` - Not mentioned
+
+**SPECIAL FEATURES** (special_features):
+- Array of feature tags
+- Examples:
+  * `corner_plot`, `lake_view`, `gated_community`
+  * `ready_to_move`, `under_construction`, `duplex`
+  * `swimming_pool`, `gym`, `clubhouse`
+- Empty array [] if none mentioned
+
+**LLM NOTES** (llm_notes):
+- Optional free text notes about anything unusual or noteworthy
+- Set to null if nothing special
+
+**IMPORTANT RULES**:
+1. ALWAYS respond with valid JSON only, no extra text
+2. If unsure about a field, use `null` (don't guess)
+3. message_type is REQUIRED (never null)
+4. special_features is REQUIRED (can be empty array [])
+5. All other fields can be null
+
+**INPUT MESSAGE**:
+{raw_message}
+
+**RESPOND WITH EXACT JSON STRUCTURE**:
+{{
+  "message_type": "...",
+  "agent_name": null,
+  "agent_contact": null,
+  "property_type": null,
+  "area_sqft": null,
+  "price": null,
+  "price_text": null,
+  "location": null,
+  "project_name": null,
+  "furnishing_status": null,
+  "parking_count": null,
+  "parking_text": null,
+  "facing_direction": null,
+  "special_features": [],
+  "llm_notes": null
+}}
