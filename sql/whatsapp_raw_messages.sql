@@ -1,56 +1,56 @@
--- Table for storing raw parsed WhatsApp messages
--- This table stores individual messages parsed from WhatsApp chat export files
+-- WhatsApp Raw Messages Table
+-- Stores ALL parsed messages from WhatsApp exports (after regex split, before LLM processing)
+-- This is Stage 1: Raw data storage with deduplication
 
-create table if not exists public.whatsapp_raw_messages (
-  -- Primary key
-  id uuid primary key default gen_random_uuid(),
+DROP TABLE IF EXISTS public.whatsapp_raw_messages CASCADE;
 
-  -- Parsed message fields
-  message_date timestamptz not null,
-  sender_name text not null,
-  message_text text not null,
+CREATE TABLE public.whatsapp_raw_messages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 
-  -- Message type flags
-  is_deleted boolean default false,
-  is_media boolean default false,
+  -- Deduplication: Hash of message content
+  message_hash text NOT NULL UNIQUE,
 
-  -- Source tracking (optional, for debugging)
+  -- Parsed message fields (from regex)
+  message_date timestamptz NOT NULL,
+  sender_name text NOT NULL,
+  message_text text NOT NULL,
+
+  -- Message type flags (detected by regex)
+  is_deleted boolean DEFAULT false,
+  is_media boolean DEFAULT false,
+
+  -- Source tracking
   source_file text,
   line_number integer,
 
+  -- Processing status
+  processed boolean DEFAULT false,  -- True if sent to LLM and extracted
+  processed_at timestamptz NULL,     -- When it was processed
+
   -- Metadata
-  created_at timestamptz not null default now()
+  created_at timestamptz NOT NULL DEFAULT now()
 );
 
--- Indexes for efficient querying
-create index if not exists idx_whatsapp_raw_message_date
-  on public.whatsapp_raw_messages(message_date desc);
+-- Indexes for performance
+CREATE INDEX IF NOT EXISTS idx_whatsapp_raw_message_hash ON public.whatsapp_raw_messages(message_hash);
+CREATE INDEX IF NOT EXISTS idx_whatsapp_raw_message_date ON public.whatsapp_raw_messages(message_date DESC);
+CREATE INDEX IF NOT EXISTS idx_whatsapp_raw_sender_name ON public.whatsapp_raw_messages(sender_name);
+CREATE INDEX IF NOT EXISTS idx_whatsapp_raw_source_file ON public.whatsapp_raw_messages(source_file);
+CREATE INDEX IF NOT EXISTS idx_whatsapp_raw_processed ON public.whatsapp_raw_messages(processed) WHERE processed = false;
 
-create index if not exists idx_whatsapp_raw_sender_name
-  on public.whatsapp_raw_messages(sender_name);
+-- Comments
+COMMENT ON TABLE public.whatsapp_raw_messages IS 'Raw parsed WhatsApp messages (Stage 1). Stores all messages after regex parsing, before LLM processing.';
+COMMENT ON COLUMN public.whatsapp_raw_messages.message_hash IS 'MD5 hash of message_text + sender_name + message_date for deduplication';
+COMMENT ON COLUMN public.whatsapp_raw_messages.processed IS 'True if message has been sent to LLM and extracted to whatsapp_listing_data';
+COMMENT ON COLUMN public.whatsapp_raw_messages.message_text IS 'Full message body from WhatsApp export (may contain multiple lines)';
 
-create index if not exists idx_whatsapp_raw_source_file
-  on public.whatsapp_raw_messages(source_file);
+-- View: Unprocessed messages (ready for LLM)
+CREATE OR REPLACE VIEW public.whatsapp_raw_messages_unprocessed AS
+SELECT *
+FROM public.whatsapp_raw_messages
+WHERE processed = false
+  AND is_deleted = false
+  AND is_media = false
+ORDER BY message_date ASC;
 
-create index if not exists idx_whatsapp_raw_created_at
-  on public.whatsapp_raw_messages(created_at desc);
-
--- Comment on table
-comment on table public.whatsapp_raw_messages is
-  'Raw parsed WhatsApp messages from chat export files. Each row represents a single message extracted from the export.';
-
--- Comments on columns
-comment on column public.whatsapp_raw_messages.message_date is
-  'Timestamp from the WhatsApp export (when the message was sent)';
-comment on column public.whatsapp_raw_messages.sender_name is
-  'Name or phone number of the message sender as it appears in the export';
-comment on column public.whatsapp_raw_messages.message_text is
-  'Full message body, may include multiple lines';
-comment on column public.whatsapp_raw_messages.is_deleted is
-  'True if the message was deleted (contains "This message was deleted")';
-comment on column public.whatsapp_raw_messages.is_media is
-  'True if the message is media (contains "image omitted", "video omitted", etc.)';
-comment on column public.whatsapp_raw_messages.source_file is
-  'Optional: name of the source file this message was parsed from';
-comment on column public.whatsapp_raw_messages.line_number is
-  'Optional: line number in the source file where this message started';
+COMMENT ON VIEW public.whatsapp_raw_messages_unprocessed IS 'Unprocessed raw messages ready for LLM extraction (excludes deleted/media)';

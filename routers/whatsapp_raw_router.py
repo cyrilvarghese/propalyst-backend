@@ -4,22 +4,15 @@ WhatsApp Raw Messages Router
 API endpoints for parsing WhatsApp chat exports and managing raw messages.
 """
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Query
-from typing import Optional
-from datetime import datetime
-import tempfile
-import os
+from fastapi import APIRouter, UploadFile, File
+from fastapi.responses import StreamingResponse
+from datetime import datetime, timedelta
 import json
-from pathlib import Path
+import asyncio
 
 from services.whatsapp_parser_service import WhatsAppParserService
-from services.whatsapp_message_splitter_service import WhatsAppMessageSplitterService
 from services.whatsapp_combined_processor_service import WhatsAppCombinedProcessorService
-from models.whatsapp_raw_message import (
-    WhatsAppParseResponse,
-    WhatsAppRawMessage,
-    WhatsAppMessageFilters
-)
+from services.supabase_service import SupabaseService
 
 
 router = APIRouter(
@@ -28,340 +21,355 @@ router = APIRouter(
 )
 
 
-@router.post("/test-parse")
-async def test_parse_file(
+@router.post("/upload-file")
+async def upload_file(
     file: UploadFile = File(..., description="WhatsApp chat export text file")
 ):
     """
-    **TESTING ENDPOINT**: Parse WhatsApp file and write output to text file
+    STAGE 1: Upload WhatsApp file and parse into raw messages (NO LLM processing)
 
-    This endpoint is for testing the parser WITHOUT database insertion.
+    **What it does**:
+    1. Parse WhatsApp export file with regex
+    2. Calculate hash for each message (MD5 of text + sender + date)
+    3. Insert into `whatsapp_raw_messages` table
+    4. Duplicates are automatically skipped (UNIQUE constraint on hash)
+    5. **STOPS HERE** - No LLM processing
 
-    It will:
-    1. Accept an uploaded WhatsApp export file
-    2. Parse it into structured messages
-    3. Filter out deleted messages and media-only messages
-    4. **Use LLM to detect and split messages with multiple listings**
-    5. Write the parsed output to `data/parsed_output.json`
-    6. Return the parsed messages
+    **Next Step**: Use `POST /process-unprocessed-stream` to process with LLM
 
-    **No database operations** - just file parsing and output to JSON.
+    **Benefits**:
+    - Fast upload (no LLM calls)
+    - Deduplication (upload same file = no duplicates)
+    - User controls when to start Stage 2
 
-    **Filtering**: Automatically excludes:
-    - Messages marked as deleted ("This message was deleted")
-    - Media-only messages ("image omitted", "video omitted", etc.)
-
-    **LLM Processing**: Uses GPT-4o-mini to:
-    - Detect messages containing multiple distinct property listings
-    - Split them into separate messages (preserving sender/date)
-    - Extract structured data from each listing (property type, price, location, etc.)
-    - All in ONE LLM call (efficient!)
+    **Response**: JSON (not streaming)
+    ```json
+    {
+      "success": true,
+      "messages_parsed": 500,
+      "messages_inserted": 300,
+      "messages_skipped": 200,
+      "ready_for_llm": 670,
+      "message": "Uploaded successfully. 300 new messages ready for processing."
+    }
+    ```
     """
-    temp_path = None
-
     try:
         # Validate file type
         if not file.filename.endswith('.txt'):
-            raise HTTPException(
-                status_code=400,
-                detail="Only .txt files are supported"
-            )
+            from fastapi import HTTPException
+            raise HTTPException(status_code=400, detail="Only .txt files are supported")
 
-        # Read file content directly
+        # Read file content
         content = await file.read()
         content_str = content.decode('utf-8')
 
-        # Parse the content
+        # Parse with regex
         messages = WhatsAppParserService.parse_file_content(
             content_str,
             source_file=file.filename
         )
 
-        # Filter out deleted and media messages
-        messages_filtered = [
-            msg for msg in messages
-            if not msg.get('is_deleted', False) and not msg.get('is_media', False)
-        ]
+        print(f"[WhatsAppRaw] Parsed {len(messages)} messages from file")
 
-        # Prepare output file (create directory and start with empty array)
-        output_dir = Path(__file__).parent.parent / "data"
-        output_dir.mkdir(exist_ok=True)
-        output_file = output_dir / "parsed_output.json"
+        # Insert into raw messages table (with deduplication)
+        insert_result = await WhatsAppParserService.insert_raw_messages(messages)
 
-        # Initialize output file with empty array
-        with open(output_file, 'w', encoding='utf-8') as f:
-            f.write('[\n')
+        print(f"[WhatsAppRaw] Inserted {insert_result['messages_inserted']} new, skipped {insert_result['messages_skipped']} duplicates")
 
-        # Process and write messages incrementally
-        messages_split_count = 0
-        first_message = True
-
-        for idx, message in enumerate(messages_filtered, 1):
-            # Process message (split + extract using combined LLM call)
-            split_result = await WhatsAppCombinedProcessorService.process_message(message)
-
-            # Write each split message to file immediately
-            for msg in split_result:
-                # Convert datetime to ISO format
-                msg_copy = msg.copy()
-                if isinstance(msg_copy.get('message_date'), datetime):
-                    msg_copy['message_date'] = msg_copy['message_date'].isoformat()
-
-                # Write to file with proper JSON formatting
-                with open(output_file, 'a', encoding='utf-8') as f:
-                    if not first_message:
-                        f.write(',\n')
-                    json.dump(msg_copy, f, indent=2, ensure_ascii=False)
-                    first_message = False
-
-                messages_split_count += 1
-
-            # Optional: print progress every 10 messages
-            if idx % 10 == 0:
-                print(f"[TestParse] Processed {idx}/{len(messages_filtered)} messages...")
-
-        # Close JSON array
-        with open(output_file, 'a', encoding='utf-8') as f:
-            f.write('\n]')
-
-        # Calculate statistics
-        messages_expanded = messages_split_count - len(messages_filtered)  # How many extra from splitting
-
-        # Read back a sample for the response
-        with open(output_file, 'r', encoding='utf-8') as f:
-            all_messages = json.load(f)
-            sample_messages = all_messages[:5] if len(all_messages) > 0 else []
+        # Get count of unprocessed messages ready for LLM (last 4 months only)
+        unprocessed_messages = await WhatsAppParserService.get_unprocessed_raw_messages(limit=10000)
+        ready_for_llm_count = len(unprocessed_messages)
 
         return {
             "success": True,
             "messages_parsed": len(messages),
-            "messages_filtered": len(messages_filtered),
-            "messages_excluded": len(messages) - len(messages_filtered),
-            "messages_after_split": messages_split_count,
-            "messages_expanded": messages_expanded,
-            "output_file": str(output_file),
-            "message": f"Successfully parsed {len(messages)} messages, kept {len(messages_filtered)} after filtering, expanded to {messages_split_count} after LLM processing (+{messages_expanded}). Extracted structured data from all listings. Output written incrementally to {output_file}",
-            "sample_messages": sample_messages
+            "messages_inserted": insert_result['messages_inserted'],
+            "messages_skipped": insert_result['messages_skipped'],
+            "ready_for_llm": ready_for_llm_count,
+            "message": f"Upload complete! {insert_result['messages_inserted']} new messages inserted, {insert_result['messages_skipped']} duplicates skipped. {ready_for_llm_count} messages ready for LLM processing (last 4 months)."
         }
 
-    except HTTPException:
-        raise
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error processing file: {str(e)}"
-        )
+        from fastapi import HTTPException
+        raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/upload", response_model=WhatsAppParseResponse)
-async def upload_chat_export(
-    file: UploadFile = File(..., description="WhatsApp chat export text file")
+@router.post("/process-unprocessed-stream")
+async def process_unprocessed_stream(
+    limit: int = 1000
 ):
     """
-    Upload and parse a WhatsApp chat export file
+    Process unprocessed raw messages (Stage 2 only - no file upload)
 
-    Accepts a .txt file exported from WhatsApp and:
-    1. Parses it into individual messages
-    2. Stores each message in the database
+    **Use Cases**:
+    - Resume processing after interruption
+    - Process messages uploaded earlier
+    - Reprocess with updated prompts
 
-    **File Format**: Standard WhatsApp export with timestamps like `[DD/MM/YY, HH:MM:SS AM/PM] Sender: Message`
+    **What it does**:
+    1. Read unprocessed messages from `whatsapp_raw_messages`
+    2. For each: LLM split + extract
+    3. Insert into `whatsapp_listing_data`
+    4. Mark as processed
 
-    **Returns**: Count of messages parsed and inserted
+    **Streaming Response**: Server-Sent Events (SSE)
+    ```
+    event: start
+    data: {"batch_size": 670}
+
+    event: progress
+    data: {"status": "completed", "progress": "1/670", "message_type": "supply_sale"}
+
+    event: complete
+    data: {"messages_extracted": 650, "messages_failed": 20}
+    ```
     """
-    temp_path = None
+    async def event_generator():
+        try:
+            # Get unprocessed messages (Stage 2 only)
+            unprocessed_messages = await WhatsAppParserService.get_unprocessed_raw_messages(limit=limit)
 
-    try:
-        # Validate file type
-        if not file.filename.endswith('.txt'):
-            raise HTTPException(
-                status_code=400,
-                detail="Only .txt files are supported"
-            )
+            print(f"[WhatsAppRaw] Found {len(unprocessed_messages)} unprocessed messages")
 
-        # Save uploaded file temporarily
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.txt', mode='wb') as tmp:
-            content = await file.read()
-            tmp.write(content)
-            temp_path = tmp.name
+            # Emit start event
+            yield f"event: start\ndata: {json.dumps({'batch_size': len(unprocessed_messages)})}\n\n"
 
-        # Parse and insert
-        result = await WhatsAppParserService.parse_and_insert_file(temp_path)
+            if len(unprocessed_messages) == 0:
+                yield f"event: complete\ndata: {json.dumps({'batch_size': 0, 'messages_extracted': 0, 'message': 'No unprocessed messages found'})}\n\n"
+                return
 
-        return WhatsAppParseResponse(**result)
+            # Counters
+            messages_extracted = 0
+            messages_failed = 0
 
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error processing file: {str(e)}"
-        )
-    finally:
-        # Cleanup temporary file
-        if temp_path and os.path.exists(temp_path):
-            try:
-                os.unlink(temp_path)
-            except Exception as e:
-                print(f"[WhatsAppRawRouter] Failed to delete temp file: {e}")
+            # Process each unprocessed message with LLM
+            for idx, raw_message in enumerate(unprocessed_messages, 1):
+                raw_message_id = raw_message.get('id')
 
+                try:
+                    # Convert raw message to format expected by processor
+                    message_for_processing = {
+                        'message_date': raw_message.get('message_date'),
+                        'sender_name': raw_message.get('sender_name'),
+                        'message_text': raw_message.get('message_text'),
+                        'source_file': raw_message.get('source_file'),
+                        'line_number': raw_message.get('line_number')
+                    }
 
-@router.post("/parse-local", response_model=WhatsAppParseResponse)
-async def parse_local_file(
-    file_path: str = Query(
-        ...,
-        description="Absolute path to the WhatsApp export file on the server",
-        example="/home/propalyst/propalyst-backend/chat_chunks/chunk_100.txt"
+                    # Process with combined LLM (split + extract)
+                    split_result = await WhatsAppCombinedProcessorService.process_message(message_for_processing)
+
+                    # Insert each split message into whatsapp_listing_data
+                    for split_idx, processed_msg in enumerate(split_result, 1):
+                        # Convert datetime to ISO string for Supabase
+                        message_date = processed_msg.get('message_date')
+                        if isinstance(message_date, datetime):
+                            message_date = message_date.isoformat()
+
+                        # Prepare data for database insertion
+                        listing_data = {
+                            "source_raw_message_id": raw_message_id,
+                            "message_date": message_date,
+                            "agent_contact": processed_msg.get('extracted_agent_contact'),
+                            "agent_name": processed_msg.get('extracted_agent_name'),
+                            "raw_message": processed_msg.get('message_text'),
+                            "message_type": processed_msg.get('message_type'),
+                            "property_type": processed_msg.get('property_type'),
+                            "area_sqft": processed_msg.get('area_sqft'),
+                            "bedroom_count": processed_msg.get('bedroom_count'),
+                            "price": processed_msg.get('price'),
+                            "price_text": processed_msg.get('price_text'),
+                            "location": processed_msg.get('location'),
+                            "project_name": processed_msg.get('project_name'),
+                            "furnishing_status": processed_msg.get('furnishing_status'),
+                            "parking_count": processed_msg.get('parking_count'),
+                            "parking_text": processed_msg.get('parking_text'),
+                            "facing_direction": processed_msg.get('facing_direction'),
+                            "special_features": processed_msg.get('special_features', []),
+                            "llm_json": {
+                                "message_type": processed_msg.get('message_type'),
+                                "split_from_original": processed_msg.get('split_from_original', False),
+                                "split_index": processed_msg.get('split_index')
+                            }
+                        }
+
+                        # Insert to whatsapp_listing_data
+                        result = await SupabaseService.insert_extracted_listing(listing_data)
+
+                        if result.get("success"):
+                            messages_extracted += 1
+
+                            # Emit progress event
+                            event_data = {
+                                'status': 'completed',
+                                'progress': f'{idx}/{len(unprocessed_messages)}',
+                                'message_type': processed_msg.get('message_type'),
+                                'location': processed_msg.get('location'),
+                                'split_index': f'{split_idx}/{len(split_result)}' if len(split_result) > 1 else None
+                            }
+                            yield f"event: progress\ndata: {json.dumps(event_data)}\n\n"
+
+                            print(f"[WhatsAppRaw] ✓ Inserted listing {idx} (split {split_idx}/{len(split_result)}) - type: {processed_msg.get('message_type')}")
+                        else:
+                            messages_failed += 1
+                            error_msg = result.get('message', 'Unknown error')
+
+                            event_data = {
+                                'status': 'failed',
+                                'progress': f'{idx}/{len(unprocessed_messages)}',
+                                'error': str(error_msg)[:200]
+                            }
+                            yield f"event: progress\ndata: {json.dumps(event_data)}\n\n"
+
+                    # Mark raw message as processed
+                    await WhatsAppParserService.mark_as_processed(raw_message_id)
+
+                except Exception as e:
+                    messages_failed += 1
+                    print(f"[WhatsAppRaw] ✗ Error processing message {idx}: {e}")
+
+                    event_data = {
+                        'status': 'failed',
+                        'progress': f'{idx}/{len(unprocessed_messages)}',
+                        'error': str(e)[:200]
+                    }
+                    yield f"event: progress\ndata: {json.dumps(event_data)}\n\n"
+
+                # Small delay
+                await asyncio.sleep(0.5)
+
+            # Emit complete event
+            completion_data = {
+                'batch_size': len(unprocessed_messages),
+                'messages_extracted': messages_extracted,
+                'messages_failed': messages_failed,
+                'message': f'Processing complete! Extracted: {messages_extracted}, Failed: {messages_failed}'
+            }
+            yield f"event: complete\ndata: {json.dumps(completion_data)}\n\n"
+
+            print(f"[WhatsAppRaw] ✓ Processing complete: {messages_extracted} extracted, {messages_failed} failed")
+
+        except Exception as e:
+            print(f"[WhatsAppRaw] ✗ Streaming error: {str(e)}")
+            yield f"event: error\ndata: {json.dumps({'message': str(e)})}\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no"
+        }
     )
-):
+
+
+@router.get("/raw-stats")
+async def get_raw_message_stats():
     """
-    Parse a WhatsApp export file from local filesystem
+    Get statistics about raw messages (Stage 1)
 
-    Useful for processing files already on the server (e.g., in chat_chunks/ directory).
-
-    **File Path**: Must be absolute path to the file
-
-    **Returns**: Count of messages parsed and inserted
-    """
-    try:
-        result = await WhatsAppParserService.parse_and_insert_file(file_path)
-        return WhatsAppParseResponse(**result)
-
-    except FileNotFoundError:
-        raise HTTPException(
-            status_code=404,
-            detail=f"File not found: {file_path}"
-        )
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error processing file: {str(e)}"
-        )
-
-
-@router.get("/messages", response_model=list[WhatsAppRawMessage])
-async def get_messages(
-    sender_name: Optional[str] = Query(
-        None,
-        description="Filter by sender name (exact match)"
-    ),
-    source_file: Optional[str] = Query(
-        None,
-        description="Filter by source file name"
-    ),
-    date_from: Optional[datetime] = Query(
-        None,
-        description="Filter messages from this date onwards (ISO 8601 format)"
-    ),
-    date_to: Optional[datetime] = Query(
-        None,
-        description="Filter messages up to this date (ISO 8601 format)"
-    ),
-    is_deleted: Optional[bool] = Query(
-        None,
-        description="Filter by deleted status"
-    ),
-    is_media: Optional[bool] = Query(
-        None,
-        description="Filter by media status"
-    ),
-    limit: int = Query(
-        100,
-        ge=1,
-        le=1000,
-        description="Maximum number of messages to return"
-    ),
-    offset: int = Query(
-        0,
-        ge=0,
-        description="Number of messages to skip (for pagination)"
-    )
-):
-    """
-    Retrieve WhatsApp raw messages with optional filters
-
-    Returns messages ordered by message date (most recent first).
-    Supports pagination using `limit` and `offset` parameters.
-
-    **Example queries**:
-    - Get latest 100 messages: `GET /messages`
-    - Get messages from specific sender: `GET /messages?sender_name=John`
-    - Get messages from specific file: `GET /messages?source_file=chunk_100.txt`
-    - Get non-deleted messages: `GET /messages?is_deleted=false`
-    - Get messages in date range: `GET /messages?date_from=2025-01-01T00:00:00Z&date_to=2025-01-31T23:59:59Z`
-    """
-    try:
-        messages = await WhatsAppParserService.get_messages(
-            sender_name=sender_name,
-            source_file=source_file,
-            date_from=date_from,
-            date_to=date_to,
-            is_deleted=is_deleted,
-            is_media=is_media,
-            limit=limit,
-            offset=offset
-        )
-
-        return messages
-
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error retrieving messages: {str(e)}"
-        )
-
-
-@router.get("/stats")
-async def get_statistics():
-    """
-    Get statistics about stored WhatsApp messages
-
-    Returns:
-    - Total message count
-    - Unique sender count
+    Returns counts of:
+    - Total raw messages (all time)
+    - Messages from last 4 months
+    - Messages older than 4 months
+    - Processed vs unprocessed (last 4 months)
+    - Deleted/media messages
+    - Ready for LLM (last 4 months only)
+    - Unique senders
     - Date range
-    - Counts by type (deleted, media)
     """
     try:
-        client = WhatsAppParserService._get_client()
+        client = SupabaseService._get_client()
 
-        # Get all messages (we'll calculate stats client-side for simplicity)
-        # In production, you'd want to use aggregation queries
-        all_messages = await WhatsAppParserService.get_messages(limit=10000)
+        # Calculate cutoff date (4 months ago)
+        cutoff_date = (datetime.now() - timedelta(days=120)).isoformat()
 
-        if not all_messages:
+        # Get total count of ALL messages (using count API for efficiency)
+        total_response = client.table("whatsapp_raw_messages")\
+            .select("*", count="exact", head=True)\
+            .execute()
+        total_messages_all_time = total_response.count if hasattr(total_response, 'count') and total_response.count else 0
+
+        # Get messages from last 4 months (paginate to fetch all records)
+        recent_messages = []
+        batch_size = 1000
+        offset = 0
+
+        while True:
+            response = client.table("whatsapp_raw_messages")\
+                .select("*")\
+                .gte("message_date", cutoff_date)\
+                .range(offset, offset + batch_size - 1)\
+                .execute()
+
+            batch = response.data or []
+            if not batch:
+                break
+
+            recent_messages.extend(batch)
+            offset += batch_size
+
+            if len(batch) < batch_size:
+                break  # Last batch
+
+        # Calculate counts
+        recent_count = len(recent_messages)
+        old_messages_count = total_messages_all_time - recent_count
+
+        if recent_count == 0:
             return {
-                "total_messages": 0,
+                "total_messages_all_time": total_messages_all_time,
+                "recent_messages_4_months": 0,
+                "old_messages_over_4_months": old_messages_count,
+                "processed": 0,
+                "unprocessed": 0,
+                "deleted": 0,
+                "media": 0,
+                "ready_for_llm": 0,
                 "unique_senders": 0,
-                "deleted_messages": 0,
-                "media_messages": 0,
                 "date_range": None
             }
 
-        # Calculate statistics
-        senders = set(msg["sender_name"] for msg in all_messages)
-        deleted_count = sum(1 for msg in all_messages if msg.get("is_deleted", False))
-        media_count = sum(1 for msg in all_messages if msg.get("is_media", False))
+        # Calculate statistics (only for recent messages)
+        processed_count = sum(1 for msg in recent_messages if msg.get("processed"))
+        unprocessed_count = sum(1 for msg in recent_messages if not msg.get("processed"))
+        deleted_count = sum(1 for msg in recent_messages if msg.get("is_deleted"))
+        media_count = sum(1 for msg in recent_messages if msg.get("is_media"))
 
-        # Get date range
-        dates = [datetime.fromisoformat(msg["message_date"].replace('Z', '+00:00'))
-                 for msg in all_messages if msg.get("message_date")]
+        # Ready for LLM = unprocessed AND not deleted AND not media (last 4 months only)
+        ready_for_llm = sum(
+            1 for msg in recent_messages
+            if not msg.get("processed")
+            and not msg.get("is_deleted")
+            and not msg.get("is_media")
+        )
+
+        unique_senders = len(set(msg.get("sender_name") for msg in recent_messages if msg.get("sender_name")))
+
+        # Date range (only recent messages)
+        dates = [msg.get("message_date") for msg in recent_messages if msg.get("message_date")]
         date_range = None
         if dates:
             date_range = {
-                "earliest": min(dates).isoformat(),
-                "latest": max(dates).isoformat()
+                "earliest": min(dates),
+                "latest": max(dates)
             }
 
         return {
-            "total_messages": len(all_messages),
-            "unique_senders": len(senders),
-            "deleted_messages": deleted_count,
-            "media_messages": media_count,
+            "total_messages_all_time": total_messages_all_time,
+            "recent_messages_4_months": recent_count,
+            "old_messages_over_4_months": old_messages_count,
+            "processed": processed_count,
+            "unprocessed": unprocessed_count,
+            "deleted": deleted_count,
+            "media": media_count,
+            "ready_for_llm": ready_for_llm,
+            "unique_senders": unique_senders,
             "date_range": date_range
         }
 
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error calculating statistics: {str(e)}"
-        )
+        from fastapi import HTTPException
+        raise HTTPException(status_code=500, detail=str(e))

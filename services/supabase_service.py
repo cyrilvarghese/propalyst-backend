@@ -205,47 +205,47 @@ class SupabaseService:
             }
 
     # @classmethod
-    # async def search_raw_message(cls, query: str, limit: int = 100) -> Dict[str, Any]:
-    #     """
-    #     Search listings by raw message content (full-text search)
+    async def search_raw_message(cls, query: str, limit: int = 100) -> Dict[str, Any]:
+        """
+        Search listings by raw message content (full-text search)
 
-    #     Args:
-    #         query: Search text to find in raw messages (case-insensitive)
-    #         limit: Maximum number of results (default: 100)
+        Args:
+            query: Search text to find in raw messages (case-insensitive)
+            limit: Maximum number of results (default: 100)
 
-    #     Returns:
-    #         Dictionary with success status and matching listings
-    #     """
-    #     try:
-    #         client = cls._get_client()
+        Returns:
+            Dictionary with success status and matching listings
+        """
+        try:
+            client = cls._get_client()
 
-    #         # Search in raw_message field using ILIKE for case-insensitive partial match
-    #         response = client.table("crea_wapp")\
-    #             .select("*")\
-    #             .ilike("raw_message", f"%{query}%")\
-    #             .order("message_date", desc=True)\
-    #             .limit(limit)\
-    #             .execute()
+            # Search in raw_message field using ILIKE for case-insensitive partial match
+            response = client.table("crea_wapp")\
+                .select("*")\
+                .ilike("raw_message", f"%{query}%")\
+                .order("message_date", desc=True)\
+                .limit(limit)\
+                .execute()
 
-    #         listings = response.data if response.data else []
+            listings = response.data if response.data else []
 
-    #         print(f"[Supabase] ✓ Raw message search for '{query}' returned {len(listings)} listings")
+            print(f"[Supabase] ✓ Raw message search for '{query}' returned {len(listings)} listings")
 
-    #         return {
-    #             "success": True,
-    #             "data": listings,
-    #             "count": len(listings),
-    #             "message": f"Found {len(listings)} listings containing '{query}'"
-    #         }
+            return {
+                "success": True,
+                "data": listings,
+                "count": len(listings),
+                "message": f"Found {len(listings)} listings containing '{query}'"
+            }
 
-    #     except Exception as e:
-    #         print(f"[Supabase] ✗ Error searching raw messages: {e}")
-    #         return {
-    #             "success": False,
-    #             "data": [],
-    #             "count": 0,
-    #             "message": f"Error searching raw messages: {str(e)}"
-    #         }
+        except Exception as e:
+            print(f"[Supabase] ✗ Error searching raw messages: {e}")
+            return {
+                "success": False,
+                "data": [],
+                "count": 0,
+                "message": f"Error searching raw messages: {str(e)}"
+            }
 
     # @classmethod
     # async def fuzzy_search_location(cls, location: str, limit: int = 100, similarity_threshold: float = 0.3) -> Dict[str, Any]:
@@ -1544,7 +1544,7 @@ class SupabaseService:
         try:
             client = cls._get_client()
 
-            source_message_id = listing_data.get("source_message_id")
+            source_raw_message_id = listing_data.get("source_raw_message_id")
 
             # Insert the extracted listing
             response = client.table("whatsapp_listing_data")\
@@ -1552,17 +1552,17 @@ class SupabaseService:
                 .execute()
 
             if response.data:
-                print(f"[Supabase] ✓ Inserted extracted listing for message {source_message_id}")
+                print(f"[Supabase] ✓ Inserted extracted listing for message {source_raw_message_id}")
                 return {
                     "success": True,
                     "data": response.data[0],
-                    "message": f"Listing extracted for message {source_message_id}"
+                    "message": f"Listing extracted for message {source_raw_message_id}"
                 }
             else:
                 return {
                     "success": False,
                     "data": None,
-                    "message": f"Failed to insert listing for message {source_message_id}"
+                    "message": f"Failed to insert listing for message {source_raw_message_id}"
                 }
 
         except Exception as e:
@@ -1576,7 +1576,11 @@ class SupabaseService:
     @classmethod
     async def get_extracted_listings(cls, limit: int = 100, offset: int = 0) -> Dict[str, Any]:
         """
-        Get extracted listings from whatsapp_listing_data table
+        Get relevant extracted listings from whatsapp_listings_relevant view
+
+        Returns only supply/demand listings (supply_sale, supply_rent, demand_buy, demand_rent).
+        Excludes greetings, garbage, and generic_info messages.
+        Sorted by message_date (newest first).
 
         Args:
             limit: Maximum number of listings to return
@@ -1588,22 +1592,26 @@ class SupabaseService:
         try:
             client = cls._get_client()
 
-            response = client.table("whatsapp_listing_data")\
+            response = client.table("whatsapp_listings_relevant")\
                 .select("*")\
-                .order("created_at", desc=True)\
+                .order("message_date", desc=True)\
                 .limit(limit)\
                 .offset(offset)\
                 .execute()
 
             listings = response.data if response.data else []
 
-            print(f"[Supabase] ✓ Retrieved {len(listings)} extracted listings")
+            print(f"[Supabase] ✓ Retrieved {len(listings)} relevant listings (supply/demand only)")
 
             return {
                 "success": True,
                 "data": listings,
                 "count": len(listings),
-                "message": f"Retrieved {len(listings)} extracted listings"
+                "message": f"Retrieved {len(listings)} relevant listings",
+                "metadata": {
+                    "source": "whatsapp_listings_relevant",
+                    "filters": "supply_sale, supply_rent, demand_buy, demand_rent only"
+                }
             }
 
         except Exception as e:
@@ -1616,46 +1624,123 @@ class SupabaseService:
             }
 
     @classmethod
-    async def get_extraction_stats(cls) -> Dict[str, Any]:
+    async def search_whatsapp_raw_message(cls, query: str, limit: int = 100) -> Dict[str, Any]:
         """
-        Get statistics about the extraction process
+        Search WhatsApp relevant listings by raw message content (full-text search)
 
-        Uses database view 'unprocessed_whatsapp_messages' for accurate remaining count
+        Searches for the query string within the raw_message field of whatsapp_listings_relevant view.
+        Only searches supply/demand listings (excludes greetings, garbage, etc).
+
+        Args:
+            query: Search text to find in raw messages (case-insensitive)
+            limit: Maximum number of results (default: 100)
 
         Returns:
-            Dictionary with extraction statistics
+            Dictionary with success status and matching listings
         """
         try:
             client = cls._get_client()
 
-            # Total messages in crea_wapp
-            total_response = client.table("crea_wapp")\
+            # Search in raw_message field using ILIKE for case-insensitive partial match
+            response = client.table("whatsapp_listings_relevant")\
+                .select("*")\
+                .ilike("raw_message", f"%{query}%")\
+                .order("message_date", desc=True)\
+                .limit(limit)\
+                .execute()
+
+            listings = response.data if response.data else []
+
+            print(f"[Supabase] ✓ WhatsApp raw message search for '{query}' returned {len(listings)} listings")
+
+            return {
+                "success": True,
+                "data": listings,
+                "count": len(listings),
+                "message": f"Found {len(listings)} WhatsApp listings containing '{query}'",
+                "metadata": {
+                    "source": "whatsapp_listings_relevant",
+                    "search_query": query,
+                    "filters": "supply_sale, supply_rent, demand_buy, demand_rent only"
+                }
+            }
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error searching WhatsApp raw messages: {e}")
+            return {
+                "success": False,
+                "data": [],
+                "count": 0,
+                "message": f"Error searching raw messages: {str(e)}"
+            }
+
+    @classmethod
+    async def get_extraction_stats(cls) -> Dict[str, Any]:
+        """
+        Get statistics about the extraction process (last 4 months only)
+
+        Returns:
+            Dictionary with extraction statistics including:
+            - Total raw messages (all time)
+            - Recent raw messages (last 4 months)
+            - Total extracted listings
+            - Unprocessed messages (ready for LLM)
+            - Progress percentage
+        """
+        try:
+            from datetime import datetime, timedelta
+
+            client = cls._get_client()
+
+            # Calculate cutoff date (4 months ago)
+            cutoff_date = (datetime.now() - timedelta(days=120)).isoformat()
+
+            # Total raw messages (all time)
+            total_raw_response = client.table("whatsapp_raw_messages")\
                 .select("*", count="exact", head=True)\
                 .execute()
-            total_messages = total_response.count if hasattr(total_response, 'count') and total_response.count else 0
+            total_raw_all_time = total_raw_response.count if hasattr(total_raw_response, 'count') and total_raw_response.count else 0
 
-            # Total extracted listings
+            # Recent raw messages (last 4 months)
+            recent_raw_response = client.table("whatsapp_raw_messages")\
+                .select("*", count="exact", head=True)\
+                .gte("message_date", cutoff_date)\
+                .execute()
+            recent_raw_count = recent_raw_response.count if hasattr(recent_raw_response, 'count') and recent_raw_response.count else 0
+
+            # Total extracted listings (all time)
             extracted_response = client.table("whatsapp_listing_data")\
                 .select("*", count="exact", head=True)\
                 .execute()
             extracted_count = extracted_response.count if hasattr(extracted_response, 'count') and extracted_response.count else 0
 
-            # Remaining messages (use view for accurate count - handles duplicates properly)
-            remaining_response = client.table("unprocessed_whatsapp_messages")\
+            # Unprocessed messages from last 4 months (ready for LLM)
+            unprocessed_response = client.table("whatsapp_raw_messages")\
                 .select("*", count="exact", head=True)\
+                .eq("processed", False)\
+                .eq("is_deleted", False)\
+                .eq("is_media", False)\
+                .gte("message_date", cutoff_date)\
                 .execute()
-            remaining = remaining_response.count if hasattr(remaining_response, 'count') and remaining_response.count else 0
+            unprocessed_count = unprocessed_response.count if hasattr(unprocessed_response, 'count') and unprocessed_response.count else 0
 
-            progress_pct = round(((total_messages - remaining) / total_messages * 100), 2) if total_messages > 0 else 0
+            # Calculate progress (based on recent messages only)
+            progress_pct = round(((recent_raw_count - unprocessed_count) / recent_raw_count * 100), 2) if recent_raw_count > 0 else 0
 
-            print(f"[Supabase] ✓ Retrieved extraction statistics (Total: {total_messages}, Extracted: {extracted_count}, Remaining: {remaining})")
+            print(f"[Supabase] ✓ Retrieved extraction statistics")
+            print(f"[Supabase]   - Total raw (all time): {total_raw_all_time}")
+            print(f"[Supabase]   - Recent raw (4 months): {recent_raw_count}")
+            print(f"[Supabase]   - Extracted: {extracted_count}")
+            print(f"[Supabase]   - Unprocessed: {unprocessed_count}")
+            print(f"[Supabase]   - Progress: {progress_pct}%")
 
             return {
                 "success": True,
                 "data": {
-                    "total_messages": total_messages,
-                    "extracted_count": extracted_count,
-                    "remaining_count": remaining,
+                    "total_raw_messages_all_time": total_raw_all_time,
+                    "recent_raw_messages_4_months": recent_raw_count,
+                    "extracted_listings_count": extracted_count,
+                    "unprocessed_count": unprocessed_count,
                     "progress_percentage": progress_pct
                 },
                 "message": "Extraction statistics retrieved"

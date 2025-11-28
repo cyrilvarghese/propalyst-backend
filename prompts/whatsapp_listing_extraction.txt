@@ -8,6 +8,7 @@ You are analyzing a WhatsApp property listing message to extract structured data
 - `supply_rent` - Property available for rent/lease
 - `demand_buy` - Buyer requirement/looking to buy
 - `demand_rent` - Tenant requirement/looking to rent
+- `unknown' - if none of the classifications fit
 
 **AGENT NAME** (agent_name):
 - Extract the agent's name or company name if mentioned in the message
@@ -36,6 +37,12 @@ You are analyzing a WhatsApp property listing message to extract structured data
 - Extract main area in square feet as a number
 - Examples: "2500 sft" → 2500, "1650 sqft" → 1650
 - For ranges like "2400-2600 sq ft", pick middle value: 2500
+- Set to null if not mentioned
+
+**BEDROOMS** (bedroom_count):
+- Extract the number of bedrooms as an integer
+- Examples: "3 BHK" → 3, "2BHK" → 2, "4 bed" → 4, "Studio" → 0
+- For ranges like "3-4 BHK", pick the lower value: 3
 - Set to null if not mentioned
 
 **PRICE** (price):
@@ -117,6 +124,7 @@ You are analyzing a WhatsApp property listing message to extract structured data
   "agent_contact": null,
   "property_type": null,
   "area_sqft": null,
+  "bedroom_count": null,
   "price": null,
   "price_text": null,
   "location": null,

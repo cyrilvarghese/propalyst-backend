@@ -26,7 +26,7 @@ class WhatsAppListingExtractionService:
 
     # Shared Gemini client instance (singleton pattern)
     _client: Optional[genai.Client] = None
-    _model: str = "gemini-2.0-flash"
+    _model: str = "gemini-2.5-flash"
     _prompt_cache: Optional[str] = None
 
     # Path to prompt file

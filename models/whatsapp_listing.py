@@ -18,6 +18,7 @@ class WhatsAppListingLLMOutput(BaseModel):
     agent_contact: Optional[str] = Field(None, description="Agent contact number extracted from message")
     property_type: Optional[str] = Field(None, description="apartment, villa, independent_house, plot, land, office, retail, warehouse, industrial, other")
     area_sqft: Optional[float] = Field(None, description="Area in square feet")
+    bedroom_count: Optional[int] = Field(None, description="Number of bedrooms (e.g., 3 BHK = 3, Studio = 0)")
     price: Optional[float] = Field(None, description="Price in rupees")
     price_text: Optional[str] = Field(None, description="Human-readable price phrase")
     location: Optional[str] = Field(None, description="Main locality or micro market")
@@ -42,6 +43,7 @@ class WhatsAppListingData(BaseModel):
     message_type: str
     property_type: Optional[str] = None
     area_sqft: Optional[float] = None
+    bedroom_count: Optional[int] = None
     price: Optional[float] = None
     price_text: Optional[str] = None
     location: Optional[str] = None

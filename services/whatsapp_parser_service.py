@@ -6,12 +6,12 @@ Implements the parsing specification from chat_chunks/chunk_100.txt.
 """
 
 import re
-from datetime import datetime
+import hashlib
+from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 
 from services.supabase_service import SupabaseService
-from models.whatsapp_raw_message import WhatsAppRawMessageCreate
 
 
 class WhatsAppParserService:
@@ -150,155 +150,159 @@ class WhatsAppParserService:
         # Parse content with source file name
         return cls.parse_file_content(content, source_file=path.name)
 
+    @staticmethod
+    def calculate_message_hash(message: Dict[str, Any]) -> str:
+        """
+        Calculate MD5 hash of message for deduplication
+
+        Uses message_text ONLY to detect duplicates across different senders/dates.
+        This ensures that the same property listing forwarded by multiple agents
+        is recognized as a duplicate.
+
+        Args:
+            message: Message dictionary (requires 'message_text' key)
+
+        Returns:
+            MD5 hash string
+        """
+        # Hash based on message text only (ignores sender and date)
+        message_text = message.get('message_text', '')
+        return hashlib.md5(message_text.encode('utf-8')).hexdigest()
+
     @classmethod
-    async def insert_messages(
+    async def insert_raw_messages(
         cls,
         messages: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
         """
-        Insert parsed messages into the database
+        Insert raw parsed messages into whatsapp_raw_messages table with deduplication
 
         Args:
-            messages: List of message dictionaries
+            messages: List of parsed message dictionaries
 
         Returns:
-            Dictionary with success status and count
+            Dict with counts of inserted and skipped messages
         """
         if not messages:
             return {
                 "success": True,
                 "messages_inserted": 0,
+                "messages_skipped": 0,
                 "message": "No messages to insert"
             }
 
         try:
-            # Convert datetime objects to ISO format strings for Supabase
-            messages_for_insert = []
+            # Add hash to each message
+            messages_with_hash = []
             for msg in messages:
                 msg_copy = msg.copy()
+
+                # Calculate hash for deduplication
+                msg_copy['message_hash'] = cls.calculate_message_hash(msg)
+
+                # Convert datetime to ISO format
                 if isinstance(msg_copy.get('message_date'), datetime):
                     msg_copy['message_date'] = msg_copy['message_date'].isoformat()
-                messages_for_insert.append(msg_copy)
 
-            # Insert into Supabase
+                messages_with_hash.append(msg_copy)
+
+            # Insert into Supabase with upsert (ON CONFLICT DO NOTHING)
             client = SupabaseService._get_client()
-            response = client.table("whatsapp_raw_messages").insert(messages_for_insert).execute()
+            response = client.table("whatsapp_raw_messages").upsert(
+                messages_with_hash,
+                on_conflict='message_hash',
+                ignore_duplicates=True
+            ).execute()
 
             inserted_count = len(response.data) if response.data else 0
+            skipped_count = len(messages) - inserted_count
+
+            print(f"[WhatsAppParser] Inserted {inserted_count} new messages, skipped {skipped_count} duplicates")
 
             return {
                 "success": True,
                 "messages_inserted": inserted_count,
-                "message": f"Successfully inserted {inserted_count} messages"
+                "messages_skipped": skipped_count,
+                "message": f"Inserted {inserted_count} messages, skipped {skipped_count} duplicates"
             }
 
         except Exception as e:
-            print(f"[WhatsAppParser] Error inserting messages: {e}")
+            print(f"[WhatsAppParser] Error inserting raw messages: {e}")
             return {
                 "success": False,
                 "messages_inserted": 0,
+                "messages_skipped": 0,
                 "message": f"Failed to insert messages: {str(e)}"
             }
 
     @classmethod
-    async def parse_and_insert_file(
+    async def get_unprocessed_raw_messages(
         cls,
-        file_path: str
-    ) -> Dict[str, Any]:
-        """
-        Parse a WhatsApp export file and insert all messages into database
-
-        Args:
-            file_path: Path to the WhatsApp export text file
-
-        Returns:
-            Dictionary with success status, counts, and any errors
-        """
-        try:
-            # Parse file
-            messages = cls.parse_file(file_path)
-
-            # Insert messages
-            insert_result = await cls.insert_messages(messages)
-
-            return {
-                "success": insert_result["success"],
-                "messages_parsed": len(messages),
-                "messages_inserted": insert_result["messages_inserted"],
-                "message": insert_result["message"],
-                "errors": None
-            }
-
-        except FileNotFoundError as e:
-            return {
-                "success": False,
-                "messages_parsed": 0,
-                "messages_inserted": 0,
-                "message": str(e),
-                "errors": [str(e)]
-            }
-        except Exception as e:
-            return {
-                "success": False,
-                "messages_parsed": 0,
-                "messages_inserted": 0,
-                "message": f"Error processing file: {str(e)}",
-                "errors": [str(e)]
-            }
-
-    @classmethod
-    async def get_messages(
-        cls,
-        sender_name: Optional[str] = None,
-        source_file: Optional[str] = None,
-        date_from: Optional[datetime] = None,
-        date_to: Optional[datetime] = None,
-        is_deleted: Optional[bool] = None,
-        is_media: Optional[bool] = None,
-        limit: int = 100,
-        offset: int = 0
+        limit: int = 100
     ) -> List[Dict[str, Any]]:
         """
-        Retrieve messages from database with optional filters
+        Get raw messages that haven't been processed by LLM yet (from last 4 months)
 
         Args:
-            sender_name: Filter by sender name (exact match)
-            source_file: Filter by source file name
-            date_from: Filter messages from this date onwards
-            date_to: Filter messages up to this date
-            is_deleted: Filter by deleted status
-            is_media: Filter by media status
             limit: Maximum number of messages to return
-            offset: Number of messages to skip
 
         Returns:
-            List of message dictionaries
+            List of unprocessed message dictionaries
         """
         try:
+            # Calculate cutoff date (4 months ago)
+            cutoff_date = (datetime.now() - timedelta(days=120)).isoformat()
+
             client = SupabaseService._get_client()
-            query = client.table("whatsapp_raw_messages").select("*")
+            response = client.table("whatsapp_raw_messages")\
+                .select("*")\
+                .eq("processed", False)\
+                .eq("is_deleted", False)\
+                .eq("is_media", False)\
+                .gte("message_date", cutoff_date)\
+                .order("message_date", desc=False)\
+                .limit(limit)\
+                .execute()
 
-            # Apply filters
-            if sender_name:
-                query = query.eq("sender_name", sender_name)
-            if source_file:
-                query = query.eq("source_file", source_file)
-            if date_from:
-                query = query.gte("message_date", date_from.isoformat())
-            if date_to:
-                query = query.lte("message_date", date_to.isoformat())
-            if is_deleted is not None:
-                query = query.eq("is_deleted", is_deleted)
-            if is_media is not None:
-                query = query.eq("is_media", is_media)
-
-            # Apply pagination and ordering
-            query = query.order("message_date", desc=True)
-            query = query.range(offset, offset + limit - 1)
-
-            response = query.execute()
             return response.data or []
 
         except Exception as e:
-            print(f"[WhatsAppParser] Error retrieving messages: {e}")
+            print(f"[WhatsAppParser] Error getting unprocessed messages: {e}")
             raise
+
+    @classmethod
+    async def mark_as_processed(
+        cls,
+        raw_message_id: str
+    ) -> Dict[str, Any]:
+        """
+        Mark a raw message as processed
+
+        Args:
+            raw_message_id: UUID of the raw message
+
+        Returns:
+            Success status
+        """
+        try:
+            client = SupabaseService._get_client()
+            client.table("whatsapp_raw_messages")\
+                .update({
+                    "processed": True,
+                    "processed_at": datetime.now().isoformat()
+                })\
+                .eq("id", raw_message_id)\
+                .execute()
+
+            return {
+                "success": True,
+                "message": "Marked as processed"
+            }
+
+        except Exception as e:
+            print(f"[WhatsAppParser] Error marking message as processed: {e}")
+            return {
+                "success": False,
+                "message": str(e)
+            }
+

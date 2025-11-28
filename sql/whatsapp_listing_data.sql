@@ -1,18 +1,19 @@
 -- WhatsApp Listing Data Table
--- Stores ALL classified messages to prevent duplicate LLM calls
+-- Stores ALL classified messages extracted from WhatsApp exports
 -- - Supply/Demand messages: Full extracted data
--- - Greeting/Garbage/Generic: Minimal data (just classification)
--- Source: public.crea_wapp table (read-only reference)
+-- - Greeting/Garbage: Minimal data (just classification)
+-- Source: Direct file uploads (WhatsApp export .txt files)
 
-create table public.whatsapp_listing_data (
+DROP TABLE IF EXISTS public.whatsapp_listing_data CASCADE;
+
+CREATE TABLE public.whatsapp_listing_data (
   id uuid primary key default gen_random_uuid(),
 
-  -- reference to the original raw message
-  source_message_id uuid not null
-    references public.crea_wapp(id) on delete cascade
-    unique,
+  -- Reference to raw message (Stage 1)
+  source_raw_message_id uuid NULL
+    REFERENCES public.whatsapp_raw_messages(id) ON DELETE CASCADE,
 
-  -- copied metadata from source row (message_date, company_name)
+  -- metadata from parsed message
   -- agent info extracted by LLM (can be null if not in message)
   message_date timestamptz,
   agent_contact text null,
@@ -28,6 +29,7 @@ create table public.whatsapp_listing_data (
   -- extracted structured fields
   property_type text null,
   area_sqft numeric null,
+  bedroom_count integer null,
 
   price numeric null,
   price_text text null,
@@ -61,7 +63,7 @@ check (
 );
 
 -- Indexes for performance
-create index if not exists idx_whatsapp_listing_source_message_id on public.whatsapp_listing_data(source_message_id);
+create index if not exists idx_whatsapp_listing_source_raw_message_id on public.whatsapp_listing_data(source_raw_message_id);
 create index if not exists idx_whatsapp_listing_message_date on public.whatsapp_listing_data(message_date);
 create index if not exists idx_whatsapp_listing_agent_contact on public.whatsapp_listing_data(agent_contact);
 create index if not exists idx_whatsapp_listing_message_type on public.whatsapp_listing_data(message_type);
@@ -70,11 +72,11 @@ create index if not exists idx_whatsapp_listing_location on public.whatsapp_list
 create index if not exists idx_whatsapp_listing_special_features on public.whatsapp_listing_data using gin(special_features);
 
 -- Comments for documentation
-comment on table public.whatsapp_listing_data is 'Structured WhatsApp listing data extracted from raw messages using LLM';
-comment on column public.whatsapp_listing_data.source_message_id is 'Reference to original message in crea_wapp table (unique)';
-comment on column public.whatsapp_listing_data.message_type is 'Classification: supply_sale, supply_rent, demand_buy, demand_rent, greeting, garbage, generic_info. Only supply/demand have full data extracted.';
+comment on table public.whatsapp_listing_data is 'Structured WhatsApp listing data extracted from file uploads using LLM';
+comment on column public.whatsapp_listing_data.message_type is 'Classification: supply_sale, supply_rent, demand_buy, demand_rent, greeting, garbage. Only supply/demand have full data extracted.';
 comment on column public.whatsapp_listing_data.property_type is 'Normalized property category: apartment, villa, plot, etc.';
 comment on column public.whatsapp_listing_data.area_sqft is 'Property area in square feet';
+comment on column public.whatsapp_listing_data.bedroom_count is 'Number of bedrooms (e.g., 3 BHK = 3, Studio = 0)';
 comment on column public.whatsapp_listing_data.price is 'Numeric price in rupees (sale=total, rent=monthly)';
 comment on column public.whatsapp_listing_data.furnishing_status is 'unfurnished, semi_furnished, fully_furnished, bare_shell, warm_shell';
 comment on column public.whatsapp_listing_data.facing_direction is 'Normalized direction: north, south, east, west, or special facing like lake_facing';

@@ -130,6 +130,7 @@ async def extract_all_listings_stream(
                             "message_type": llm_output.message_type,
                             "property_type": llm_output.property_type,
                             "area_sqft": llm_output.area_sqft,
+                            "bedroom_count": llm_output.bedroom_count,
                             "price": llm_output.price,
                             "price_text": llm_output.price_text,
                             "location": llm_output.location,
@@ -388,14 +389,19 @@ async def get_extracted_listings(
     offset: int = Query(0, description="Number of listings to skip for pagination")
 ):
     """
-    Get extracted listings with pagination
+    Get relevant extracted listings with pagination (supply/demand only)
+
+    Returns only relevant listings from whatsapp_listings_relevant view:
+    - supply_sale, supply_rent, demand_buy, demand_rent
+    - Excludes greetings, garbage, and generic_info messages
+    - Sorted by message_date (newest first)
 
     Args:
         limit: Maximum number of listings (default: 100)
         offset: Number of listings to skip (default: 0)
 
     Returns:
-        List of extracted listings
+        List of relevant extracted listings
 
     Example:
         GET /api/whatsapp-listings?limit=50&offset=0
@@ -484,6 +490,46 @@ async def search_whatsapp_listings(
     except Exception as e:
         print(f"[API-WhatsAppListing] ✗ Error searching listings: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error searching listings: {str(e)}")
+
+
+@router.get("/search/message")
+async def search_whatsapp_raw_message(
+    query: str = Query(..., description="Search text to find in raw messages"),
+    limit: int = Query(100, description="Maximum number of results", ge=1, le=500)
+):
+    """
+    Search WhatsApp listings by raw message content (full-text search)
+
+    Searches for the query string within the raw_message field of whatsapp_listings_relevant view.
+    Only searches supply/demand listings (excludes greetings, garbage, etc).
+    Results are sorted by message_date (newest first).
+
+    Args:
+        query: Search text to find in messages (case-insensitive)
+        limit: Maximum number of results (1-500, default: 100)
+
+    Returns:
+        List of matching WhatsApp listings
+
+    Examples:
+        # Find all messages mentioning "Indiranagar"
+        GET /api/whatsapp-listings/search/message?query=Indiranagar
+
+        # Find messages about "3 BHK"
+        GET /api/whatsapp-listings/search/message?query=3%20BHK
+
+        # Find specific agent messages
+        GET /api/whatsapp-listings/search/message?query=Whitefield%20Villa
+    """
+    try:
+        print(f"[API-WhatsAppListing] Searching raw messages for: '{query}'")
+
+        result = await SupabaseService.search_whatsapp_raw_message(query=query, limit=limit)
+        return result
+
+    except Exception as e:
+        print(f"[API-WhatsAppListing] ✗ Error searching raw messages: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error searching raw messages: {str(e)}")
 
 
 # Progress endpoints removed - use /stats instead for database-driven progress

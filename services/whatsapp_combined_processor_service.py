@@ -23,7 +23,7 @@ class WhatsAppCombinedProcessorService:
     PROMPT_FILE = Path(__file__).parent.parent / "prompts" / "whatsapp_combined_processor.txt"
     _prompt_cache: Optional[str] = None
     _client: Optional[genai.Client] = None
-    _model: str = "gemini-2.0-flash-exp"
+    _model: str = "gemini-2.5-flash-lite"
 
     @classmethod
     def _get_client(cls) -> genai.Client:
@@ -128,7 +128,7 @@ class WhatsAppCombinedProcessorService:
                 processed_msg["extracted_agent_name"] = listing.get('agent_name')
                 processed_msg["extracted_agent_contact"] = listing.get('agent_contact')
                 processed_msg["property_type"] = listing.get('property_type')
-                processed_msg["bhk_config"] = listing.get('bhk_config')  # NEW: bedroom count
+                processed_msg["bedroom_count"] = listing.get('bedroom_count')
                 processed_msg["area_sqft"] = listing.get('area_sqft')
                 processed_msg["price"] = listing.get('price')
                 processed_msg["price_text"] = listing.get('price_text')
