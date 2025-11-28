@@ -1629,10 +1629,14 @@ class SupabaseService:
         Search WhatsApp relevant listings by raw message content (full-text search)
 
         Searches for the query string within the raw_message field of whatsapp_listings_relevant view.
+        Splits query by spaces and searches for ALL words (AND logic).
         Only searches supply/demand listings (excludes greetings, garbage, etc).
 
+        Example:
+            query="plot hrbr" returns messages containing BOTH "plot" AND "hrbr"
+
         Args:
-            query: Search text to find in raw messages (case-insensitive)
+            query: Search text to find in raw messages (space-separated, case-insensitive)
             limit: Maximum number of results (default: 100)
 
         Returns:
@@ -1641,26 +1645,44 @@ class SupabaseService:
         try:
             client = cls._get_client()
 
-            # Search in raw_message field using ILIKE for case-insensitive partial match
-            response = client.table("whatsapp_listings_relevant")\
-                .select("*")\
-                .ilike("raw_message", f"%{query}%")\
+            # Split query by spaces and filter out empty strings
+            search_terms = [term.strip() for term in query.split() if term.strip()]
+
+            if not search_terms:
+                return {
+                    "success": False,
+                    "data": [],
+                    "count": 0,
+                    "message": "Search query cannot be empty"
+                }
+
+            # Start with base query
+            response_query = client.table("whatsapp_listings_relevant").select("*")
+
+            # Chain ILIKE conditions for each term (AND logic)
+            for term in search_terms:
+                response_query = response_query.ilike("raw_message", f"%{term}%")
+
+            # Execute query
+            response = response_query\
                 .order("message_date", desc=True)\
                 .limit(limit)\
                 .execute()
 
             listings = response.data if response.data else []
 
-            print(f"[Supabase] ✓ WhatsApp raw message search for '{query}' returned {len(listings)} listings")
+            print(f"[Supabase] ✓ WhatsApp raw message search for '{query}' (terms: {search_terms}) returned {len(listings)} listings")
 
             return {
                 "success": True,
                 "data": listings,
                 "count": len(listings),
-                "message": f"Found {len(listings)} WhatsApp listings containing '{query}'",
+                "message": f"Found {len(listings)} WhatsApp listings containing ALL of: {', '.join(search_terms)}",
                 "metadata": {
                     "source": "whatsapp_listings_relevant",
                     "search_query": query,
+                    "search_terms": search_terms,
+                    "search_logic": "AND (all terms must match)",
                     "filters": "supply_sale, supply_rent, demand_buy, demand_rent only"
                 }
             }

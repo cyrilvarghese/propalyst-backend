@@ -494,32 +494,37 @@ async def search_whatsapp_listings(
 
 @router.get("/search/message")
 async def search_whatsapp_raw_message(
-    query: str = Query(..., description="Search text to find in raw messages"),
+    query: str = Query(..., description="Search text (space-separated terms, all must match)"),
     limit: int = Query(100, description="Maximum number of results", ge=1, le=500)
 ):
     """
-    Search WhatsApp listings by raw message content (full-text search)
+    Search WhatsApp listings by raw message content (multi-term AND search)
 
-    Searches for the query string within the raw_message field of whatsapp_listings_relevant view.
+    Searches for the query string(s) within the raw_message field of whatsapp_listings_relevant view.
+    Splits query by spaces and searches for ALL terms (AND logic).
     Only searches supply/demand listings (excludes greetings, garbage, etc).
     Results are sorted by message_date (newest first).
 
     Args:
-        query: Search text to find in messages (case-insensitive)
+        query: Search text (space-separated terms, case-insensitive). All terms must be present.
         limit: Maximum number of results (1-500, default: 100)
 
     Returns:
         List of matching WhatsApp listings
 
+    Search Logic:
+        "plot hrbr" → finds messages with BOTH "plot" AND "hrbr"
+        "3BHK villa whitefield" → finds messages with ALL three terms
+
     Examples:
-        # Find all messages mentioning "Indiranagar"
-        GET /api/whatsapp-listings/search/message?query=Indiranagar
+        # Find plot listings in HRBR
+        GET /api/whatsapp-listings/search/message?query=plot%20hrbr
 
-        # Find messages about "3 BHK"
-        GET /api/whatsapp-listings/search/message?query=3%20BHK
+        # Find 3BHK villas in Whitefield
+        GET /api/whatsapp-listings/search/message?query=3BHK%20villa%20whitefield
 
-        # Find specific agent messages
-        GET /api/whatsapp-listings/search/message?query=Whitefield%20Villa
+        # Find supply_sale messages in specific area
+        GET /api/whatsapp-listings/search/message?query=villa%20indiranagar&limit=50
     """
     try:
         print(f"[API-WhatsAppListing] Searching raw messages for: '{query}'")
