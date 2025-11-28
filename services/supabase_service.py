@@ -1624,19 +1624,23 @@ class SupabaseService:
             }
 
     @classmethod
-    async def search_whatsapp_raw_message(cls, query: str, limit: int = 100) -> Dict[str, Any]:
+    async def search_whatsapp_raw_message(cls, query: Optional[str] = None, limit: int = 100) -> Dict[str, Any]:
         """
         Search WhatsApp relevant listings by raw message content (full-text search)
 
-        Searches for the query string within the raw_message field of whatsapp_listings_relevant view.
-        Splits query by spaces and searches for ALL words (AND logic).
+        Behavior:
+        - If query provided: Searches for ALL terms in raw_message (AND logic)
+        - If query is None/empty: Returns all relevant listings sorted by message_date
+
+        Searches within the raw_message field of whatsapp_listings_relevant view.
         Only searches supply/demand listings (excludes greetings, garbage, etc).
 
         Example:
             query="plot hrbr" returns messages containing BOTH "plot" AND "hrbr"
+            query=None returns all records sorted by message_date (latest first)
 
         Args:
-            query: Search text to find in raw messages (space-separated, case-insensitive)
+            query: Search text to find in raw messages (space-separated, case-insensitive). Optional.
             limit: Maximum number of results (default: 100)
 
         Returns:
@@ -1644,6 +1648,30 @@ class SupabaseService:
         """
         try:
             client = cls._get_client()
+
+            # If no query provided, return all records sorted by message_date
+            if not query:
+                response = client.table("whatsapp_listings_relevant")\
+                    .select("*")\
+                    .order("message_date", desc=True)\
+                    .limit(limit)\
+                    .execute()
+
+                listings = response.data if response.data else []
+
+                print(f"[Supabase] ✓ WhatsApp raw message listing (no search) returned {len(listings)} listings")
+
+                return {
+                    "success": True,
+                    "data": listings,
+                    "count": len(listings),
+                    "message": f"Retrieved {len(listings)} WhatsApp listings (all records, sorted by latest)",
+                    "metadata": {
+                        "source": "whatsapp_listings_relevant",
+                        "search_type": "list_all",
+                        "filters": "supply_sale, supply_rent, demand_buy, demand_rent only"
+                    }
+                }
 
             # Split query by spaces and filter out empty strings
             search_terms = [term.strip() for term in query.split() if term.strip()]
@@ -1680,6 +1708,7 @@ class SupabaseService:
                 "message": f"Found {len(listings)} WhatsApp listings containing ALL of: {', '.join(search_terms)}",
                 "metadata": {
                     "source": "whatsapp_listings_relevant",
+                    "search_type": "multi_term_and",
                     "search_query": query,
                     "search_terms": search_terms,
                     "search_logic": "AND (all terms must match)",

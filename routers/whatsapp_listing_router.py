@@ -494,8 +494,8 @@ async def search_whatsapp_listings(
 
 @router.get("/search/message")
 async def search_whatsapp_raw_message(
-    query: str = Query(..., description="Search text (space-separated terms, all must match)"),
-    limit: int = Query(100, description="Maximum number of results", ge=1, le=500)
+    query: Optional[str] = Query(None, description="Search text (space-separated terms, all must match). If empty, returns all records."),
+    limit: int = Query(100, description="Maximum number of results", ge=1, le=700)
 ):
     """
     Search WhatsApp listings by raw message content (multi-term AND search)
@@ -505,8 +505,12 @@ async def search_whatsapp_raw_message(
     Only searches supply/demand listings (excludes greetings, garbage, etc).
     Results are sorted by message_date (newest first).
 
+    Behavior:
+        - If query is provided: Returns listings matching ALL search terms (AND logic)
+        - If query is empty/null: Returns all relevant listings sorted by message_date (latest first)
+
     Args:
-        query: Search text (space-separated terms, case-insensitive). All terms must be present.
+        query: Search text (space-separated terms, case-insensitive). All terms must be present. Optional.
         limit: Maximum number of results (1-500, default: 100)
 
     Returns:
@@ -515,6 +519,7 @@ async def search_whatsapp_raw_message(
     Search Logic:
         "plot hrbr" → finds messages with BOTH "plot" AND "hrbr"
         "3BHK villa whitefield" → finds messages with ALL three terms
+        (empty) → returns all records sorted by message_date
 
     Examples:
         # Find plot listings in HRBR
@@ -525,6 +530,12 @@ async def search_whatsapp_raw_message(
 
         # Find supply_sale messages in specific area
         GET /api/whatsapp-listings/search/message?query=villa%20indiranagar&limit=50
+
+        # Get all records (no search query)
+        GET /api/whatsapp-listings/search/message?limit=100
+
+        # Get all records with limit and offset-like pagination
+        GET /api/whatsapp-listings/search/message
     """
     try:
         print(f"[API-WhatsAppListing] Searching raw messages for: '{query}'")
