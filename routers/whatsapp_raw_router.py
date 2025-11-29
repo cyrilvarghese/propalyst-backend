@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import json
 import asyncio
 
-from services.whatsapp_parser_service import WhatsAppParserService
+from services.whatsapp_parser_service import WhatsAppParserService, WhatsAppFormatType
 from services.whatsapp_combined_processor_service import WhatsAppCombinedProcessorService
 from services.supabase_service import SupabaseService
 
@@ -64,13 +64,18 @@ async def upload_file(
         content = await file.read()
         content_str = content.decode('utf-8')
 
+        # Detect format
+        detected_format = WhatsAppParserService.detect_format(content_str)
+        print(f"[WhatsAppRaw] Format detected: {detected_format.value.upper()} (from file: {file.filename})")
+
         # Parse with regex
         messages = WhatsAppParserService.parse_file_content(
             content_str,
-            source_file=file.filename
+            source_file=file.filename,
+            format=detected_format
         )
 
-        print(f"[WhatsAppRaw] Parsed {len(messages)} messages from file")
+        print(f"[WhatsAppRaw] Parsed {len(messages)} messages from file (format: {detected_format.value})")
 
         # Insert into raw messages table (with deduplication)
         insert_result = await WhatsAppParserService.insert_raw_messages(messages)

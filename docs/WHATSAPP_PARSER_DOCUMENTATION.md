@@ -49,11 +49,13 @@ file: chunk_100.txt
 ```
 
 **What it does:**
-- Parses file with regex
+- Automatically detects format (iOS or Android)
+- Parses file with format-specific regex
 - Calculates MD5 hash for each message
 - Inserts into `whatsapp_raw_messages` table
 - Skips duplicates automatically
 - **NO LLM calls** (instant)
+- Logs detected format to server console
 
 ---
 
@@ -144,6 +146,88 @@ GET http://localhost:8000/api/whatsapp-raw/raw-stats
 - `media` - Media-only messages (filtered out)
 - `ready_for_llm` - Unprocessed AND not deleted AND not media
 - `unique_senders` - Count of unique sender names
+
+---
+
+## Supported WhatsApp Export Formats
+
+The parser supports **two WhatsApp export formats** and automatically detects which one is used:
+
+### **Format 1: iOS (iPhone)**
+
+**Format Pattern:** `[DD/MM/YY, HH:MM:SS AM/PM] Sender: Message`
+
+**Example:**
+```
+[06/07/16, 8:04:11 PM] ~ Vino: Sir i am accepting it is my mistake
+[10/07/16, 1:45:43 PM] Srinivas: Available for sale in Bangalore
+[11/3/25, 12:54:10 PM] ‪+91 98861 35757‬: Rental Inventory
+```
+
+**Characteristics:**
+- Timestamp in square brackets `[...]`
+- 12-hour format with AM/PM
+- Includes seconds (HH:MM:SS)
+- 2-digit year (YY)
+- Bracket-space separator `] ` before sender name
+
+---
+
+### **Format 2: Android**
+
+**Format Pattern:** `DD/MM/YYYY, HH:MM - Sender: Message`
+
+**Example:**
+```
+28/11/2025, 14:30 - John Doe: Hello everyone
+4/28/25, 8:31 AM - Vinay Gowda: *Purchasing Requirement for Villa*
+3/4/2025, 9:15 - Jane Smith: Property available
+```
+
+**Characteristics:**
+- No brackets around timestamp
+- 24-hour format (military time)
+- No seconds (HH:MM only)
+- 4-digit year (YYYY) or 2-digit year (YY)
+- Dash-space separator ` - ` before sender name
+- Single-digit days/months are allowed (3/4/2025 = April 3rd, 2025)
+
+---
+
+### **Format Detection (Automatic)**
+
+The parser automatically detects the format by:
+1. Scanning the first 50 lines of the file
+2. Counting matches for each format
+3. Returning the format with the most matches
+4. Logging the detected format to console (e.g., `[WhatsAppRaw] Format detected: IOS (from file: chunk_100.txt)`)
+
+**Example Server Output:**
+```
+[WhatsAppRaw] Format detected: ANDROID (from file: properties_may_2025.txt)
+[WhatsAppRaw] Parsed 487 messages from file (format: android)
+[WhatsAppRaw] Inserted 300 new, skipped 187 duplicates
+```
+
+### **Manual Format Override**
+
+If automatic detection fails, you can specify the format programmatically:
+
+```python
+from services.whatsapp_parser_service import WhatsAppParserService, WhatsAppFormatType
+
+# iOS format
+messages = WhatsAppParserService.parse_file_content(
+    content,
+    format=WhatsAppFormatType.IOS
+)
+
+# Android format
+messages = WhatsAppParserService.parse_file_content(
+    content,
+    format=WhatsAppFormatType.ANDROID
+)
+```
 
 ---
 

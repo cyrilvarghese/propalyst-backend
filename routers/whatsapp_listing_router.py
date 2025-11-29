@@ -443,59 +443,60 @@ async def get_extraction_stats():
         raise HTTPException(status_code=500, detail=f"Error retrieving stats: {str(e)}")
 
 
-@router.get("/search")
-async def search_whatsapp_listings(
-    agent_name: Optional[str] = Query(None, description="Agent or company name to search for"),
-    property_query: Optional[str] = Query(None, description="Property type or project name (e.g., 'Villa', '3BHK')"),
-    location: Optional[str] = Query(None, description="Location to search for"),
-    message_type: Optional[str] = Query(None, description="Filter by message type: supply_sale, supply_rent, demand_buy, demand_rent"),
-    limit: int = Query(100, description="Maximum number of results", ge=1, le=500),
-    similarity_threshold: float = Query(0.3, description="Fuzzy matching threshold (0-1)", ge=0, le=1)
-):
-    """
-    Search extracted WhatsApp listings with fuzzy matching
+# @router.get("/search")
+# async def search_whatsapp_listings(
+#     agent_name: Optional[str] = Query(None, description="Agent or company name to search for"),
+#     property_query: Optional[str] = Query(None, description="Property type or project name (e.g., 'Villa', '3BHK')"),
+#     location: Optional[str] = Query(None, description="Location to search for"),
+#     message_type: Optional[str] = Query(None, description="Filter by message type: supply_sale, supply_rent, demand_buy, demand_rent"),
+#     limit: int = Query(100, description="Maximum number of results", ge=1, le=500),
+#     similarity_threshold: float = Query(0.3, description="Fuzzy matching threshold (0-1)", ge=0, le=1)
+# ):
+#     """
+#     Search extracted WhatsApp listings with fuzzy matching
 
-    Searches structured data from whatsapp_listings_relevant view (supply/demand only).
-    Uses hybrid strategy: exact database matching + fuzzy client-side matching.
-    Filters use AND logic (all specified filters must match).
+#     Searches structured data from whatsapp_listings_relevant view (supply/demand only).
+#     Uses hybrid strategy: exact database matching + fuzzy client-side matching.
+#     Filters use AND logic (all specified filters must match).
 
-    Query Parameters:
-        agent_name: Search in agent_name, agent_contact, company_name fields
-        property_query: Search in property_type, project_name fields
-        location: Search in location field
-        message_type: Filter by type (supply_sale, supply_rent, demand_buy, demand_rent)
-        limit: Maximum results to return (1-500, default: 100)
-        similarity_threshold: Fuzzy match threshold 0-1 (default: 0.3, lower = more lenient)
+#     Query Parameters:
+#         agent_name: Search in agent_name, agent_contact, company_name fields
+#         property_query: Search in property_type, project_name fields
+#         location: Search in location field
+#         message_type: Filter by type (supply_sale, supply_rent, demand_buy, demand_rent)
+#         limit: Maximum results to return (1-500, default: 100)
+#         similarity_threshold: Fuzzy match threshold 0-1 (default: 0.3, lower = more lenient)
 
-    Examples:
-        GET /api/whatsapp-listings/search?location=Whitefield
-        GET /api/whatsapp-listings/search?agent_name=Tajamul&property_query=Villa
-        GET /api/whatsapp-listings/search?location=Indiranagar&message_type=supply_sale
-        GET /api/whatsapp-listings/search?property_query=3BHK&location=Koramangala&limit=50
-    """
-    try:
-        print(f"[API-WhatsAppListing] Searching with filters: agent={agent_name}, property={property_query}, location={location}, type={message_type}")
+#     Examples:
+#         GET /api/whatsapp-listings/search?location=Whitefield
+#         GET /api/whatsapp-listings/search?agent_name=Tajamul&property_query=Villa
+#         GET /api/whatsapp-listings/search?location=Indiranagar&message_type=supply_sale
+#         GET /api/whatsapp-listings/search?property_query=3BHK&location=Koramangala&limit=50
+#     """
+#     try:
+#         print(f"[API-WhatsAppListing] Searching with filters: agent={agent_name}, property={property_query}, location={location}, type={message_type}")
 
-        result = await SupabaseService.unified_search_whatsapp(
-            agent_name=agent_name,
-            property_query=property_query,
-            location=location,
-            message_type=message_type,
-            limit=limit,
-            similarity_threshold=similarity_threshold
-        )
+#         result = await SupabaseService.unified_search_whatsapp(
+#             agent_name=agent_name,
+#             property_query=property_query,
+#             location=location,
+#             message_type=message_type,
+#             limit=limit,
+#             similarity_threshold=similarity_threshold
+#         )
 
-        return result
+#         return result
 
-    except Exception as e:
-        print(f"[API-WhatsAppListing] ✗ Error searching listings: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error searching listings: {str(e)}")
+#     except Exception as e:
+#         print(f"[API-WhatsAppListing] ✗ Error searching listings: {str(e)}")
+#         raise HTTPException(status_code=500, detail=f"Error searching listings: {str(e)}")
 
 
 @router.get("/search/message")
 async def search_whatsapp_raw_message(
     query: Optional[str] = Query(None, description="Search text (space-separated terms, all must match). If empty, returns all records."),
-    limit: int = Query(100, description="Maximum number of results", ge=1, le=700)
+    limit: int = Query(100, description="Maximum number of results", ge=1, le=700),
+    offset: int = Query(0, description="Number of records to skip for pagination", ge=0)
 ):
     """
     Search WhatsApp listings by raw message content (multi-term AND search)
@@ -511,7 +512,8 @@ async def search_whatsapp_raw_message(
 
     Args:
         query: Search text (space-separated terms, case-insensitive). All terms must be present. Optional.
-        limit: Maximum number of results (1-500, default: 100)
+        limit: Maximum number of results (1-700, default: 100)
+        offset: Number of records to skip for pagination (default: 0)
 
     Returns:
         List of matching WhatsApp listings
@@ -531,16 +533,19 @@ async def search_whatsapp_raw_message(
         # Find supply_sale messages in specific area
         GET /api/whatsapp-listings/search/message?query=villa%20indiranagar&limit=50
 
-        # Get all records (no search query)
-        GET /api/whatsapp-listings/search/message?limit=100
+        # Get all records with pagination (first 100)
+        GET /api/whatsapp-listings/search/message?limit=100&offset=0
 
-        # Get all records with limit and offset-like pagination
-        GET /api/whatsapp-listings/search/message
+        # Get next page (skip first 100, get next 100)
+        GET /api/whatsapp-listings/search/message?limit=100&offset=100
+
+        # Search with pagination
+        GET /api/whatsapp-listings/search/message?query=3BHK&limit=200&offset=200
     """
     try:
-        print(f"[API-WhatsAppListing] Searching raw messages for: '{query}'")
+        print(f"[API-WhatsAppListing] Searching raw messages for: '{query}' (limit: {limit}, offset: {offset})")
 
-        result = await SupabaseService.search_whatsapp_raw_message(query=query, limit=limit)
+        result = await SupabaseService.search_whatsapp_raw_message(query=query, limit=limit, offset=offset)
         return result
 
     except Exception as e:

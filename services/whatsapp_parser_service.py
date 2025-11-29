@@ -10,8 +10,16 @@ import hashlib
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
 from pathlib import Path
+from enum import Enum
 
 from services.supabase_service import SupabaseService
+
+
+class WhatsAppFormatType(str, Enum):
+    """Enum for WhatsApp export format types"""
+    IOS = "ios"           # [DD/MM/YY, HH:MM:SS AM/PM] Sender: Message
+    ANDROID = "android"   # DD/MM/YYYY, HH:MM - Sender: Message
+    UNKNOWN = "unknown"
 
 
 class WhatsAppParserService:
@@ -19,24 +27,68 @@ class WhatsAppParserService:
     Service for parsing WhatsApp chat export files into structured messages
     """
 
-    # Regex pattern for WhatsApp message boundary
-    # Matches: [DD/MM/YY, HH:MM:SS AM/PM] Sender: Message
-    BOUNDARY_PATTERN = re.compile(
-        r'^\[(\d{2}/\d{2}/\d{2}),\s*(\d{1,2}:\d{2}:\d{2}\s*[AP]M)\]\s*([^:]+):\s*(.*)',
+    # iOS format: [DD/MM/YY, HH:MM:SS AM/PM] Sender: Message
+    # Supports both 1-2 digit day/month (e.g., 11/3/25 or 11/03/25)
+    IOS_BOUNDARY_PATTERN = re.compile(
+        r'^\[(\d{1,2}/\d{1,2}/\d{2}),\s*(\d{1,2}:\d{2}:\d{2}\s*[AP]M)\]\s*([^:]+):\s*(.*)',
         re.MULTILINE
     )
 
-    # Pattern for detecting system messages without sender
-    SYSTEM_MESSAGE_PATTERN = re.compile(
-        r'^\[(\d{2}/\d{2}/\d{2}),\s*(\d{1,2}:\d{2}:\d{2}\s*[AP]M)\]\s*(.+)$',
+    # Android format: DD/MM/YYYY, HH:MM - Sender: Message
+    # Supports both 1-2 digit day/month and 2-4 digit year (e.g., 3/4/2025 or 3/4/25)
+    ANDROID_BOUNDARY_PATTERN = re.compile(
+        r'^(\d{1,2}/\d{1,2}/\d{2,4}),\s*(\d{1,2}:\d{2})\s*-\s*([^:]+):\s*(.*)',
         re.MULTILINE
     )
+
+    # Legacy alias for backward compatibility
+    BOUNDARY_PATTERN = IOS_BOUNDARY_PATTERN
+
+    # Pattern for detecting system messages without sender (iOS format)
+    # Supports both 1-2 digit day/month (e.g., 11/3/25 or 11/03/25)
+    SYSTEM_MESSAGE_PATTERN = re.compile(
+        r'^\[(\d{1,2}/\d{1,2}/\d{2}),\s*(\d{1,2}:\d{2}:\d{2}\s*[AP]M)\]\s*(.+)$',
+        re.MULTILINE
+    )
+
+    @classmethod
+    def detect_format(cls, content: str) -> WhatsAppFormatType:
+        """
+        Detect WhatsApp export format by analyzing first 50 lines
+
+        Args:
+            content: String content of WhatsApp export file
+
+        Returns:
+            WhatsAppFormatType enum (ios, android, or unknown)
+        """
+        lines = content.split('\n')
+        ios_count = 0
+        android_count = 0
+
+        # Sample first 50 lines to detect format
+        for line in lines[:50]:
+            line_cleaned = line.lstrip('\u200e\u200f\ufeff')
+
+            if cls.IOS_BOUNDARY_PATTERN.match(line_cleaned):
+                ios_count += 1
+            elif cls.ANDROID_BOUNDARY_PATTERN.match(line_cleaned):
+                android_count += 1
+
+        # Return format with most matches
+        if ios_count > android_count and ios_count > 0:
+            return WhatsAppFormatType.IOS
+        elif android_count > ios_count and android_count > 0:
+            return WhatsAppFormatType.ANDROID
+        else:
+            return WhatsAppFormatType.UNKNOWN
 
     @classmethod
     def parse_file_content(
         cls,
         content: str,
-        source_file: Optional[str] = None
+        source_file: Optional[str] = None,
+        format: Optional[WhatsAppFormatType] = None
     ) -> List[Dict[str, Any]]:
         """
         Parse WhatsApp export content string into structured messages
@@ -44,10 +96,25 @@ class WhatsAppParserService:
         Args:
             content: String content of WhatsApp export file
             source_file: Optional name of source file for tracking
+            format: Optional format override (ios or android). Auto-detected if None.
 
         Returns:
             List of message dictionaries ready for database insertion
+
+        Raises:
+            ValueError: If format is unknown or unsupported
         """
+        # Auto-detect format if not specified
+        if format is None:
+            format = cls.detect_format(content)
+
+        if format == WhatsAppFormatType.UNKNOWN:
+            raise ValueError("Unable to detect WhatsApp export format. File must be in iOS [DD/MM/YY, HH:MM:SS AM/PM] or Android (DD/MM/YYYY, HH:MM) format.")
+
+        # Select pattern based on format
+        boundary_pattern = cls.IOS_BOUNDARY_PATTERN if format == WhatsAppFormatType.IOS else cls.ANDROID_BOUNDARY_PATTERN
+        is_ios_format = format == WhatsAppFormatType.IOS
+
         messages = []
         lines = content.split('\n')
 
@@ -60,7 +127,7 @@ class WhatsAppParserService:
             line_cleaned = line.lstrip('\u200e\u200f\ufeff')  # LTR mark, RTL mark, BOM
 
             # Try to match message boundary on cleaned line
-            match = cls.BOUNDARY_PATTERN.match(line_cleaned)
+            match = boundary_pattern.match(line_cleaned)
 
             if match:
                 # Save previous message if exists
@@ -73,9 +140,18 @@ class WhatsAppParserService:
                 date_str, time_str, sender, text = match.groups()
 
                 try:
-                    # Parse datetime (format: DD/MM/YY, HH:MM:SS AM/PM)
+                    # Determine datetime format based on format type and year length
+                    if is_ios_format:
+                        datetime_format = "%d/%m/%y %I:%M:%S %p"
+                    else:
+                        # Android: detect year format (2-digit vs 4-digit)
+                        # Count slashes to get year field, then check length
+                        year_part = date_str.split('/')[-1]
+                        datetime_format = "%d/%m/%y %H:%M" if len(year_part) == 2 else "%d/%m/%Y %H:%M"
+
+                    # Parse datetime using detected/specified format
                     datetime_str = f"{date_str} {time_str.strip()}"
-                    message_date = datetime.strptime(datetime_str, "%d/%m/%y %I:%M:%S %p")
+                    message_date = datetime.strptime(datetime_str, datetime_format)
 
                     # Detect special message types
                     is_deleted = "This message was deleted" in text or "‎This message was deleted" in text

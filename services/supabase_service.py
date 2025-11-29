@@ -1624,7 +1624,7 @@ class SupabaseService:
             }
 
     @classmethod
-    async def search_whatsapp_raw_message(cls, query: Optional[str] = None, limit: int = 100) -> Dict[str, Any]:
+    async def search_whatsapp_raw_message(cls, query: Optional[str] = None, limit: int = 100, offset: int = 0) -> Dict[str, Any]:
         """
         Search WhatsApp relevant listings by raw message content (full-text search)
 
@@ -1648,13 +1648,14 @@ class SupabaseService:
         """
         try:
             client = cls._get_client()
-
+            print(f"[Supabase] Searching WhatsApp raw message for: '{query}' (offset: {offset}, limit: {limit})")   
             # If no query provided, return all records sorted by message_date
             if not query:
                 response = client.table("whatsapp_listings_relevant")\
                     .select("*")\
                     .order("message_date", desc=True)\
                     .limit(limit)\
+                    .offset(offset)\
                     .execute()
 
                 listings = response.data if response.data else []
@@ -1695,6 +1696,7 @@ class SupabaseService:
             response = response_query\
                 .order("message_date", desc=True)\
                 .limit(limit)\
+                .offset(offset)\
                 .execute()
 
             listings = response.data if response.data else []
