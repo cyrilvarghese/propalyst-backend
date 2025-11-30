@@ -27,10 +27,13 @@ class WhatsAppParserService:
     Service for parsing WhatsApp chat export files into structured messages
     """
 
-    # iOS format: [DD/MM/YY, HH:MM:SS AM/PM] Sender: Message
-    # Supports both 1-2 digit day/month (e.g., 11/3/25 or 11/03/25)
+    # iOS format: [DD/MM/YY, HH:MM:SS AM/PM] or [DD/MM/YYYY, HH:MM:SS] Sender: Message
+    # Supports:
+    # - 1-2 digit day/month (e.g., 11/3/25 or 11/03/25)
+    # - 2 or 4 digit year (e.g., 25 or 2025)
+    # - 12-hour with AM/PM or 24-hour format (e.g., 2:30:45 PM or 20:30:45)
     IOS_BOUNDARY_PATTERN = re.compile(
-        r'^\[(\d{1,2}/\d{1,2}/\d{2}),\s*(\d{1,2}:\d{2}:\d{2}\s*[AP]M)\]\s*([^:]+):\s*(.*)',
+        r'^\[(\d{1,2}/\d{1,2}/\d{2,4}),\s*(\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?)\]\s*([^:]+):\s*(.*)',
         re.MULTILINE
     )
 
@@ -45,9 +48,9 @@ class WhatsAppParserService:
     BOUNDARY_PATTERN = IOS_BOUNDARY_PATTERN
 
     # Pattern for detecting system messages without sender (iOS format)
-    # Supports both 1-2 digit day/month (e.g., 11/3/25 or 11/03/25)
+    # Supports 1-2 digit day/month, 2-4 digit year, and both 12-hour and 24-hour formats
     SYSTEM_MESSAGE_PATTERN = re.compile(
-        r'^\[(\d{1,2}/\d{1,2}/\d{2}),\s*(\d{1,2}:\d{2}:\d{2}\s*[AP]M)\]\s*(.+)$',
+        r'^\[(\d{1,2}/\d{1,2}/\d{2,4}),\s*(\d{1,2}:\d{2}:\d{2}(?:\s*[AP]M)?)\]\s*(.+)$',
         re.MULTILINE
     )
 
@@ -140,12 +143,20 @@ class WhatsAppParserService:
                 date_str, time_str, sender, text = match.groups()
 
                 try:
-                    # Determine datetime format based on format type and year length
+                    # Determine datetime format based on format type
                     if is_ios_format:
-                        datetime_format = "%d/%m/%y %I:%M:%S %p"
+                        # iOS: detect year format (2-digit vs 4-digit) and time format (12-hour vs 24-hour)
+                        year_part = date_str.split('/')[-1]
+                        has_am_pm = 'AM' in time_str.upper() or 'PM' in time_str.upper()
+
+                        if len(year_part) == 2:
+                            # 2-digit year
+                            datetime_format = "%d/%m/%y %I:%M:%S %p" if has_am_pm else "%d/%m/%y %H:%M:%S"
+                        else:
+                            # 4-digit year
+                            datetime_format = "%d/%m/%Y %I:%M:%S %p" if has_am_pm else "%d/%m/%Y %H:%M:%S"
                     else:
                         # Android: detect year format (2-digit vs 4-digit)
-                        # Count slashes to get year field, then check length
                         year_part = date_str.split('/')[-1]
                         datetime_format = "%d/%m/%y %H:%M" if len(year_part) == 2 else "%d/%m/%Y %H:%M"
 
