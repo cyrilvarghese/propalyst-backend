@@ -1806,3 +1806,104 @@ class SupabaseService:
                 "data": None,
                 "message": f"Error retrieving stats: {str(e)}"
             }
+
+    @classmethod
+    async def get_listing_with_raw_message(cls, listing_id: str) -> Dict[str, Any]:
+        """
+        Get a listing from whatsapp_listing_data joined with its source raw message.
+
+        Performs a left join between:
+        - whatsapp_listing_data (processed table)
+        - whatsapp_raw_messages (raw table)
+
+        Returns comparison fields to help identify discrepancies:
+        - dates_match: Whether message_date matches
+        - exact_text_match: Whether raw_message matches raw_message_text
+
+        Args:
+            listing_id: UUID of the listing from whatsapp_listing_data table
+
+        Returns:
+            Dictionary with success status, processed listing data, and related raw message
+        """
+        try:
+            client = cls._get_client()
+
+            # Fetch the processed listing
+            processed_response = client.table("whatsapp_listing_data")\
+                .select("*")\
+                .eq("id", listing_id)\
+                .execute()
+
+            if not processed_response.data or len(processed_response.data) == 0:
+                print(f"[Supabase] ✗ Listing not found: {listing_id}")
+                return {
+                    "success": False,
+                    "data": None,
+                    "message": f"Listing with ID {listing_id} not found"
+                }
+
+            processed_listing = processed_response.data[0]
+            raw_message_id = processed_listing.get("source_raw_message_id")
+
+            # If no source raw message ID, return just the processed data
+            if not raw_message_id:
+                print(f"[Supabase] ✓ Retrieved listing {listing_id} (no source raw message)")
+                return {
+                    "success": True,
+                    "data": {
+                        "processed": processed_listing,
+                        "raw": None,
+                        "comparison": {
+                            "dates_match": None,
+                            "exact_text_match": None,
+                            "has_raw_message": False
+                        }
+                    },
+                    "message": f"Retrieved listing {listing_id} (no source raw message found)"
+                }
+
+            # Fetch the raw message
+            raw_response = client.table("whatsapp_raw_messages")\
+                .select("*")\
+                .eq("id", raw_message_id)\
+                .execute()
+
+            raw_message = raw_response.data[0] if raw_response.data and len(raw_response.data) > 0 else None
+
+            # Calculate comparison fields
+            dates_match = None
+            exact_text_match = None
+
+            if raw_message:
+                processed_date = processed_listing.get("message_date")
+                raw_date = raw_message.get("message_date")
+                dates_match = processed_date == raw_date if processed_date and raw_date else None
+
+                processed_msg = processed_listing.get("raw_message", "")
+                raw_msg = raw_message.get("message_text", "")
+                exact_text_match = processed_msg == raw_msg
+
+            print(f"[Supabase] ✓ Retrieved listing {listing_id} with raw message {raw_message_id}")
+
+            return {
+                "success": True,
+                "data": {
+                    "processed": processed_listing,
+                    "raw": raw_message,
+                    "comparison": {
+                        "dates_match": dates_match,
+                        "exact_text_match": exact_text_match,
+                        "has_raw_message": raw_message is not None
+                    }
+                },
+                "message": f"Successfully joined listing {listing_id} with raw message data"
+            }
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error fetching listing with raw message: {e}")
+            return {
+                "success": False,
+                "data": None,
+                "message": f"Error fetching listing: {str(e)}"
+            }

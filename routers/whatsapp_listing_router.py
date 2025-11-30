@@ -553,4 +553,59 @@ async def search_whatsapp_raw_message(
         raise HTTPException(status_code=500, detail=f"Error searching raw messages: {str(e)}")
 
 
+@router.get("/{listing_id}/source")
+async def get_listing_with_source_message(listing_id: str):
+    """
+    Get a processed listing joined with its source raw WhatsApp message.
+
+    Performs a left join between:
+    - whatsapp_listing_data (processed/extracted table)
+    - whatsapp_raw_messages (source raw messages table)
+
+    Includes comparison helpers:
+    - dates_match: Indicates if message_date values match
+    - exact_text_match: Indicates if raw message text matches exactly
+    - has_raw_message: Whether source raw message was found
+
+    Args:
+        listing_id: UUID of the listing from whatsapp_listing_data table
+
+    Returns:
+        Dictionary with processed listing data, source raw message, and comparison metadata
+
+    Example:
+        GET /api/whatsapp-listings/80739ff4-8b22-405c-8ba9-0ee271845855/source
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "processed": { ...listing_data... },
+                "raw": { ...raw_message_data... },
+                "comparison": {
+                    "dates_match": true,
+                    "exact_text_match": true,
+                    "has_raw_message": true
+                }
+            },
+            "message": "Successfully joined listing with raw message data"
+        }
+    """
+    try:
+        print(f"[API-WhatsAppListing] Fetching listing {listing_id} with source message")
+
+        result = await SupabaseService.get_listing_with_raw_message(listing_id)
+
+        if not result.get("success"):
+            raise HTTPException(status_code=404, detail=result.get("message"))
+
+        return result
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[API-WhatsAppListing] ✗ Error fetching listing with source: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error fetching listing: {str(e)}")
+
+
 # Progress endpoints removed - use /stats instead for database-driven progress
