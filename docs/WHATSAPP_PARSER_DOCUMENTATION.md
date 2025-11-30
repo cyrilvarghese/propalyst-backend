@@ -155,42 +155,50 @@ The parser supports **two WhatsApp export formats** and automatically detects wh
 
 ### **Format 1: iOS (iPhone)**
 
-**Format Pattern:** `[DD/MM/YY, HH:MM:SS AM/PM] Sender: Message`
+**Format Patterns:**
+- `[DD/MM/YY, HH:MM:SS AM/PM] Sender: Message` (12-hour with AM/PM, 2-digit year)
+- `[DD/MM/YYYY, HH:MM:SS] Sender: Message` (24-hour, 4-digit year)
 
-**Example:**
+**Examples:**
 ```
 [06/07/16, 8:04:11 PM] ~ Vino: Sir i am accepting it is my mistake
 [10/07/16, 1:45:43 PM] Srinivas: Available for sale in Bangalore
 [11/3/25, 12:54:10 PM] ‪+91 98861 35757‬: Rental Inventory
+[26/11/2025, 20:53:56] Naresh Shetty: Test message
 ```
 
 **Characteristics:**
 - Timestamp in square brackets `[...]`
-- 12-hour format with AM/PM
-- Includes seconds (HH:MM:SS)
-- 2-digit year (YY)
+- **Time format**: 12-hour with AM/PM (e.g., `8:04:11 PM`) **OR** 24-hour (e.g., `20:53:56`)
+- Always includes seconds (HH:MM:SS)
+- **Year format**: 2-digit (YY) **OR** 4-digit (YYYY)
 - Bracket-space separator `] ` before sender name
+- Single-digit days/months allowed (e.g., `11/3/25` = March 11, 2025)
 
 ---
 
 ### **Format 2: Android**
 
-**Format Pattern:** `DD/MM/YYYY, HH:MM - Sender: Message`
+**Format Patterns:**
+- `DD/MM/YY, HH:MM AM/PM - Sender: Message` (12-hour with AM/PM, 2-digit year)
+- `DD/MM/YYYY, HH:MM - Sender: Message` (24-hour, 4-digit year)
+- `DD/MM/YYYY, HH:MM - Sender: Message` (24-hour, 4-digit year)
 
-**Example:**
+**Examples:**
 ```
 28/11/2025, 14:30 - John Doe: Hello everyone
+11/22/25, 12:16 PM - Naresh S: Good Morning
 4/28/25, 8:31 AM - Vinay Gowda: *Purchasing Requirement for Villa*
 3/4/2025, 9:15 - Jane Smith: Property available
 ```
 
 **Characteristics:**
-- No brackets around timestamp
-- 24-hour format (military time)
+- No brackets around timestamp (unlike iOS)
+- **Time format**: 24-hour (e.g., `14:30`) **OR** 12-hour with AM/PM (e.g., `12:16 PM`)
 - No seconds (HH:MM only)
-- 4-digit year (YYYY) or 2-digit year (YY)
+- **Year format**: 2-digit (YY) **OR** 4-digit (YYYY)
 - Dash-space separator ` - ` before sender name
-- Single-digit days/months are allowed (3/4/2025 = April 3rd, 2025)
+- Single-digit days/months allowed (3/4/2025 = April 3rd, 2025)
 
 ---
 

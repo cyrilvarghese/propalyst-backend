@@ -38,9 +38,12 @@ class WhatsAppParserService:
     )
 
     # Android format: DD/MM/YYYY, HH:MM - Sender: Message
-    # Supports both 1-2 digit day/month and 2-4 digit year (e.g., 3/4/2025 or 3/4/25)
+    # Supports:
+    # - 1-2 digit day/month (e.g., 3/4 or 03/04)
+    # - 2 or 4 digit year (e.g., 25 or 2025)
+    # - 24-hour format (20:30) or 12-hour with AM/PM (3:24 PM)
     ANDROID_BOUNDARY_PATTERN = re.compile(
-        r'^(\d{1,2}/\d{1,2}/\d{2,4}),\s*(\d{1,2}:\d{2})\s*-\s*([^:]+):\s*(.*)',
+        r'^(\d{1,2}/\d{1,2}/\d{2,4}),\s*(\d{1,2}:\d{2}(?:\s*[AP]M)?)\s*-\s*([^:]+):\s*(.*)',
         re.MULTILINE
     )
 
@@ -112,7 +115,9 @@ class WhatsAppParserService:
             format = cls.detect_format(content)
 
         if format == WhatsAppFormatType.UNKNOWN:
-            raise ValueError("Unable to detect WhatsApp export format. File must be in iOS [DD/MM/YY, HH:MM:SS AM/PM] or Android (DD/MM/YYYY, HH:MM) format.")
+            raise ValueError("Unable to detect WhatsApp export format. Supported formats:\n"
+                           "  iOS: [DD/MM/YY, HH:MM:SS AM/PM] or [DD/MM/YYYY, HH:MM:SS]\n"
+                           "  Android: DD/MM/YY, HH:MM AM/PM or DD/MM/YYYY, HH:MM")
 
         # Select pattern based on format
         boundary_pattern = cls.IOS_BOUNDARY_PATTERN if format == WhatsAppFormatType.IOS else cls.ANDROID_BOUNDARY_PATTERN
@@ -156,9 +161,16 @@ class WhatsAppParserService:
                             # 4-digit year
                             datetime_format = "%d/%m/%Y %I:%M:%S %p" if has_am_pm else "%d/%m/%Y %H:%M:%S"
                     else:
-                        # Android: detect year format (2-digit vs 4-digit)
+                        # Android: detect year format (2-digit vs 4-digit) and time format (12-hour vs 24-hour)
                         year_part = date_str.split('/')[-1]
-                        datetime_format = "%d/%m/%y %H:%M" if len(year_part) == 2 else "%d/%m/%Y %H:%M"
+                        has_am_pm = 'AM' in time_str.upper() or 'PM' in time_str.upper()
+
+                        if len(year_part) == 2:
+                            # 2-digit year
+                            datetime_format = "%d/%m/%y %I:%M %p" if has_am_pm else "%d/%m/%y %H:%M"
+                        else:
+                            # 4-digit year
+                            datetime_format = "%d/%m/%Y %I:%M %p" if has_am_pm else "%d/%m/%Y %H:%M"
 
                     # Parse datetime using detected/specified format
                     datetime_str = f"{date_str} {time_str.strip()}"
