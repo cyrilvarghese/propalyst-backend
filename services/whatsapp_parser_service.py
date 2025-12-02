@@ -293,11 +293,13 @@ class WhatsAppParserService:
         try:
             # Add hash to each message
             messages_with_hash = []
+            hashes = []
             for msg in messages:
                 msg_copy = msg.copy()
 
                 # Calculate hash for deduplication
                 msg_copy['message_hash'] = cls.calculate_message_hash(msg)
+                hashes.append(msg_copy['message_hash'])
 
                 # Convert datetime to ISO format
                 if isinstance(msg_copy.get('message_date'), datetime):
@@ -305,24 +307,64 @@ class WhatsAppParserService:
 
                 messages_with_hash.append(msg_copy)
 
-            # Insert into Supabase with upsert (ON CONFLICT DO NOTHING)
+            # Check for existing duplicates BEFORE inserting
             client = SupabaseService._get_client()
-            response = client.table("whatsapp_raw_messages").upsert(
-                messages_with_hash,
-                on_conflict='message_hash',
-                ignore_duplicates=True
-            ).execute()
+            existing_response = client.table("whatsapp_raw_messages")\
+                .select("id, sender_name, message_text, message_date, message_hash")\
+                .in_("message_hash", hashes)\
+                .execute()
 
-            inserted_count = len(response.data) if response.data else 0
-            skipped_count = len(messages) - inserted_count
+            # Build lookup of existing messages by hash
+            existing_by_hash = {}
+            if existing_response.data:
+                for existing in existing_response.data:
+                    existing_by_hash[existing['message_hash']] = existing
 
-            print(f"[WhatsAppParser] Inserted {inserted_count} new messages, skipped {skipped_count} duplicates")
+            # Find duplicate pairs
+            duplicate_pairs = []
+            messages_to_insert = []
+
+            for msg in messages_with_hash:
+                msg_hash = msg['message_hash']
+                if msg_hash in existing_by_hash:
+                    # This is a duplicate
+                    existing = existing_by_hash[msg_hash]
+                    duplicate_pairs.append({
+                        "existing": {
+                            "id": existing['id'],
+                            "sender": existing['sender_name'],
+                            "preview": existing['message_text'][:150] if existing['message_text'] else "",
+                            "date": existing['message_date']
+                        },
+                        "incoming": {
+                            "sender": msg.get('sender_name'),
+                            "preview": msg.get('message_text', '')[:150],
+                            "date": msg.get('message_date')
+                        }
+                    })
+                else:
+                    # New message
+                    messages_to_insert.append(msg)
+
+            # Insert only new messages
+            inserted_count = 0
+            if messages_to_insert:
+                response = client.table("whatsapp_raw_messages").insert(
+                    messages_to_insert
+                ).execute()
+                inserted_count = len(response.data) if response.data else 0
+
+            skipped_count = len(duplicate_pairs)
+
+            print(f"[WhatsAppParser] Inserted {inserted_count} new messages, found {skipped_count} duplicates")
 
             return {
                 "success": True,
                 "messages_inserted": inserted_count,
                 "messages_skipped": skipped_count,
-                "message": f"Inserted {inserted_count} messages, skipped {skipped_count} duplicates"
+                "duplicate_pairs": duplicate_pairs[:10],  # First 10 duplicate pairs
+                "total_duplicates": skipped_count,
+                "message": f"Inserted {inserted_count} messages, found {skipped_count} duplicates"
             }
 
         except Exception as e:
@@ -331,6 +373,8 @@ class WhatsAppParserService:
                 "success": False,
                 "messages_inserted": 0,
                 "messages_skipped": 0,
+                "duplicate_pairs": [],
+                "total_duplicates": 0,
                 "message": f"Failed to insert messages: {str(e)}"
             }
 

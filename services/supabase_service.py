@@ -7,6 +7,7 @@ Handles connections and queries to Supabase database.
 
 import os
 from typing import List, Dict, Any, Optional
+from datetime import datetime
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
@@ -1805,6 +1806,91 @@ class SupabaseService:
                 "success": False,
                 "data": None,
                 "message": f"Error retrieving stats: {str(e)}"
+            }
+
+    @classmethod
+    async def get_extracted_listing_by_id(cls, listing_id: str) -> Dict[str, Any]:
+        """
+        Get a single extracted listing by ID from whatsapp_listing_data
+
+        Args:
+            listing_id: UUID of the listing
+
+        Returns:
+            Dictionary with success status and listing data
+        """
+        try:
+            client = cls._get_client()
+
+            response = client.table("whatsapp_listing_data")\
+                .select("*")\
+                .eq("id", listing_id)\
+                .execute()
+
+            if response.data and len(response.data) > 0:
+                listing = response.data[0]
+                print(f"[Supabase] ✓ Found extracted listing: {listing_id}")
+                return {
+                    "success": True,
+                    "data": listing,
+                    "message": "Listing found"
+                }
+            else:
+                print(f"[Supabase] ✗ Extracted listing not found: {listing_id}")
+                return {
+                    "success": False,
+                    "data": None,
+                    "message": f"Extracted listing with ID {listing_id} not found"
+                }
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error retrieving extracted listing: {e}")
+            return {
+                "success": False,
+                "data": None,
+                "message": f"Error retrieving listing: {str(e)}"
+            }
+
+    @classmethod
+    async def update_extracted_listing(cls, listing_id: str, update_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Update an extracted listing in whatsapp_listing_data table
+
+        Args:
+            listing_id: UUID of the listing to update
+            update_data: Dictionary with fields to update
+
+        Returns:
+            Result dictionary with success status
+        """
+        try:
+            client = cls._get_client()
+
+            response = client.table("whatsapp_listing_data")\
+                .update(update_data)\
+                .eq("id", listing_id)\
+                .execute()
+
+            if response.data and len(response.data) > 0:
+                print(f"[Supabase] ✓ Updated extracted listing: {listing_id}")
+                return {
+                    "success": True,
+                    "data": response.data[0],
+                    "message": f"Listing {listing_id} updated successfully"
+                }
+            else:
+                return {
+                    "success": False,
+                    "data": None,
+                    "message": f"Failed to update listing {listing_id}"
+                }
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error updating extracted listing: {e}")
+            return {
+                "success": False,
+                "data": None,
+                "message": f"Error updating listing: {str(e)}"
             }
 
     @classmethod

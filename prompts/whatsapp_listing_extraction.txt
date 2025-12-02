@@ -41,7 +41,7 @@ You are analyzing a WhatsApp property listing message to extract structured data
 
 **BEDROOMS** (bedroom_count):
 - Extract the number of bedrooms as an integer
-- Examples: "3 BHK" → 3, "2BHK" → 2, "4 bed" → 4, "Studio" → 0
+- Examples: "3 BHK" → 3,"2bhk" → 2, "2BHK" → 2, "4 bed" → 4, "Studio" → 0
 - For ranges like "3-4 BHK", pick the lower value: 3
 - Set to null if not mentioned
 

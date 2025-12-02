@@ -52,7 +52,7 @@ For EACH listing (after splitting), extract the following fields. Return `null` 
 - **price_text**: Keep original text (e.g., "90/- per sqft negotiable" or "1.2 Cr + Reg").
 - **location**: Main locality (e.g., "Indiranagar").
 - **project_name**: Building/Society name.
-- **bedroom_count**: Number of bedrooms as integer (e.g., "3 BHK" -> 3, "2BHK" -> 2, "Studio" -> 0). `null` for plots/commercial.
+- **bedroom_count**: Number of bedrooms as integer (e.g., "3 BHK" -> 3,"2bhk" -> 2, "2BHK" -> 2, "Studio" -> 0). If a range is provided (e.g., '2 or 3 BHK'), use the lowest number. `null` for plots/commercial.
 - **furnishing_status**: `unfurnished`, `semi_furnished`, `fully_furnished`, `bare_shell`.
 - **facing_direction**: `north`, `east`, `west`, `south`, `north_east`, etc.
 - **special_features**: Array of strings. Include keywords like: `["corner_plot", "gated_community", "khata_b", "negotiable", "metro_nearby"]`.
@@ -76,7 +76,7 @@ For EACH listing (after splitting), extract the following fields. Return `null` 
       "agent_name": "Name",
       "agent_contact": "Number",
       "property_type": "apartment",
-      "bedroom_count": 2,
+      "bedroom_count": 2,//BHK count
       "area_sqft": 1200,
       "price": 12500000,
       "price_text": "1.25 Cr Negotiable",

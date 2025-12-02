@@ -13,7 +13,9 @@ from .crea_wapp_router import router as crea_wapp_router
 from .shortlist_router import router as shortlist_router
 from .agent_profile_router import router as agent_profile_router
 from .whatsapp_listing_router import router as whatsapp_listing_router
-from .whatsapp_raw_router import router as whatsapp_raw_router
+from .whatsapp_upload_processing_router import router as whatsapp_upload_processing_router
+from .whatsapp_listings_router import router as whatsapp_listings_router
+from .whatsapp_stats_router import router as whatsapp_stats_router
 
 __all__ = [
     "ui_router",
@@ -24,5 +26,7 @@ __all__ = [
     "shortlist_router",
     "agent_profile_router",
     "whatsapp_listing_router",
-    "whatsapp_raw_router"
+    "whatsapp_upload_processing_router",
+    "whatsapp_listings_router",
+    "whatsapp_stats_router"
 ]

@@ -38,7 +38,10 @@ from dotenv import load_dotenv
 from graphs import ui_generator_graph, propalyst_graph
 
 # Import routers
-from routers import ui_router, propalyst_router, search_router, scraping_router, shortlist_router, crea_wapp_router, agent_profile_router, whatsapp_listing_router, whatsapp_raw_router
+from routers import ui_router, propalyst_router, search_router, scraping_router, shortlist_router, crea_wapp_router, agent_profile_router, whatsapp_listing_router
+from routers.whatsapp_upload_processing_router import router as whatsapp_upload_processing_router
+from routers.whatsapp_listings_router import router as whatsapp_listings_router
+from routers.whatsapp_stats_router import router as whatsapp_stats_router
 
 # Load environment variables from .env file
 load_dotenv()
@@ -86,7 +89,9 @@ app.include_router(shortlist_router)
 app.include_router(crea_wapp_router)
 app.include_router(agent_profile_router)
 app.include_router(whatsapp_listing_router)
-app.include_router(whatsapp_raw_router)
+app.include_router(whatsapp_upload_processing_router)
+app.include_router(whatsapp_listings_router)
+app.include_router(whatsapp_stats_router)
 
 # ============================================================================
 # HEALTH CHECK ENDPOINTS
