@@ -10,6 +10,7 @@ from typing import List, Dict, Any, Optional
 from datetime import datetime
 from supabase import create_client, Client
 from dotenv import load_dotenv
+from google import genai
 
 load_dotenv()
 
@@ -2010,4 +2011,167 @@ class SupabaseService:
                 "success": False,
                 "data": None,
                 "message": f"Error fetching listing: {str(e)}"
+            }
+
+    @classmethod
+    def _fallback_short_desc(cls, listing_data: Dict[str, Any]) -> str:
+        """Generate fallback short description without LLM"""
+        project_name = listing_data.get("project_name")
+        location = listing_data.get("location")
+        property_type = listing_data.get("property_type")
+
+        if project_name and location:
+            return f"{project_name}, {location}"
+        elif property_type and location:
+            return f"{property_type} in {location}"
+        elif location:
+            return f"Property in {location}"
+        else:
+            return "Property listing"
+
+    @classmethod
+    async def generate_short_desc(cls, listing_data: Dict[str, Any]) -> str:
+        """
+        Generate short property description using LLM with fallback logic
+
+        Tries Gemini LLM first, falls back to simple text combination if:
+        - No API key configured
+        - LLM call fails
+        - Any error occurs
+
+        Args:
+            listing_data: WhatsApp listing data dictionary
+
+        Returns:
+            Short description string (50-100 chars)
+        """
+        try:
+            api_key = os.getenv("GEMINI_AI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+            if not api_key:
+                print("[Supabase] ℹ Gemini API key not configured, using fallback description")
+                return cls._fallback_short_desc(listing_data)
+
+            client = genai.Client(api_key=api_key)
+
+            # Extract relevant fields for description
+            property_type = listing_data.get("property_type", "Property")
+            location = listing_data.get("location", "")
+            project_name = listing_data.get("project_name", "")
+            price = listing_data.get("price")
+            area_sqft = listing_data.get("area_sqft")
+            bedroom_count = listing_data.get("bedroom_count")
+
+            # Build context for LLM
+            prompt = f"""Generate a concise property description (50-100 characters) for real estate listing:
+
+Property Type: {property_type}
+Location: {location}
+Project: {project_name}
+Bedrooms: {bedroom_count}
+Area: {area_sqft} sqft
+Price: {price}
+
+Output: Just the description text, no quotes or extra formatting.
+Example: "3BHK apartment in Whitefield, Prestige Lake Ridge, 2400 sqft"
+"""
+
+            response = client.models.generate_content(
+                model="gemini-2.0-flash-exp",
+                contents=prompt
+            )
+
+            short_desc = response.text.strip() if response.text else None
+            if short_desc:
+                print(f"[Supabase] ✓ Generated short_desc via LLM: {short_desc[:50]}...")
+                return short_desc
+            else:
+                print("[Supabase] ℹ LLM returned empty response, using fallback")
+                return cls._fallback_short_desc(listing_data)
+
+        except Exception as e:
+            print(f"[Supabase] ℹ LLM generation failed ({type(e).__name__}), using fallback: {str(e)[:100]}")
+            return cls._fallback_short_desc(listing_data)
+
+    @classmethod
+    async def check_matching_supply_duplicate(cls, lead_id: int, supply_id: str) -> bool:
+        """
+        Check if matching_supply record already exists for lead_id + supply_id combination
+
+        Args:
+            lead_id: Lead ID (bigint)
+            supply_id: Supply ID (text, from whatsapp listing UUID)
+
+        Returns:
+            True if duplicate exists, False otherwise
+        """
+        try:
+            client = cls._get_client()
+
+            response = client.table("matching_supply")\
+                .select("id")\
+                .eq("lead_id", lead_id)\
+                .eq("supply_id", supply_id)\
+                .execute()
+
+            exists = response.data and len(response.data) > 0
+
+            if exists:
+                print(f"[Supabase] ⚠️ Duplicate matching_supply found: lead_id={lead_id}, supply_id={supply_id[:20]}...")
+
+            return exists
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error checking duplicate match: {e}")
+            # Return False to allow insert to proceed (error handling at insert level)
+            return False
+
+    @classmethod
+    async def insert_matching_supply(cls, match_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Insert new record into matching_supply table
+
+        Args:
+            match_data: Dictionary with matching_supply fields (lead_id, supply_id, etc)
+
+        Returns:
+            {"success": bool, "data": dict, "message": str}
+        """
+        try:
+            client = cls._get_client()
+
+            response = client.table("matching_supply")\
+                .insert(match_data)\
+                .execute()
+
+            if response.data:
+                inserted = response.data[0]
+                print(f"[Supabase] ✓ Inserted matching_supply: lead_id={match_data.get('lead_id')}, supply_id={match_data.get('supply_id')[:20]}...")
+                return {
+                    "success": True,
+                    "data": inserted,
+                    "message": f"Successfully created match for lead {match_data.get('lead_id')}"
+                }
+            else:
+                return {
+                    "success": False,
+                    "data": None,
+                    "message": "Failed to insert matching_supply record"
+                }
+
+        except Exception as e:
+            error_msg = str(e)
+            print(f"[Supabase] ✗ Error inserting matching_supply: {error_msg[:200]}")
+
+            # Check for foreign key constraint violations
+            if "foreign key" in error_msg.lower() or "violates" in error_msg.lower():
+                return {
+                    "success": False,
+                    "data": None,
+                    "message": f"Foreign key constraint failed. Check if lead_id exists: {error_msg[:100]}"
+                }
+
+            return {
+                "success": False,
+                "data": None,
+                "message": f"Error inserting match: {error_msg[:150]}"
             }
