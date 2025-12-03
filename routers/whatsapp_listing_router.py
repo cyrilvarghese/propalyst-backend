@@ -496,10 +496,12 @@ async def get_extraction_stats():
 async def search_whatsapp_raw_message(
     query: Optional[str] = Query(None, description="Search text (space-separated terms, all must match). If empty, returns all records."),
     limit: int = Query(100, description="Maximum number of results", ge=1, le=700),
-    offset: int = Query(0, description="Number of records to skip for pagination", ge=0)
+    offset: int = Query(0, description="Number of records to skip for pagination", ge=0),
+    message_type: Optional[str] = Query(None, description="Filter by exact message type (supply_sale, supply_rent, demand_buy, demand_rent)"),
+    property_type: Optional[str] = Query(None, description="Filter by exact property type (villa, plot, apartment, etc)")
 ):
     """
-    Search WhatsApp listings by raw message content (multi-term AND search)
+    Search WhatsApp listings by raw message content (multi-term AND search) with optional filters
 
     Searches for the query string(s) within the raw_message field of whatsapp_listings_relevant view.
     Splits query by spaces and searches for ALL terms (AND logic).
@@ -509,11 +511,14 @@ async def search_whatsapp_raw_message(
     Behavior:
         - If query is provided: Returns listings matching ALL search terms (AND logic)
         - If query is empty/null: Returns all relevant listings sorted by message_date (latest first)
+        - Filters (message_type, property_type) use exact matching (equals condition)
 
     Args:
         query: Search text (space-separated terms, case-insensitive). All terms must be present. Optional.
         limit: Maximum number of results (1-700, default: 100)
         offset: Number of records to skip for pagination (default: 0)
+        message_type: Filter by exact message type (supply_sale, supply_rent, demand_buy, demand_rent). Optional.
+        property_type: Filter by exact property type (villa, plot, apartment, etc). Optional.
 
     Returns:
         List of matching WhatsApp listings
@@ -541,11 +546,20 @@ async def search_whatsapp_raw_message(
 
         # Search with pagination
         GET /api/whatsapp-listings/search/message?query=3BHK&limit=200&offset=200
+
+        # Filter by message_type
+        GET /api/whatsapp-listings/search/message?message_type=supply_sale
+
+        # Filter by property_type
+        GET /api/whatsapp-listings/search/message?property_type=villa
+
+        # Combine search and filters
+        GET /api/whatsapp-listings/search/message?query=whitefield&message_type=supply_sale&property_type=villa
     """
     try:
-        print(f"[API-WhatsAppListing] Searching raw messages for: '{query}' (limit: {limit}, offset: {offset})")
+        print(f"[API-WhatsAppListing] Searching raw messages for: '{query}' (limit: {limit}, offset: {offset}, message_type: {message_type}, property_type: {property_type})")
 
-        result = await SupabaseService.search_whatsapp_raw_message(query=query, limit=limit, offset=offset)
+        result = await SupabaseService.search_whatsapp_raw_message(query=query, limit=limit, offset=offset, message_type=message_type, property_type=property_type)
         return result
 
     except Exception as e:

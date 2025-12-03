@@ -1625,13 +1625,14 @@ class SupabaseService:
             }
 
     @classmethod
-    async def search_whatsapp_raw_message(cls, query: Optional[str] = None, limit: int = 100, offset: int = 0) -> Dict[str, Any]:
+    async def search_whatsapp_raw_message(cls, query: Optional[str] = None, limit: int = 100, offset: int = 0, message_type: Optional[str] = None, property_type: Optional[str] = None) -> Dict[str, Any]:
         """
         Search WhatsApp relevant listings by raw message content (full-text search)
 
         Behavior:
         - If query provided: Searches for ALL terms in raw_message (AND logic)
         - If query is None/empty: Returns all relevant listings sorted by message_date
+        - Supports filtering by message_type and property_type (exact match)
 
         Searches within the raw_message field of whatsapp_listings_relevant view.
         Only searches supply/demand listings (excludes greetings, garbage, etc).
@@ -1639,21 +1640,32 @@ class SupabaseService:
         Example:
             query="plot hrbr" returns messages containing BOTH "plot" AND "hrbr"
             query=None returns all records sorted by message_date (latest first)
+            message_type="supply_sale" filters to only supply sale messages
+            property_type="villa" filters to only villa properties
 
         Args:
             query: Search text to find in raw messages (space-separated, case-insensitive). Optional.
             limit: Maximum number of results (default: 100)
+            message_type: Filter by exact message type match (supply_sale, supply_rent, demand_buy, demand_rent). Optional.
+            property_type: Filter by exact property type match (villa, plot, apartment, etc). Optional.
 
         Returns:
             Dictionary with success status and matching listings
         """
         try:
             client = cls._get_client()
-            print(f"[Supabase] Searching WhatsApp raw message for: '{query}' (offset: {offset}, limit: {limit})")   
+            print(f"[Supabase] Searching WhatsApp raw message for: '{query}' (offset: {offset}, limit: {limit}, message_type: {message_type}, property_type: {property_type})")
             # If no query provided, return all records sorted by message_date
             if not query:
-                response = client.table("whatsapp_listings_relevant")\
-                    .select("*")\
+                response_query = client.table("whatsapp_listings_relevant").select("*")
+
+                # Apply exact match filters if provided
+                if message_type:
+                    response_query = response_query.eq("message_type", message_type)
+                if property_type:
+                    response_query = response_query.eq("property_type", property_type)
+
+                response = response_query\
                     .order("message_date", desc=True)\
                     .limit(limit)\
                     .offset(offset)\
@@ -1692,6 +1704,12 @@ class SupabaseService:
             # Chain ILIKE conditions for each term (AND logic)
             for term in search_terms:
                 response_query = response_query.ilike("raw_message", f"%{term}%")
+
+            # Apply exact match filters if provided
+            if message_type:
+                response_query = response_query.eq("message_type", message_type)
+            if property_type:
+                response_query = response_query.eq("property_type", property_type)
 
             # Execute query
             response = response_query\
