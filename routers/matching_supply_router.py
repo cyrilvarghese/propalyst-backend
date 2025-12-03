@@ -97,16 +97,8 @@ async def create_matching_supply(request: MatchingSupplyCreateRequest):
 
         if not insert_result.get("success"):
             error_msg = insert_result.get("message", "Unknown error")
-
-            # Check if FK violation (lead_id doesn't exist)
-            if "foreign key" in error_msg.lower():
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Lead ID {request.lead_id} does not exist in leads table"
-                )
-
             raise HTTPException(
-                status_code=500,
+                status_code=400,
                 detail=error_msg
             )
 

@@ -2160,18 +2160,10 @@ Example: "3BHK apartment in Whitefield, Prestige Lake Ridge, 2400 sqft"
 
         except Exception as e:
             error_msg = str(e)
-            print(f"[Supabase] ✗ Error inserting matching_supply: {error_msg[:200]}")
-
-            # Check for foreign key constraint violations
-            if "foreign key" in error_msg.lower() or "violates" in error_msg.lower():
-                return {
-                    "success": False,
-                    "data": None,
-                    "message": f"Foreign key constraint failed. Check if lead_id exists: {error_msg[:100]}"
-                }
+            print(f"[Supabase] ✗ Error inserting matching_supply: {error_msg}")
 
             return {
                 "success": False,
                 "data": None,
-                "message": f"Error inserting match: {error_msg[:150]}"
+                "message": f"Error inserting match: {error_msg}"
             }
