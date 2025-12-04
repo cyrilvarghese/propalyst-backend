@@ -6,7 +6,7 @@ API endpoints for uploading WhatsApp chat exports and processing raw messages.
 - Stage 2: Process messages with LLM
 """
 
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile, File, Form
 from fastapi.responses import StreamingResponse
 from datetime import datetime, timedelta
 import json
@@ -25,7 +25,8 @@ router = APIRouter(
 
 @router.post("/upload-file")
 async def upload_file(
-    file: UploadFile = File(..., description="WhatsApp chat export text file")
+    file: UploadFile = File(..., description="WhatsApp chat export text file"),
+    date_format_preference: str = Form("DD/MM/YY", description="Date format: DD/MM/YY (default, most common) or MM/DD/YY (US format)")
 ):
     """
     STAGE 1: Upload WhatsApp file and parse into raw messages (NO LLM processing)
@@ -38,6 +39,10 @@ async def upload_file(
     5. **STOPS HERE** - No LLM processing
 
     **Next Step**: Use `POST /process-unprocessed-stream` to process with LLM
+
+    **Parameters**:
+    - `file`: WhatsApp chat export .txt file
+    - `date_format_preference`: Date format in export (default: DD/MM/YY for most countries, use MM/DD/YY for US exports)
 
     **Benefits**:
     - Fast upload (no LLM calls)
@@ -74,7 +79,8 @@ async def upload_file(
         messages = WhatsAppParserService.parse_file_content(
             content_str,
             source_file=file.filename,
-            format=detected_format
+            format=detected_format,
+            date_format_preference=date_format_preference
         )
 
         print(f"[WhatsAppRaw] Parsed {len(messages)} messages from file (format: {detected_format.value})")

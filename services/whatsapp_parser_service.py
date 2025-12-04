@@ -6,6 +6,7 @@ Implements the parsing specification from chat_chunks/chunk_100.txt.
 """
 
 import re
+import json
 import hashlib
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
@@ -94,7 +95,8 @@ class WhatsAppParserService:
         cls,
         content: str,
         source_file: Optional[str] = None,
-        format: Optional[WhatsAppFormatType] = None
+        format: Optional[WhatsAppFormatType] = None,
+        date_format_preference: str = "DD/MM/YY"
     ) -> List[Dict[str, Any]]:
         """
         Parse WhatsApp export content string into structured messages
@@ -103,6 +105,7 @@ class WhatsAppParserService:
             content: String content of WhatsApp export file
             source_file: Optional name of source file for tracking
             format: Optional format override (ios or android). Auto-detected if None.
+            date_format_preference: Date format in export - "DD/MM/YY" (default) or "MM/DD/YY" (US format)
 
         Returns:
             List of message dictionaries ready for database insertion
@@ -155,22 +158,34 @@ class WhatsAppParserService:
                         has_am_pm = 'AM' in time_str.upper() or 'PM' in time_str.upper()
 
                         if len(year_part) == 2:
-                            # 2-digit year
-                            datetime_format = "%d/%m/%y %I:%M:%S %p" if has_am_pm else "%d/%m/%y %H:%M:%S"
+                            # 2-digit year - apply user date format preference
+                            if date_format_preference == "MM/DD/YY":
+                                datetime_format = "%m/%d/%y %I:%M:%S %p" if has_am_pm else "%m/%d/%y %H:%M:%S"
+                            else:  # DD/MM/YY (default)
+                                datetime_format = "%d/%m/%y %I:%M:%S %p" if has_am_pm else "%d/%m/%y %H:%M:%S"
                         else:
-                            # 4-digit year
-                            datetime_format = "%d/%m/%Y %I:%M:%S %p" if has_am_pm else "%d/%m/%Y %H:%M:%S"
+                            # 4-digit year - apply user date format preference
+                            if date_format_preference == "MM/DD/YY":
+                                datetime_format = "%m/%d/%Y %I:%M:%S %p" if has_am_pm else "%m/%d/%Y %H:%M:%S"
+                            else:  # DD/MM/YY (default)
+                                datetime_format = "%d/%m/%Y %I:%M:%S %p" if has_am_pm else "%d/%m/%Y %H:%M:%S"
                     else:
                         # Android: detect year format (2-digit vs 4-digit) and time format (12-hour vs 24-hour)
                         year_part = date_str.split('/')[-1]
                         has_am_pm = 'AM' in time_str.upper() or 'PM' in time_str.upper()
 
                         if len(year_part) == 2:
-                            # 2-digit year
-                            datetime_format = "%d/%m/%y %I:%M %p" if has_am_pm else "%d/%m/%y %H:%M"
+                            # 2-digit year - apply user date format preference
+                            if date_format_preference == "MM/DD/YY":
+                                datetime_format = "%m/%d/%y %I:%M %p" if has_am_pm else "%m/%d/%y %H:%M"
+                            else:  # DD/MM/YY (default)
+                                datetime_format = "%d/%m/%y %I:%M %p" if has_am_pm else "%d/%m/%y %H:%M"
                         else:
-                            # 4-digit year
-                            datetime_format = "%d/%m/%Y %I:%M %p" if has_am_pm else "%d/%m/%Y %H:%M"
+                            # 4-digit year - apply user date format preference
+                            if date_format_preference == "MM/DD/YY":
+                                datetime_format = "%m/%d/%Y %I:%M %p" if has_am_pm else "%m/%d/%Y %H:%M"
+                            else:  # DD/MM/YY (default)
+                                datetime_format = "%d/%m/%Y %I:%M %p" if has_am_pm else "%d/%m/%Y %H:%M"
 
                     # Parse datetime using detected/specified format
                     datetime_str = f"{date_str} {time_str.strip()}"
@@ -293,13 +308,11 @@ class WhatsAppParserService:
         try:
             # Add hash to each message
             messages_with_hash = []
-            hashes = []
             for msg in messages:
                 msg_copy = msg.copy()
 
                 # Calculate hash for deduplication
                 msg_copy['message_hash'] = cls.calculate_message_hash(msg)
-                hashes.append(msg_copy['message_hash'])
 
                 # Convert datetime to ISO format
                 if isinstance(msg_copy.get('message_date'), datetime):
@@ -307,64 +320,76 @@ class WhatsAppParserService:
 
                 messages_with_hash.append(msg_copy)
 
-            # Check for existing duplicates BEFORE inserting
             client = SupabaseService._get_client()
-            existing_response = client.table("whatsapp_raw_messages")\
-                .select("id, sender_name, message_text, message_date, message_hash")\
-                .in_("message_hash", hashes)\
-                .execute()
+            print(f"[WhatsAppParser] ✓ Prepared {len(messages_with_hash)} messages with hashes")
 
-            # Build lookup of existing messages by hash
-            existing_by_hash = {}
-            if existing_response.data:
-                for existing in existing_response.data:
-                    existing_by_hash[existing['message_hash']] = existing
-
-            # Find duplicate pairs
-            duplicate_pairs = []
-            messages_to_insert = []
-
-            for msg in messages_with_hash:
-                msg_hash = msg['message_hash']
-                if msg_hash in existing_by_hash:
-                    # This is a duplicate
-                    existing = existing_by_hash[msg_hash]
-                    duplicate_pairs.append({
-                        "existing": {
-                            "id": existing['id'],
-                            "sender": existing['sender_name'],
-                            "preview": existing['message_text'][:150] if existing['message_text'] else "",
-                            "date": existing['message_date']
-                        },
-                        "incoming": {
-                            "sender": msg.get('sender_name'),
-                            "preview": msg.get('message_text', '')[:150],
-                            "date": msg.get('message_date')
-                        }
-                    })
-                else:
-                    # New message
-                    messages_to_insert.append(msg)
-
-            # Insert only new messages
+            # Use PostgreSQL's ON CONFLICT DO NOTHING to handle duplicates atomically
+            # This handles both database duplicates AND within-batch duplicates automatically
             inserted_count = 0
-            if messages_to_insert:
-                response = client.table("whatsapp_raw_messages").insert(
-                    messages_to_insert
-                ).execute()
+            skipped_count = 0
+
+            try:
+                # Try upsert with ignore_duplicates first (cleanest approach)
+                print(f"[WhatsAppParser] Inserting {len(messages_with_hash)} messages (duplicates ignored via ON CONFLICT)...")
+
+                # Upsert will ignore conflicts on the message_hash unique constraint
+                response = client.table("whatsapp_raw_messages")\
+                    .upsert(
+                        messages_with_hash,
+                        on_conflict="message_hash",
+                        ignore_duplicates=True
+                    )\
+                    .execute()
+
                 inserted_count = len(response.data) if response.data else 0
+                skipped_count = len(messages_with_hash) - inserted_count
 
-            skipped_count = len(duplicate_pairs)
+                print(f"[WhatsAppParser] ✓ Inserted {inserted_count} new messages, skipped {skipped_count} duplicates")
 
-            print(f"[WhatsAppParser] Inserted {inserted_count} new messages, found {skipped_count} duplicates")
+            except Exception as upsert_error:
+                error_str = str(upsert_error)
+                print(f"[WhatsAppParser] ⚠ Upsert failed: {error_str[:200]}")
+
+                # Fallback: Insert in chunks and catch duplicate key errors
+                print(f"[WhatsAppParser] Falling back to chunked insert with error handling...")
+
+                chunk_size = 100  # Smaller chunks to avoid URL length and handle errors gracefully
+                inserted_count = 0
+                skipped_count = 0
+
+                for i in range(0, len(messages_with_hash), chunk_size):
+                    chunk = messages_with_hash[i:i + chunk_size]
+                    chunk_num = i // chunk_size + 1
+                    total_chunks = (len(messages_with_hash) + chunk_size - 1) // chunk_size
+
+                    try:
+                        chunk_response = client.table("whatsapp_raw_messages").insert(chunk).execute()
+                        chunk_inserted = len(chunk_response.data) if chunk_response.data else 0
+                        inserted_count += chunk_inserted
+                        print(f"[WhatsAppParser] Chunk {chunk_num}/{total_chunks}: inserted {chunk_inserted} messages")
+
+                    except Exception as chunk_error:
+                        chunk_error_str = str(chunk_error)
+
+                        # Check if it's a duplicate key violation (SQLSTATE 23505)
+                        if "duplicate key" in chunk_error_str.lower() or "23505" in chunk_error_str:
+                            # All messages in this chunk are duplicates - skip it
+                            skipped_count += len(chunk)
+                            print(f"[WhatsAppParser] Chunk {chunk_num}/{total_chunks}: all {len(chunk)} duplicates, skipped")
+                        else:
+                            # Other error - log and re-raise
+                            print(f"[WhatsAppParser] ✗ Chunk {chunk_num} error: {chunk_error_str[:200]}")
+                            raise
+
+            print(f"[WhatsAppParser] Final: {inserted_count} inserted, {skipped_count} skipped")
 
             return {
                 "success": True,
                 "messages_inserted": inserted_count,
                 "messages_skipped": skipped_count,
-                "duplicate_pairs": duplicate_pairs[:10],  # First 10 duplicate pairs
+                "duplicate_pairs": [],  # No longer tracking individual pairs
                 "total_duplicates": skipped_count,
-                "message": f"Inserted {inserted_count} messages, found {skipped_count} duplicates"
+                "message": f"Inserted {inserted_count} messages, skipped {skipped_count} duplicates (handled by ON CONFLICT)"
             }
 
         except Exception as e:
