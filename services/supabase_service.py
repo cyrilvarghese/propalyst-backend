@@ -1626,6 +1626,102 @@ class SupabaseService:
             }
 
     @classmethod
+    async def get_properties_listings(
+        cls,
+        limit: int = 100,
+        offset: int = 0,
+        filters: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Get properties from properties_with_agent view
+
+        Uses database view that automatically includes agent details from profiles table.
+        No JOIN needed in application code - handled by the view.
+
+        The view performs:
+            SELECT properties.*, profiles.full_name as agent_name, ...
+            FROM properties LEFT JOIN profiles ON properties.user_id = profiles.id
+
+        Args:
+            limit: Maximum number of properties to return (default: 100)
+            offset: Number of properties to skip for pagination (default: 0)
+            filters: Optional dictionary of filters:
+                - property_type: str (exact match)
+                - city: str (case-insensitive partial match)
+                - bedrooms: int (exact match)
+                - price_min: float (minimum price)
+                - price_max: float (maximum price)
+
+        Returns:
+            Dictionary with success status and properties data:
+            {
+                "success": bool,
+                "data": list of properties with agent details,
+                "count": int,
+                "message": str
+            }
+
+        Example:
+            result = await SupabaseService.get_properties_listings(
+                limit=50,
+                filters={"city": "Bangalore", "bedrooms": 3}
+            )
+        """
+        try:
+            client = cls._get_client()
+
+            # Query the view (includes agent info automatically via JOIN)
+            query = client.table("properties_with_agent").select("*")
+
+            # Apply filters if provided
+            if filters:
+                if filters.get("property_type"):
+                    query = query.eq("property_type", filters["property_type"])
+
+                if filters.get("city"):
+                    query = query.ilike("city", f"%{filters['city']}%")
+
+                if filters.get("bedrooms"):
+                    query = query.eq("bedrooms", filters["bedrooms"])
+
+                if filters.get("price_min"):
+                    query = query.gte("price", filters["price_min"])
+
+                if filters.get("price_max"):
+                    query = query.lte("price", filters["price_max"])
+
+            # Pagination and ordering
+            query = query.order("created_at", desc=True).limit(limit).offset(offset)
+
+            response = query.execute()
+
+            properties = response.data if response.data else []
+
+            filter_desc = f" with filters: {filters}" if filters else ""
+            print(f"[Supabase] ✓ Retrieved {len(properties)} properties{filter_desc}")
+
+            return {
+                "success": True,
+                "data": properties,
+                "count": len(properties),
+                "message": f"Retrieved {len(properties)} properties",
+                "metadata": {
+                    "source": "properties_with_agent",
+                    "filters_applied": filters or {}
+                }
+            }
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error retrieving properties: {e}")
+            return {
+                "success": False,
+                "data": [],
+                "count": 0,
+                "message": f"Error retrieving properties: {str(e)}",
+                "error": str(e)
+            }
+
+    @classmethod
     async def search_whatsapp_raw_message(cls, query: Optional[str] = None, limit: int = 100, offset: int = 0, message_type: Optional[str] = None, property_type: Optional[str] = None) -> Dict[str, Any]:
         """
         Search WhatsApp relevant listings by raw message content (full-text search)

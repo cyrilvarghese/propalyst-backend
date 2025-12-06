@@ -11,8 +11,11 @@ from typing import Optional
 import json
 import asyncio
 from models.whatsapp_listing import WhatsAppListingExtractionResponse
+from models.unified_property import UnifiedPropertyResponse
 from services.whatsapp_listing_extraction_service import WhatsAppListingExtractionService
 from services.supabase_service import SupabaseService
+from services.properties_service import PropertiesService
+from services.property_transformation_service import PropertyTransformationService
 
 router = APIRouter(
     prefix="/api/whatsapp-listings",
@@ -383,35 +386,90 @@ async def extract_single_message(message_id: str):
         raise HTTPException(status_code=500, detail=f"Error extracting message: {str(e)}")
 
 
-@router.get("")
+@router.get("", response_model=UnifiedPropertyResponse)
 async def get_extracted_listings(
-    limit: int = Query(100, description="Maximum number of listings to return"),
-    offset: int = Query(0, description="Number of listings to skip for pagination")
+    limit: int = Query(100, description="Maximum number of listings to return per source"),
+    offset: int = Query(0, description="Number of listings to skip for pagination"),
+    include_properties: bool = Query(True, description="Include verified properties from properties table")
 ):
     """
-    Get relevant extracted listings with pagination (supply/demand only)
+    Get listings from both WhatsApp and properties table with unified schema
 
-    Returns only relevant listings from whatsapp_listings_relevant view:
-    - supply_sale, supply_rent, demand_buy, demand_rent
-    - Excludes greetings, garbage, and generic_info messages
-    - Sorted by message_date (newest first)
+    Returns listings from two sources in separate arrays with consistent field structure:
+    1. WhatsApp Listings - From whatsapp_listings_relevant view (supply/demand only)
+    2. RB Properties - From properties_with_agent view (properties table + agent info)
+
+    Both sources are transformed to the same unified schema for easy UI rendering.
+    Frontend can display them in separate tabs while using the same component.
 
     Args:
-        limit: Maximum number of listings (default: 100)
-        offset: Number of listings to skip (default: 0)
+        limit: Maximum number of listings per source (default: 100)
+        offset: Number of listings to skip for pagination (default: 0)
+        include_properties: Include properties table data (default: True)
 
     Returns:
-        List of relevant extracted listings
+        UnifiedPropertyResponse with:
+        - whatsapp_listings: Array of WhatsApp listings (unified schema)
+        - rb_properties: Array of properties (unified schema)
+        - counts: Count breakdown per source
+        - total_count: Total across all sources
 
-    Example:
+    Response Structure:
+        {
+            "whatsapp_listings": [...],  # Unified schema
+            "rb_properties": [...],  # Unified schema
+            "counts": {"whatsapp": 50, "properties": 30},
+            "total_count": 80
+        }
+
+    Examples:
         GET /api/whatsapp-listings?limit=50&offset=0
+        GET /api/whatsapp-listings?include_properties=false
+        GET /api/whatsapp-listings?limit=100&offset=100
     """
     try:
-        print(f"[API-WhatsAppListing] Retrieving extracted listings (limit: {limit}, offset: {offset})")
+        print(f"[API-WhatsAppListing] Retrieving listings (limit: {limit}, offset: {offset}, include_properties: {include_properties})")
 
-        result = await SupabaseService.get_extracted_listings(limit=limit, offset=offset)
+        # 1. Fetch WhatsApp listings
+        whatsapp_result = await SupabaseService.get_extracted_listings(limit=limit, offset=offset)
+        whatsapp_data = whatsapp_result.get("data", [])
 
-        return result
+        # Transform WhatsApp listings to unified schema
+        whatsapp_unified = [
+            PropertyTransformationService.whatsapp_to_unified(item)
+            for item in whatsapp_data
+        ]
+
+        print(f"[API-WhatsAppListing] ✓ Transformed {len(whatsapp_unified)} WhatsApp listings")
+
+        # 2. Fetch properties if enabled
+        properties_unified = []
+        if include_properties:
+            properties_result = await PropertiesService.get_properties(limit=limit, offset=offset)
+            properties_data = properties_result.get("data", [])
+
+            # Transform properties to unified schema
+            properties_unified = [
+                PropertyTransformationService.properties_to_unified(item)
+                for item in properties_data
+            ]
+
+            print(f"[API-WhatsAppListing] ✓ Transformed {len(properties_unified)} properties")
+
+        # 3. Build unified response
+        response = {
+            "whatsapp_listings": whatsapp_unified,
+            "rb_properties": properties_unified,
+            "counts": {
+                "whatsapp": len(whatsapp_unified),
+                "properties": len(properties_unified)
+            },
+            "total_count": len(whatsapp_unified) + len(properties_unified)
+        }
+
+        print(f"[API-WhatsAppListing] ✓ Returning {response['total_count']} total listings (WhatsApp: {response['counts']['whatsapp']}, Properties: {response['counts']['properties']})")
+
+        return response
 
     except Exception as e:
         print(f"[API-WhatsAppListing] ✗ Error retrieving listings: {str(e)}")
@@ -492,79 +550,120 @@ async def get_extraction_stats():
 #         raise HTTPException(status_code=500, detail=f"Error searching listings: {str(e)}")
 
 
-@router.get("/search/message")
+@router.get("/search/message", response_model=UnifiedPropertyResponse)
 async def search_whatsapp_raw_message(
-    query: Optional[str] = Query(None, description="Search text (space-separated terms, all must match). If empty, returns all records."),
-    limit: int = Query(100, description="Maximum number of results", ge=1, le=1000),
+    query: Optional[str] = Query(None, description="Search text. For WhatsApp: space-separated terms (all must match). For Properties: searches title/description/city/area."),
+    limit: int = Query(100, description="Maximum number of results per source", ge=1, le=1000),
     offset: int = Query(0, description="Number of records to skip for pagination", ge=0),
-    message_type: Optional[str] = Query(None, description="Filter by exact message type (supply_sale, supply_rent, demand_buy, demand_rent)"),
-    property_type: Optional[str] = Query(None, description="Filter by exact property type (villa, plot, apartment, etc)")
+    message_type: Optional[str] = Query(None, description="Filter WhatsApp by message type (supply_sale, supply_rent, demand_buy, demand_rent)"),
+    property_type: Optional[str] = Query(None, description="Filter both sources by property type (villa, plot, apartment, etc)"),
+    include_properties: bool = Query(True, description="Include verified properties from properties table")
 ):
     """
-    Search WhatsApp listings by raw message content (multi-term AND search) with optional filters
+    Search listings from both WhatsApp and properties with unified schema
 
-    Searches for the query string(s) within the raw_message field of whatsapp_listings_relevant view.
-    Splits query by spaces and searches for ALL terms (AND logic).
-    Only searches supply/demand listings (excludes greetings, garbage, etc).
-    Results are sorted by message_date (newest first).
+    Returns listings from two sources in separate arrays with consistent field structure:
+    1. WhatsApp Listings - Searches raw_message field (multi-term AND search)
+    2. RB Properties - Searches title, description, city, area fields (OR search)
 
-    Behavior:
-        - If query is provided: Returns listings matching ALL search terms (AND logic)
-        - If query is empty/null: Returns all relevant listings sorted by message_date (latest first)
-        - Filters (message_type, property_type) use exact matching (equals condition)
+    Both sources are transformed to the same unified schema for easy UI rendering.
+
+    WhatsApp Search Logic:
+        - "plot hrbr" → finds messages with BOTH "plot" AND "hrbr"
+        - (empty) → returns all supply/demand listings
+        - message_type filter for exact matching
+
+    Properties Search Logic:
+        - "whitefield" → finds properties with "whitefield" in title/description/city/area
+        - (empty) → returns all properties
+        - property_type filter for exact matching
 
     Args:
-        query: Search text (space-separated terms, case-insensitive). All terms must be present. Optional.
-        limit: Maximum number of results (1-700, default: 100)
-        offset: Number of records to skip for pagination (default: 0)
-        message_type: Filter by exact message type (supply_sale, supply_rent, demand_buy, demand_rent). Optional.
-        property_type: Filter by exact property type (villa, plot, apartment, etc). Optional.
+        query: Search text (optional, returns all if empty)
+        limit: Maximum results per source (default: 100)
+        offset: Pagination offset (default: 0)
+        message_type: Filter WhatsApp by message type
+        property_type: Filter both sources by property type
+        include_properties: Include properties table data (default: True)
 
     Returns:
-        List of matching WhatsApp listings
-
-    Search Logic:
-        "plot hrbr" → finds messages with BOTH "plot" AND "hrbr"
-        "3BHK villa whitefield" → finds messages with ALL three terms
-        (empty) → returns all records sorted by message_date
+        UnifiedPropertyResponse with:
+        - whatsapp_listings: Array of WhatsApp listings (unified schema)
+        - rb_properties: Array of properties (unified schema)
+        - counts: Count breakdown per source
+        - total_count: Total across all sources
 
     Examples:
-        # Find plot listings in HRBR
-        GET /api/whatsapp-listings/search/message?query=plot%20hrbr
+        # Search for "whitefield" in both sources
+        GET /api/whatsapp-listings/search/message?query=whitefield
 
-        # Find 3BHK villas in Whitefield
-        GET /api/whatsapp-listings/search/message?query=3BHK%20villa%20whitefield
+        # Search with property type filter
+        GET /api/whatsapp-listings/search/message?query=3bhk&property_type=apartment
 
-        # Find supply_sale messages in specific area
-        GET /api/whatsapp-listings/search/message?query=villa%20indiranagar&limit=50
+        # Get all records from both sources
+        GET /api/whatsapp-listings/search/message?limit=100
 
-        # Get all records with pagination (first 100)
-        GET /api/whatsapp-listings/search/message?limit=100&offset=0
-
-        # Get next page (skip first 100, get next 100)
-        GET /api/whatsapp-listings/search/message?limit=100&offset=100
-
-        # Search with pagination
-        GET /api/whatsapp-listings/search/message?query=3BHK&limit=200&offset=200
-
-        # Filter by message_type
-        GET /api/whatsapp-listings/search/message?message_type=supply_sale
-
-        # Filter by property_type
-        GET /api/whatsapp-listings/search/message?property_type=villa
-
-        # Combine search and filters
-        GET /api/whatsapp-listings/search/message?query=whitefield&message_type=supply_sale&property_type=villa
+        # Search WhatsApp only (exclude properties)
+        GET /api/whatsapp-listings/search/message?query=plot&include_properties=false
     """
     try:
-        print(f"[API-WhatsAppListing] Searching raw messages for: '{query}' (limit: {limit}, offset: {offset}, message_type: {message_type}, property_type: {property_type})")
+        print(f"[API-WhatsAppListing] Searching: query='{query}', limit={limit}, include_properties={include_properties}")
 
-        result = await SupabaseService.search_whatsapp_raw_message(query=query, limit=limit, offset=offset, message_type=message_type, property_type=property_type)
-        return result
+        # 1. Search WhatsApp listings
+        whatsapp_result = await SupabaseService.search_whatsapp_raw_message(
+            query=query,
+            limit=limit,
+            offset=offset,
+            message_type=message_type,
+            property_type=property_type
+        )
+        whatsapp_data = whatsapp_result.get("data", [])
+
+        # Transform WhatsApp listings to unified schema
+        whatsapp_unified = [
+            PropertyTransformationService.whatsapp_to_unified(item)
+            for item in whatsapp_data
+        ]
+
+        print(f"[API-WhatsAppListing] ✓ Found {len(whatsapp_unified)} WhatsApp listings")
+
+        # 2. Search properties if enabled
+        properties_unified = []
+        if include_properties:
+            properties_result = await PropertiesService.search_properties(
+                query=query,
+                limit=limit,
+                offset=offset,
+                filters={"property_type": property_type} if property_type else None
+            )
+            properties_data = properties_result.get("data", [])
+
+            # Transform properties to unified schema
+            properties_unified = [
+                PropertyTransformationService.properties_to_unified(item)
+                for item in properties_data
+            ]
+
+            print(f"[API-WhatsAppListing] ✓ Found {len(properties_unified)} properties")
+
+        # 3. Build unified response
+        response = {
+            "whatsapp_listings": whatsapp_unified,
+            "rb_properties": properties_unified,
+            "counts": {
+                "whatsapp": len(whatsapp_unified),
+                "properties": len(properties_unified)
+            },
+            "total_count": len(whatsapp_unified) + len(properties_unified)
+        }
+
+        print(f"[API-WhatsAppListing] ✓ Returning {response['total_count']} total results (WhatsApp: {response['counts']['whatsapp']}, Properties: {response['counts']['properties']})")
+
+        return response
 
     except Exception as e:
-        print(f"[API-WhatsAppListing] ✗ Error searching raw messages: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error searching raw messages: {str(e)}")
+        print(f"[API-WhatsAppListing] ✗ Error searching listings: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error searching listings: {str(e)}")
 
 
 @router.get("/{listing_id}/source")
