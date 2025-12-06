@@ -495,7 +495,7 @@ async def get_extraction_stats():
 @router.get("/search/message")
 async def search_whatsapp_raw_message(
     query: Optional[str] = Query(None, description="Search text (space-separated terms, all must match). If empty, returns all records."),
-    limit: int = Query(100, description="Maximum number of results", ge=1, le=700),
+    limit: int = Query(100, description="Maximum number of results", ge=1, le=1000),
     offset: int = Query(0, description="Number of records to skip for pagination", ge=0),
     message_type: Optional[str] = Query(None, description="Filter by exact message type (supply_sale, supply_rent, demand_buy, demand_rent)"),
     property_type: Optional[str] = Query(None, description="Filter by exact property type (villa, plot, apartment, etc)")
