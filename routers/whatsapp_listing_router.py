@@ -630,11 +630,18 @@ async def search_whatsapp_raw_message(
         # 2. Search properties if enabled
         properties_unified = []
         if include_properties:
+            # Build filters dict for properties (map message_type and property_type)
+            filters_dict = {}
+            if property_type:
+                filters_dict["property_type"] = property_type
+            if message_type:
+                filters_dict["message_type"] = message_type
+
             properties_result = await PropertiesService.search_properties(
                 query=query,
                 limit=limit,
                 offset=offset,
-                filters={"property_type": property_type} if property_type else None
+                filters=filters_dict if filters_dict else None
             )
             properties_data = properties_result.get("data", [])
 

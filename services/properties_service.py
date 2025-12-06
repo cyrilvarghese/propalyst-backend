@@ -85,8 +85,19 @@ class PropertiesService:
 
             # Apply filters if provided
             if filters:
+                # Map message_type to property_type column for cross-source filtering
+                if filters.get("message_type"):
+                    message_type_value = filters["message_type"]
+                    # Map WhatsApp message_type to properties property_type column
+                    if message_type_value == "supply_sale":
+                        query = query.eq("property_type", "Sale")
+                    elif message_type_value == "supply_rent":
+                        query = query.eq("property_type", "Rent")
+                    # Ignore demand types (demand_buy, demand_rent) - no mapping for properties
+
                 if filters.get("property_type"):
-                    query = query.eq("property_type", filters["property_type"])
+                    # Search property_type in title field using ILIKE for flexible matching
+                    query = query.ilike("title", f"%{filters['property_type']}%")
 
                 if filters.get("city"):
                     query = query.ilike("city", f"%{filters['city']}%")
@@ -198,8 +209,19 @@ class PropertiesService:
 
             # Apply filters if provided (AND logic with search)
             if filters:
+                # Map message_type to property_type column for cross-source filtering
+                if filters.get("message_type"):
+                    message_type_value = filters["message_type"]
+                    # Map WhatsApp message_type to properties property_type column
+                    if message_type_value == "supply_sale":
+                        query_builder = query_builder.eq("property_type", "Sale")
+                    elif message_type_value == "supply_rent":
+                        query_builder = query_builder.eq("property_type", "Rent")
+                    # Ignore demand types (demand_buy, demand_rent) - no mapping for properties
+
                 if filters.get("property_type"):
-                    query_builder = query_builder.eq("property_type", filters["property_type"])
+                    # Search property_type in title field using ILIKE for flexible matching
+                    query_builder = query_builder.ilike("title", f"%{filters['property_type']}%")
 
                 if filters.get("bedrooms"):
                     query_builder = query_builder.eq("bedrooms", filters["bedrooms"])
