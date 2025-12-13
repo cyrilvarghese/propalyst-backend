@@ -38,7 +38,7 @@ from dotenv import load_dotenv
 from graphs import ui_generator_graph, propalyst_graph
 
 # Import routers
-from routers import ui_router, propalyst_router, search_router, scraping_router, shortlist_router, crea_wapp_router, agent_profile_router, whatsapp_listing_router
+from routers import ui_router, propalyst_router, search_router, scraping_router, shortlist_router, crea_wapp_router, agent_profile_router, whatsapp_listing_router, lead_router
 from routers.whatsapp_upload_processing_router import router as whatsapp_upload_processing_router
 from routers.whatsapp_listings_router import router as whatsapp_listings_router
 from routers.whatsapp_stats_router import router as whatsapp_stats_router
@@ -94,6 +94,7 @@ app.include_router(whatsapp_upload_processing_router)
 app.include_router(whatsapp_listings_router)
 app.include_router(whatsapp_stats_router)
 app.include_router(matching_supply_router)
+app.include_router(lead_router)
 
 # ============================================================================
 # HEALTH CHECK ENDPOINTS

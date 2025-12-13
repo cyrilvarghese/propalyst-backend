@@ -1,0 +1,1033 @@
+[
+  {
+    "id": "f1133c1a-91a5-4898-a7a2-2427e1ec37dd",
+    "query": "3BHK in Whitefield, budget 5 crores, possession in 6 months",
+    "extracted_criteria": {
+      "property": {
+        "bhk": 3,
+        "budget_min": null,
+        "budget_max": 5.0,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": null,
+        "property_age": null,
+        "location": "Whitefield",
+        "req_type": "demand_buy",
+        "locations": [
+          "Whitefield"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": "under_construction",
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": "6 months",
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "Marathahalli",
+        "distance_km": 6.4
+      },
+      {
+        "name": "Kadugodi",
+        "distance_km": 4.0
+      },
+      {
+        "name": "Sarjapur Road",
+        "distance_km": 13.0
+      },
+      {
+        "name": "Hoodi",
+        "distance_km": 6.0
+      },
+      {
+        "name": "Varthur",
+        "distance_km": 6.5
+      }
+    ],
+    "created_at": "2025-12-13T16:17:23.594759"
+  },
+  {
+    "id": "ffd48c59-c9db-4911-94ed-9afc18d8ed1b",
+    "query": "3BHK in Indiranagar  villa, budget upto 15 crores, possession in 6 months",
+    "extracted_criteria": {
+      "property": {
+        "bhk": 3,
+        "budget_min": null,
+        "budget_max": 15.0,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": "villa",
+        "property_age": null,
+        "location": "Indiranagar",
+        "req_type": "demand_buy",
+        "locations": [
+          "Indiranagar"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": null,
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": "6 months",
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "area",
+      "property_age",
+      "proximity_preferences",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "CV Raman Nagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Domlur",
+        "distance_km": 3.5
+      },
+      {
+        "name": "HAL Layout",
+        "distance_km": 2.5
+      },
+      {
+        "name": "Ulsoor",
+        "distance_km": 2.0
+      },
+      {
+        "name": "Koramangala",
+        "distance_km": 6.0
+      }
+    ],
+    "created_at": "2025-12-13T16:21:22.652562"
+  },
+  {
+    "id": "a108b210-e52e-437e-80bf-f0322be3707f",
+    "query": "Indiranagar apartment, budget upto 15 crores, possession in 6 months",
+    "extracted_criteria": {
+      "property": {
+        "bhk": null,
+        "budget_min": null,
+        "budget_max": 15.0,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": "apartment",
+        "property_age": null,
+        "location": "Indiranagar",
+        "req_type": "demand_buy",
+        "locations": [
+          "Indiranagar"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": "under_construction",
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": "6 months",
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "bhk",
+      "area",
+      "property_age",
+      "proximity_preferences",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [
+      {
+        "id": "c909c0ce-f439-4ce1-bb16-f42777942df9",
+        "property_type": "apartment",
+        "location": "HRBR, OMBR, Kasturinagar or Indiranagar",
+        "bedroom_count": 3,
+        "area_sqft": null,
+        "price": 30000000,
+        "price_text": "Rs.3cr",
+        "message_type": "demand_buy",
+        "agent_name": "+91 95912 92090",
+        "agent_contact": "9591292090",
+        "message_date": "2025-11-03T14:45:00+00:00",
+        "raw_message": "1) Require 3 or 4BHK Flat for Purchase in HRBR, OMBR, Kasturinagar or Indiranagar Budget Rs.3cr......also interested in under construction or yet to start project\nCONTACT - 9591292090"
+      }
+    ],
+    "nearby_localities": [
+      {
+        "name": "CV Raman Nagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Domlur",
+        "distance_km": 2.5
+      },
+      {
+        "name": "Murugeshpalya",
+        "distance_km": 3.5
+      },
+      {
+        "name": "Ulsoor",
+        "distance_km": 2.0
+      },
+      {
+        "name": "Koramangala",
+        "distance_km": 6.0
+      }
+    ],
+    "created_at": "2025-12-13T16:28:18.974289"
+  },
+  {
+    "id": "fb919d8c-9a07-4c0c-bd67-20f2584072de",
+    "query": "Indiranagar apartment, budget upto 15 crores, possession in 6 months",
+    "extracted_criteria": {
+      "property": {
+        "bhk": null,
+        "budget_min": null,
+        "budget_max": 15.0,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": "apartment",
+        "property_age": null,
+        "location": "Indiranagar",
+        "req_type": "demand_buy",
+        "locations": [
+          "Indiranagar"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": "under_construction",
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": "6 months",
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "bhk",
+      "area",
+      "property_age",
+      "proximity_preferences",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "Domlur",
+        "distance_km": 2.0
+      },
+      {
+        "name": "Ulsoor",
+        "distance_km": 3.5
+      },
+      {
+        "name": "CV Raman Nagar",
+        "distance_km": 4.0
+      },
+      {
+        "name": "Koramangala",
+        "distance_km": 5.0
+      },
+      {
+        "name": "Marathahalli",
+        "distance_km": 8.0
+      }
+    ],
+    "created_at": "2025-12-13T16:38:45.299230"
+  },
+  {
+    "id": "2a0675ee-e2f8-49e9-96ae-94da86398294",
+    "query": "Our client is keen to purchase a ready to occupy indipendent house built on a plot size of 3500 to 4000 sq ft . The total built up size of the house could be 3500 to 4500 sq ft with an orientation of 2 bedroom. On ground floor and 2 bedroom on upper. Floor . The house should additionally have maids room & toilet and a small garden . Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
+    "extracted_criteria": {
+      "property": {
+        "bhk": 4,
+        "budget_min": null,
+        "budget_max": null,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": "independent_house",
+        "property_age": null,
+        "location": "Ulsoor",
+        "req_type": "demand_buy",
+        "locations": [
+          "Ulsoor",
+          "Cooke town",
+          "Cox town",
+          "Benson Town",
+          "R T Nagar",
+          "Jaymahal",
+          "Indiranagar",
+          "Vasantha nagar",
+          "Kumara park",
+          "Richmond town"
+        ],
+        "plot_size_min": 3500.0,
+        "plot_size_max": 4000.0,
+        "built_up_area_min": 3500.0,
+        "built_up_area_max": 4500.0,
+        "property_status": "ready_to_move",
+        "furnishing_status": null,
+        "special_features": [
+          "maids_room",
+          "garden",
+          "2 bedroom on ground floor and 2 bedroom on upper floor"
+        ]
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": null,
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "budget",
+      "property_age",
+      "proximity_preferences",
+      "possession_timeline",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "Jogupalya",
+        "distance_km": 2.4
+      },
+      {
+        "name": "Indira Nagar",
+        "distance_km": 2.9
+      },
+      {
+        "name": "Cox Town",
+        "distance_km": 2.96
+      },
+      {
+        "name": "Frazer Town",
+        "distance_km": 3.06
+      },
+      {
+        "name": "Shivaji Nagar",
+        "distance_km": 3.94
+      }
+    ],
+    "created_at": "2025-12-13T16:57:10.050129"
+  },
+  {
+    "id": "5066ac80-daef-44ac-9493-7d6487f21830",
+    "query": "Our client is keen to purchase a ready to occupy indipendent house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
+    "extracted_criteria": {
+      "property": {
+        "bhk": null,
+        "budget_min": null,
+        "budget_max": null,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": "independent_house",
+        "property_age": null,
+        "location": "Ulsoor",
+        "req_type": "demand_buy",
+        "locations": [
+          "Ulsoor",
+          "Cooke town",
+          "Cox town",
+          "Benson Town",
+          "R T Nagar",
+          "Jaymahal",
+          "Indiranagar",
+          "Vasantha nagar",
+          "Kumara park",
+          "Richmond town"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": "ready_to_move",
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": "ready to move",
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "bhk",
+      "budget",
+      "area",
+      "property_age",
+      "proximity_preferences",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "Jogupalya",
+        "distance_km": 2.4
+      },
+      {
+        "name": "Indira Nagar",
+        "distance_km": 2.9
+      },
+      {
+        "name": "Cox Town",
+        "distance_km": 2.96
+      },
+      {
+        "name": "Frazer Town",
+        "distance_km": 3.06
+      },
+      {
+        "name": "Shivaji Nagar",
+        "distance_km": 3.94
+      }
+    ],
+    "created_at": "2025-12-13T16:59:59.226014"
+  },
+  {
+    "id": "a6e58902-73e0-43de-aec2-1d05ae8cfb44",
+    "query": "Our client is keen to purchase a ready to occupy indipendent house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
+    "extracted_criteria": {
+      "property": {
+        "bhk": null,
+        "budget_min": null,
+        "budget_max": null,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": "independent_house",
+        "property_age": null,
+        "location": "Ulsoor",
+        "req_type": "demand_buy",
+        "locations": [
+          "Ulsoor",
+          "Cooke town",
+          "Cox town",
+          "Benson Town",
+          "R T Nagar",
+          "Jaymahal",
+          "Indiranagar",
+          "Vasantha nagar",
+          "Kumara park",
+          "Richmond town"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": "ready_to_move",
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": null,
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "bhk",
+      "budget",
+      "area",
+      "property_age",
+      "proximity_preferences",
+      "possession_timeline",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "MG Road",
+        "distance_km": 1.0
+      },
+      {
+        "name": "Frazer Town",
+        "distance_km": 1.0
+      },
+      {
+        "name": "Shivajinagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Indiranagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Koramangala",
+        "distance_km": 7.0
+      }
+    ],
+    "created_at": "2025-12-13T17:00:46.009829"
+  },
+  {
+    "id": "1fc4f111-9090-484f-9716-f757dc5c0265",
+    "query": "Our client is keen to purchase a ready to occupy indipendent house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
+    "extracted_criteria": {
+      "property": {
+        "bhk": null,
+        "budget_min": null,
+        "budget_max": null,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": "independent_house",
+        "property_age": null,
+        "location": "Ulsoor",
+        "req_type": "demand_buy",
+        "locations": [
+          "Ulsoor",
+          "Cooke town",
+          "Cox town",
+          "Benson Town",
+          "R T Nagar",
+          "Jaymahal",
+          "Indiranagar",
+          "Vasantha nagar",
+          "Kumara park",
+          "Richmond town"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": "ready_to_move",
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": "ready to move",
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "bhk",
+      "budget",
+      "area",
+      "property_age",
+      "proximity_preferences",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "Commercial Street",
+        "distance_km": 2.0
+      },
+      {
+        "name": "Jogupalya",
+        "distance_km": 2.4
+      },
+      {
+        "name": "MG Road",
+        "distance_km": 2.5
+      },
+      {
+        "name": "Frazer Town",
+        "distance_km": 2.5
+      },
+      {
+        "name": "Shivajinagar",
+        "distance_km": 3.0
+      }
+    ],
+    "created_at": "2025-12-13T17:24:21.959752"
+  },
+  {
+    "id": "229ff739-10b0-4544-8a96-348d19040c06",
+    "query": "Our client is keen to purchase a ready to occupy indipendent house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
+    "extracted_criteria": {
+      "property": {
+        "bhk": null,
+        "budget_min": null,
+        "budget_max": null,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": "independent_house",
+        "property_age": null,
+        "location": "Ulsoor",
+        "req_type": "demand_buy",
+        "locations": [
+          "Ulsoor",
+          "Cooke town",
+          "Cox town",
+          "Benson Town",
+          "R T Nagar",
+          "Jaymahal",
+          "Indiranagar",
+          "Vasantha nagar",
+          "Kumara park",
+          "Richmond town"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": "ready_to_move",
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": null,
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "bhk",
+      "budget",
+      "area",
+      "property_age",
+      "proximity_preferences",
+      "possession_timeline",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "MG Road",
+        "distance_km": 1.0
+      },
+      {
+        "name": "Jogupalya",
+        "distance_km": 2.4
+      },
+      {
+        "name": "Indiranagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Frazer Town",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Shivajinagar",
+        "distance_km": 3.0
+      }
+    ],
+    "created_at": "2025-12-13T17:26:17.865655"
+  },
+  {
+    "id": "f858b67c-04e0-45b7-b74e-50fb1032fdf7",
+    "query": "Our client is keen to purchase a ready to occupy indipendent house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
+    "extracted_criteria": {
+      "property": {
+        "bhk": null,
+        "budget_min": null,
+        "budget_max": null,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": "independent_house",
+        "property_age": null,
+        "location": "Ulsoor",
+        "req_type": "demand_buy",
+        "locations": [
+          "Ulsoor",
+          "Cooke town",
+          "Cox town",
+          "Benson Town",
+          "R T Nagar",
+          "Jaymahal",
+          "Indiranagar",
+          "Vasantha nagar",
+          "Kumara park",
+          "Richmond town"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": "ready_to_move",
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": null,
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "bhk",
+      "budget",
+      "area",
+      "property_age",
+      "proximity_preferences",
+      "possession_timeline",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [
+      {
+        "id": "66d2379f-f5d3-4598-8278-ab6cbfb5168d",
+        "property_type": "independent_house",
+        "location": "BENSON TOWN",
+        "bedroom_count": null,
+        "area_sqft": null,
+        "price": 70000000,
+        "price_text": "7 cr max",
+        "message_type": "demand_buy",
+        "agent_name": "~ Farhad Ataul Haque",
+        "agent_contact": null,
+        "message_date": "2025-11-19T19:36:40+00:00",
+        "raw_message": "Urgent requirement\n\nGood livable Independent house for purchase in BENSON TOWN. \nBudget :7 cr max. \n\nIndirect but genuine enquiry"
+      },
+      {
+        "id": "b9f266ef-b641-4bb9-ac1a-db9c7e24bbd4",
+        "property_type": "independent_house",
+        "location": "Central Bangalore – Indiranagar, Old Airport Road",
+        "bedroom_count": 4,
+        "area_sqft": null,
+        "price": null,
+        "price_text": "5 – 6 Cr",
+        "message_type": "demand_buy",
+        "agent_name": "Abhishek, Babu",
+        "agent_contact": "81052 13550, 91642 13550",
+        "message_date": "2025-10-30T12:06:17+00:00",
+        "raw_message": "🌟 *WANTED - Premium Property Alert* ! 🌟\n\n🏡 4 BHK Modern Penthouse / Independent House\n📍 Location: *Central Bangalore – Indiranagar, Old Airport Road* \n🛋️ Semi-Furnished\n💰 Budget: ₹5 – 6 Cr\n\n📞 Contact ..."
+      },
+      {
+        "id": "02643d0c-c982-4ea9-990f-b0685d27183e",
+        "property_type": "independent_house",
+        "location": "Indiranagar Surrounding, New Tippasandara, Kodihalli, Jeevabhimanagar",
+        "bedroom_count": null,
+        "area_sqft": null,
+        "price": 47500000,
+        "price_text": "4.75 cr - 5 cr",
+        "message_type": "demand_buy",
+        "agent_name": "Anees Z Husain",
+        "agent_contact": "9844313606",
+        "message_date": "2025-09-16T12:42:43+00:00",
+        "raw_message": "Dear Associates, \n\nPURCHASE REQUIREMENT \n\n40/60 Site or Site with a House can be any facing \n\nINDIRANAGAR SURROUNDING \nNEW TIPPASANDARA \nKODIHALLI \nJEEVABHIMANAGAR \n\n4.75 cr - 5 cr. Can extend budget ..."
+      },
+      {
+        "id": "b59871a2-e58f-46cd-8b11-9b905f9a9540",
+        "property_type": "independent_house",
+        "location": "M G Road",
+        "bedroom_count": null,
+        "area_sqft": 3500,
+        "price": 100000000,
+        "price_text": "10 cr",
+        "message_type": "demand_buy",
+        "agent_name": "~ Suraajet",
+        "agent_contact": "9945323691",
+        "message_date": "2025-09-14T18:31:46+00:00",
+        "raw_message": "Purchase Requirement :\n\nOur client wants to buy a ready to live independent house built on a 3000 to 4000 sq ft plot with a minimum of 4 bhk with 4 toilets , spacious living , dining and some garden a..."
+      }
+    ],
+    "nearby_localities": [
+      {
+        "name": "Jogupalya",
+        "distance_km": 2.4
+      },
+      {
+        "name": "Indira Nagar",
+        "distance_km": 2.9
+      },
+      {
+        "name": "Cox Town",
+        "distance_km": 2.96
+      },
+      {
+        "name": "Frazer Town",
+        "distance_km": 3.06
+      },
+      {
+        "name": "Shivaji Nagar",
+        "distance_km": 3.94
+      }
+    ],
+    "created_at": "2025-12-13T17:40:06.047579"
+  },
+  {
+    "id": "19346b40-e4b6-494e-90a8-00869c187c04",
+    "query": "Our client is keen to purchase a ready to occupy 4bhk house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
+    "extracted_criteria": {
+      "property": {
+        "bhk": 4,
+        "budget_min": null,
+        "budget_max": null,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": "independent_house",
+        "property_age": null,
+        "location": "Ulsoor",
+        "req_type": "demand_buy",
+        "locations": [
+          "Ulsoor",
+          "Cooke town",
+          "Cox town",
+          "Benson Town",
+          "R T Nagar",
+          "Jaymahal",
+          "Indiranagar",
+          "Vasantha nagar",
+          "Kumara park",
+          "Richmond town"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": "ready_to_move",
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": null,
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "budget",
+      "area",
+      "property_age",
+      "proximity_preferences",
+      "possession_timeline",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [
+      {
+        "id": "b9f266ef-b641-4bb9-ac1a-db9c7e24bbd4",
+        "property_type": "independent_house",
+        "location": "Central Bangalore – Indiranagar, Old Airport Road",
+        "bedroom_count": 4,
+        "area_sqft": null,
+        "price": null,
+        "price_text": "5 – 6 Cr",
+        "message_type": "demand_buy",
+        "agent_name": "Abhishek, Babu",
+        "agent_contact": "81052 13550, 91642 13550",
+        "message_date": "2025-10-30T12:06:17+00:00",
+        "raw_message": "🌟 *WANTED - Premium Property Alert* ! 🌟\n\n🏡 4 BHK Modern Penthouse / Independent House\n📍 Location: *Central Bangalore – Indiranagar, Old Airport Road* \n🛋️ Semi-Furnished\n💰 Budget: ₹5 – 6 Cr\n\n📞 Contact ..."
+      }
+    ],
+    "nearby_localities": [
+      {
+        "name": "Indiranagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Shivajinagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Frazer Town",
+        "distance_km": 2.5
+      },
+      {
+        "name": "MG Road",
+        "distance_km": 2.0
+      },
+      {
+        "name": "Commercial Street",
+        "distance_km": 2.0
+      }
+    ],
+    "created_at": "2025-12-13T17:41:41.027823"
+  },
+  {
+    "id": "9a0e25fd-23a4-407c-afd7-2572b38a01c7",
+    "query": "Our client is keen to purchase a ready to occupy 4bhk house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
+    "extracted_criteria": {
+      "property": {
+        "bhk": 4,
+        "budget_min": null,
+        "budget_max": null,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": "independent_house",
+        "property_age": null,
+        "location": "Ulsoor",
+        "req_type": "demand_buy",
+        "locations": [
+          "Ulsoor",
+          "Cooke town",
+          "Cox town",
+          "Benson Town",
+          "R T Nagar",
+          "Jaymahal",
+          "Indiranagar",
+          "Vasantha nagar",
+          "Kumara park",
+          "Richmond town"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": "ready_to_move",
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": null,
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "budget",
+      "area",
+      "property_age",
+      "proximity_preferences",
+      "possession_timeline",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [
+      {
+        "id": "454e8e4c-0e53-4005-948c-a5bdbd77a438",
+        "property_type": "independent_house",
+        "location": "Cooke Town",
+        "bedroom_count": 4,
+        "area_sqft": 2600,
+        "price": 35000000,
+        "price_text": "Rs 3.50cr",
+        "message_type": "supply_sale",
+        "agent_name": "+91 95912 92090",
+        "agent_contact": "9591292090",
+        "message_date": "2025-09-04T11:53:00+00:00",
+        "raw_message": "10) Cooke Town 23x41 Independent House with a built up of 2600sft 4BHK triplex semifurnished for Rent Rs 1.25 Lakhs or Sale Rs 3.50cr\nCONTACT - 9591292090"
+      }
+    ],
+    "nearby_localities": [
+      {
+        "name": "Indiranagar",
+        "distance_km": 3.5
+      },
+      {
+        "name": "MG Road",
+        "distance_km": 1.5
+      },
+      {
+        "name": "Frazer Town",
+        "distance_km": 2.5
+      },
+      {
+        "name": "Shivajinagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Jogupalya",
+        "distance_km": 2.4
+      }
+    ],
+    "created_at": "2025-12-13T17:44:41.106889"
+  }
+]

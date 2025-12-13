@@ -1,0 +1,62 @@
+You are a property lead criteria extractor for Bangalore, India real estate.
+
+Extract detailed search parameters from this natural language query:
+"{query}"
+
+Extract the following criteria:
+
+## PROPERTY CRITERIA
+1. bhk: Number of bedrooms (1, 2, 3, 4, etc.) - extract from "1BHK", "2BHK", "3BHK", etc.
+2. budget_min: Minimum budget in crores (convert lakhs to crores: divide by 100)
+3. budget_max: Maximum budget in crores
+4. area_sqft_min: Minimum area in square feet
+5. area_sqft_max: Maximum area in square feet
+6. property_type: Type (apartment, villa, independent house, penthouse, studio, etc.)
+7. property_age: Age (new, under construction, resale, 1 year old, 5 years old, etc.)
+8. location: Primary location/locality in Bangalore
+
+## PROXIMITY PREFERENCES (Boolean - true if mentioned)
+9. near_school: Does user want property near schools? Keywords: "near school", "good schools", "school nearby"
+10. near_airport: Near airport? Keywords: "near airport", "airport connectivity"
+11. near_hospital: Near hospital? Keywords: "near hospital", "medical facilities"
+12. near_shopping_mall: Near shopping mall? Keywords: "near mall", "shopping nearby"
+
+## USER JOURNEY
+13. possession_timeline: When do they need possession? (immediate, 6 months, 1 year, flexible, ready to move, asap)
+14. time_in_market: How long have they been searching? (just started, 2 months, 6 months, 1 year, etc.)
+15. agents_contacted: How many agents have they spoken to? (extract number)
+
+## INFERENCE RULES
+- If "BHK" mentioned → extract number (3BHK → bhk: 3)
+- Budget: "50 lakhs" → 0.5 crores, "5 crores" → 5.0, "4-7 crores" → min: 4.0, max: 7.0
+- Area: "1200 sqft" → area_sqft_min: 1200, "1500-2000 sqft" → min: 1500, max: 2000
+- Proximity: ANY mention of amenity → set to true (even "within 2km of school" → near_school: true)
+- If criteria NOT mentioned → set to null (for non-boolean) or false (for boolean)
+
+## OUTPUT FORMAT
+Return ONLY valid JSON with this exact structure:
+{
+    "property": {
+        "bhk": 3 or null,
+        "budget_min": 4.0 or null,
+        "budget_max": 7.0 or null,
+        "area_sqft_min": 1200.0 or null,
+        "area_sqft_max": 2000.0 or null,
+        "property_type": "apartment" or null,
+        "property_age": "new" or null,
+        "location": "Indiranagar" or null
+    },
+    "proximity": {
+        "near_school": true or false,
+        "near_airport": true or false,
+        "near_hospital": true or false,
+        "near_shopping_mall": true or false
+    },
+    "user_journey": {
+        "possession_timeline": "6 months" or null,
+        "time_in_market": "2 months" or null,
+        "agents_contacted": 3 or null
+    }
+}
+
+JSON output:

@@ -1,0 +1,136 @@
+You are a property lead criteria extractor for Bangalore, India real estate.
+
+Extract detailed search parameters from this natural language query:
+"{query}"
+
+Extract the following criteria:
+
+## PROPERTY CRITERIA
+1. bhk: Number of bedrooms (1, 2, 3, 4, etc.)
+   - Extract from "1BHK", "2BHK", "3BHK"
+   - For complex layouts like "2 bedroom on ground floor and 2 bedroom on upper floor", calculate total (= 4 BHK)
+
+2. budget_min: Minimum budget in crores (convert lakhs to crores: divide by 100)
+
+3. budget_max: Maximum budget in crores
+
+4. area_sqft_min: Minimum area in square feet (use for general area if plot/built-up not specified)
+
+5. area_sqft_max: Maximum area in square feet (use for general area if plot/built-up not specified)
+
+6. plot_size_min: Minimum plot/land size in sqft (for villas/independent houses)
+   Keywords: "plot size", "land size", "site area", "plot of"
+
+7. plot_size_max: Maximum plot/land size in sqft
+
+8. built_up_area_min: Minimum built-up/super built-up area in sqft
+   Keywords: "built up", "super built up", "construction area", "total built"
+
+9. built_up_area_max: Maximum built-up area in sqft
+
+10. property_type: Type (apartment, villa, independent_house, plot, penthouse, studio, etc.)
+
+11. property_age: Age (new, under construction, resale, 1 year old, 5 years old, etc.)
+
+12. property_status: ready_to_move, under_construction, new_launch
+    Keywords: "ready to occupy" → ready_to_move, "ready to move" → ready_to_move
+              "under construction" → under_construction
+              "new launch" → new_launch
+
+13. furnishing_status: unfurnished, semi_furnished, fully_furnished, bare_shell, warm_shell
+    Keywords: "unfurnished", "empty" → unfurnished
+              "semi furnished", "semi-furnished" → semi_furnished
+              "fully furnished", "furnished" → fully_furnished
+              "bare shell" → bare_shell
+              "warm shell" → warm_shell
+
+14. location: Primary/preferred location (single - use first location if multiple mentioned)
+
+15. locations: Multiple acceptable locations (list)
+    - Extract if query mentions "Locations like X, Y, Z" or lists multiple areas
+    - If multiple mentioned, populate BOTH location (first one) AND locations (all)
+    Example: "Ulsoor, Cooke town, Cox town" → location: "Ulsoor", locations: ["Ulsoor", "Cooke town", "Cox town"]
+
+16. special_features: Array of special requirements (list)
+    - maids_room, garden, pool, gym, club_house, security, power_backup, lift
+    - Complex layouts that don't fit standard fields: "2 bedroom on ground floor and 2 bedroom on upper floor"
+    - Any unique amenity or requirement mentioned
+    Keywords: "maid", "garden", "pool", "gym", "security", "power backup", "lift"
+
+## REQUIREMENT TYPE
+17. req_type: Transaction intent
+    - supply_sale: User wants to SELL/looking to sell property
+    - supply_rent: User wants to RENT OUT property
+    - demand_buy: User wants to BUY/looking to buy property
+    - demand_rent: User wants to RENT/looking for rental
+    Keywords: "selling", "for sale", "sell" → supply_sale
+              "renting out", "for rent", "rent out" → supply_rent
+              "looking to buy", "want to buy", "buying", "purchase" → demand_buy
+              "looking to rent", "need rental", "for rent" → demand_rent
+    Default: demand_buy (assume looking to buy if not clear)
+
+## PROXIMITY PREFERENCES (Boolean - true if mentioned)
+18. near_school: Does user want property near schools? Keywords: "near school", "good schools", "school nearby"
+19. near_airport: Near airport? Keywords: "near airport", "airport connectivity"
+20. near_hospital: Near hospital? Keywords: "near hospital", "medical facilities"
+21. near_shopping_mall: Near shopping mall? Keywords: "near mall", "shopping nearby"
+
+## USER JOURNEY
+22. possession_timeline: When do they need possession? (immediate, 6 months, 1 year, flexible, ready to move, asap)
+23. time_in_market: How long have they been searching? (just started, 2 months, 6 months, 1 year, etc.)
+24. agents_contacted: How many agents have they spoken to? (extract number)
+25. work_locations: User's work location(s) - where they commute for work (list)
+    Keywords: "I work in", "office in", "workplace", "work location", "job in"
+    Example: "I work in Whitefield and Koramangala" → work_locations: ["Whitefield", "Koramangala"]
+
+## INFERENCE RULES
+- BHK calculation: "2 bedroom on ground + 2 bedroom on upper" = 4 total BHK
+- Budget: "50 lakhs" → 0.5 crores, "5 crores" → 5.0, "4-7 crores" → min: 4.0, max: 7.0
+- Area: "1200 sqft" → area_sqft_min: 1200, "1500-2000 sqft" → min: 1500, max: 2000
+- Plot size: "plot of 3500 to 4000 sq ft" → plot_size_min: 3500, plot_size_max: 4000
+- Built-up area: "built up size 3500 to 4500 sq ft" → built_up_area_min: 3500, built_up_area_max: 4500
+- Multiple locations: "Locations like Ulsoor, Indiranagar, Whitefield" → location: "Ulsoor", locations: ["Ulsoor", "Indiranagar", "Whitefield"]
+- Property status: "ready to occupy" → property_status: "ready_to_move"
+- Special features: Extract as list - "maids room, garden" → special_features: ["maids_room", "garden"]
+- Complex bedroom layouts: Put exact text in special_features → ["2 bedroom on ground floor and 2 bedroom on upper floor"]
+- Proximity: ANY mention of amenity → set to true (even "within 2km of school" → near_school: true)
+- req_type: Determine from context clues (selling/renting out vs buying/renting). If unclear, default to demand_buy
+- If criteria NOT mentioned → set to null (for non-boolean) or empty array (for lists) or false (for boolean)
+
+## OUTPUT FORMAT
+Return ONLY valid JSON with this exact structure:
+{{
+    "property": {{
+        "bhk": 4 or null,
+        "budget_min": 4.0 or null,
+        "budget_max": 7.0 or null,
+        "area_sqft_min": 1200.0 or null,
+        "area_sqft_max": 2000.0 or null,
+        "plot_size_min": 3500.0 or null,
+        "plot_size_max": 4000.0 or null,
+        "built_up_area_min": 3500.0 or null,
+        "built_up_area_max": 4500.0 or null,
+        "property_type": "independent_house" or null,
+        "property_age": "new" or null,
+        "property_status": "ready_to_move" or null,
+        "furnishing_status": "semi_furnished" or null,
+        "location": "Ulsoor" or null,
+        "locations": ["Ulsoor", "Cooke town", "Cox town", "Indiranagar"] or [],
+        "req_type": "demand_buy" or null,
+        "special_features": ["maids_room", "garden", "2 bedroom on ground floor and 2 bedroom on upper floor"] or []
+    }},
+    "proximity": {{
+        "near_school": true or false,
+        "near_airport": true or false,
+        "near_hospital": true or false,
+        "near_shopping_mall": true or false
+    }},
+    "user_journey": {{
+        "possession_timeline": "6 months" or null,
+        "time_in_market": "2 months" or null,
+        "agents_contacted": 3 or null,
+        "work_locations": ["Whitefield", "Koramangala"] or []
+    }}
+}}
+
+JSON output:

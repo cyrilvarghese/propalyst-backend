@@ -8,7 +8,7 @@ API endpoints for property search functionality.
 import os
 from fastapi import APIRouter, HTTPException
 
-from models.search import PropertySearchRequest, SearchResponse
+from models.search import PropertyResult, PropertySearchRequest, SearchResponse
 from providers.gemini_search import GeminiSearchProvider
 
 
@@ -98,7 +98,7 @@ async def property_search(request: PropertySearchRequest):
         print("="*80)
         print(f"Total Results: {len(results)}")
         print("\nProperty Listings:")
-        for i, result in enumerate(results, 1):
+        for i, result in enumerate[PropertyResult](results, 1):
             print(f"\n  [{i}] {result.title}")
             print(f"      URL: {result.url}")
             print(f"      Location: {result.location}")

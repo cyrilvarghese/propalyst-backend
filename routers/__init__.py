@@ -16,6 +16,8 @@ from .whatsapp_listing_router import router as whatsapp_listing_router
 from .whatsapp_upload_processing_router import router as whatsapp_upload_processing_router
 from .whatsapp_listings_router import router as whatsapp_listings_router
 from .whatsapp_stats_router import router as whatsapp_stats_router
+from .lead import router as lead_router
+
 
 __all__ = [
     "ui_router",
@@ -28,5 +30,6 @@ __all__ = [
     "whatsapp_listing_router",
     "whatsapp_upload_processing_router",
     "whatsapp_listings_router",
-    "whatsapp_stats_router"
+    "whatsapp_stats_router",
+    "lead_router"
 ]
