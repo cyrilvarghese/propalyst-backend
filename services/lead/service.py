@@ -7,10 +7,11 @@ Combines criteria extraction, property matching, and nearby locality finding.
 """
 
 import uuid
-from typing import Dict, Any
+from typing import Dict, Any, List
 from datetime import datetime
 
 from models.lead import CreateLeadResponse
+from models.whatsapp_listing import WhatsAppListingData
 from .extraction import CriteriaExtractionService
 from .matching import PropertyMatchingService
 from .localities import LocalitiesService
@@ -26,7 +27,7 @@ class LeadService:
         return await CriteriaExtractionService.extract_detailed_criteria(query)
 
     @classmethod
-    async def match_properties_from_criteria(cls, criteria, limit: int = 100) -> list:
+    async def match_properties_from_criteria(cls, criteria, limit: int = 100) -> List[WhatsAppListingData]:
         """Match properties from Supabase based on criteria"""
         return await PropertyMatchingService.match_properties_from_criteria(criteria, limit)
 
@@ -77,63 +78,34 @@ class LeadService:
             # STEP 3: Match properties from Supabase
             matched_properties = await PropertyMatchingService.match_properties_from_criteria(criteria, limit=100)
 
-            # STEP 4: Transform to simplified format for frontend
-            matched_properties_simplified = [
-                {
-                    # Property identifiers
-                    "id": prop.get("id"),
-                    "property_type": prop.get("property_type"),
-                    "location": prop.get("location"),
+            print(f"[LeadService] ✓ Matched {len(matched_properties)} properties")
 
-                    # Property details
-                    "bedroom_count": prop.get("bedroom_count"),
-                    "area_sqft": prop.get("area_sqft"),
-
-                    # Pricing
-                    "price": prop.get("price"),  # In rupees
-                    "price_text": prop.get("price_text"),  # Human-readable (e.g., "5 Cr")
-
-                    # Transaction type
-                    "message_type": prop.get("message_type"),  # supply_sale, demand_buy, etc.
-
-                    # Agent contact info
-                    "agent_name": prop.get("agent_name"),
-                    "agent_contact": prop.get("agent_contact"),
-
-                    # Metadata
-                    "message_date": prop.get("message_date"),
-
-                    # Original WhatsApp message (truncated for payload size)
-                    "raw_message": (prop.get("raw_message")[:200] + "...") if prop.get("raw_message") and len(prop.get("raw_message", "")) > 200 else prop.get("raw_message")
-                }
-                for prop in matched_properties
-            ]
-
-            print(f"[LeadService] ✓ Matched {len(matched_properties_simplified)} properties")
-
-            # STEP 5: Generate lead ID and timestamp
+            # STEP 4: Generate lead ID and timestamp
             lead_id = str(uuid.uuid4())
             created_at = datetime.now().isoformat()
 
-            # STEP 6: Create lead response
+            # STEP 5: Create lead response
             lead_data = CreateLeadResponse(
                 lead_id=lead_id,
+                query=query,
                 extracted_criteria=criteria,
                 missing_criteria=criteria_response.missing_criteria,
-                matched_properties=matched_properties_simplified,
+                matched_properties=[prop.dict() for prop in matched_properties],
                 nearby_localities=criteria_response.nearby_localities,
-                created_at=created_at
+                created_at=created_at,
+                status="new"
             )
 
-            # STEP 7: Save lead to JSON file
+            # STEP 6: Save lead to JSON file
             lead_dict = {
                 "id": lead_id,
                 "query": query,
                 "extracted_criteria": criteria.dict(),
                 "missing_criteria": criteria_response.missing_criteria,
-                "matched_properties": matched_properties_simplified,
+                "matched_properties": [prop.dict() for prop in matched_properties],
                 "nearby_localities": [loc.dict() for loc in criteria_response.nearby_localities] if criteria_response.nearby_localities else [],
-                "created_at": created_at
+                "created_at": created_at,
+                "status": "new"
             }
             LeadPersistenceService.save_lead(lead_dict)
 
@@ -141,7 +113,7 @@ class LeadService:
             return {
                 "success": True,
                 "data": lead_data,
-                "message": f"Lead created with {len(matched_properties_simplified)} matched properties"
+                "message": f"Lead created with {len(matched_properties)} matched properties"
             }
 
         except Exception as e:

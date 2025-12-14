@@ -223,6 +223,11 @@ class CreateLeadResponse(BaseModel):
         description="Unique lead identifier"
     )
 
+    query: str = Field(
+        ...,
+        description="Original natural language query"
+    )
+
     extracted_criteria: DetailedCriteria = Field(
         ...,
         description="Extracted property criteria and user journey"
@@ -246,4 +251,56 @@ class CreateLeadResponse(BaseModel):
     created_at: str = Field(
         ...,
         description="ISO timestamp of lead creation"
+    )
+
+    status: str = Field(
+        default="new",
+        description="Lead status: new, in_progress, matched, contacted, closed"
+    )
+
+
+class UpdateLeadRequest(BaseModel):
+    """Request to update a lead - re-extract criteria and re-match properties"""
+
+    query: str = Field(
+        ...,
+        min_length=1,
+        description="Natural language query to re-extract criteria and re-match properties"
+    )
+
+    status: Optional[str] = Field(
+        None,
+        description="Optional: Update lead status (new, in_progress, matched, contacted, closed)"
+    )
+
+
+class UpdateLeadStatusRequest(BaseModel):
+    """Request to update only the status of a lead"""
+
+    status: str = Field(
+        ...,
+        description="Lead status: new, in_progress, matched, contacted, closed"
+    )
+
+
+class UpdateLeadMatchedPropertiesRequest(BaseModel):
+    """Request to update matched properties for a lead"""
+
+    matched_properties: List[Dict[str, Any]] = Field(
+        ...,
+        description="Updated list of matched property objects"
+    )
+
+
+class ListLeadsResponse(BaseModel):
+    """Response for listing all leads"""
+
+    leads: List[CreateLeadResponse] = Field(
+        default_factory=list,
+        description="List of complete lead objects"
+    )
+
+    total_count: int = Field(
+        ...,
+        description="Total number of leads"
     )

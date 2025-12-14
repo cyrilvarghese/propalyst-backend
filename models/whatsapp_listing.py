@@ -33,13 +33,13 @@ class WhatsAppListingLLMOutput(BaseModel):
 class WhatsAppListingData(BaseModel):
     """Model representing complete extracted listing data"""
     id: str
-    source_message_id: str
-    message_date: Optional[datetime]
-    agent_contact: str
-    agent_name: Optional[str]
-    company_name: Optional[str]
-    raw_message: str
-    message_type: str
+    source_message_id: Optional[str] = None
+    message_date: Optional[datetime] = None
+    agent_contact: Optional[str] = None
+    agent_name: Optional[str] = None
+    company_name: Optional[str] = None
+    raw_message: Optional[str] = None
+    message_type: Optional[str] = None
     property_type: Optional[str] = None
     area_sqft: Optional[float] = None
     bedroom_count: Optional[int] = None
@@ -53,8 +53,24 @@ class WhatsAppListingData(BaseModel):
     facing_direction: Optional[str] = None
     special_features: List[str] = Field(default_factory=list)
     llm_json: Optional[dict] = None
-    created_at: datetime
+    created_at: Optional[datetime] = None
     sender_name: Optional[str] = None
+
+    class Config:
+        """Pydantic config for JSON serialization of datetime objects"""
+        json_encoders = {
+            datetime: lambda v: v.isoformat() if v else None
+        }
+
+    def dict(self, **kwargs) -> dict:
+        """Override dict() to handle datetime serialization for JSON compatibility"""
+        data = super().dict(**kwargs)
+        # Convert datetime objects to ISO format strings
+        if data.get('message_date') and isinstance(data['message_date'], datetime):
+            data['message_date'] = data['message_date'].isoformat()
+        if data.get('created_at') and isinstance(data['created_at'], datetime):
+            data['created_at'] = data['created_at'].isoformat()
+        return data
 
 
 class WhatsAppListingExtractionResponse(BaseModel):

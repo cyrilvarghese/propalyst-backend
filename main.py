@@ -43,6 +43,7 @@ from routers.whatsapp_upload_processing_router import router as whatsapp_upload_
 from routers.whatsapp_listings_router import router as whatsapp_listings_router
 from routers.whatsapp_stats_router import router as whatsapp_stats_router
 from routers.matching_supply_router import router as matching_supply_router
+from routers.distributions import router as distributions_router
 
 # Load environment variables from .env file
 load_dotenv()
@@ -95,6 +96,7 @@ app.include_router(whatsapp_listings_router)
 app.include_router(whatsapp_stats_router)
 app.include_router(matching_supply_router)
 app.include_router(lead_router)
+app.include_router(distributions_router)
 
 # ============================================================================
 # HEALTH CHECK ENDPOINTS

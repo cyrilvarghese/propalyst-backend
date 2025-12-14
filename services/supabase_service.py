@@ -2263,3 +2263,57 @@ Example: "3BHK apartment in Whitefield, Prestige Lake Ridge, 2400 sqft"
                 "data": None,
                 "message": f"Error inserting match: {error_msg}"
             }
+
+    # ============================================================================
+    # Distribution & Analytics Methods
+    # ============================================================================
+
+    @classmethod
+    async def get_locality_distributions(cls, location: Optional[str] = None, limit: int = 100) -> Dict[str, Any]:
+        """
+        Get distribution statistics per locality from locality_distributions view
+
+        Aggregates whatsapp_listings_relevant data by location showing:
+        - Price range distributions (5-8Cr, 8-10Cr, 10-12Cr, 12-15Cr, 15Cr+)
+        - Area range distributions (0-500, 500-1000, 1000-1500, 1500-2000, 2000+ sqft)
+        - Property type distributions (Apartment, Villa, Independent House, Plot)
+        - BHK distributions (1, 2, 3, 4 bedroom counts)
+
+        Args:
+            location: Optional location filter (case-insensitive partial match)
+            limit: Maximum number of localities to return (default: 100)
+
+        Returns:
+            Dictionary with success status and distribution data
+        """
+        try:
+            client = cls._get_client()
+
+            query = client.table("locality_distributions").select("*")
+
+            # Apply location filter if provided (fuzzy match)
+            if location:
+                query = query.ilike("location", f"%{location.lower()}%")
+
+            query = query.limit(limit)
+            response = query.execute()
+
+            distributions = response.data if response.data else []
+
+            print(f"[Supabase] ✓ Retrieved {len(distributions)} locality distributions")
+
+            return {
+                "success": True,
+                "data": distributions,
+                "count": len(distributions),
+                "message": f"Retrieved distributions for {len(distributions)} localities"
+            }
+
+        except Exception as e:
+            print(f"[Supabase] ✗ Error retrieving locality distributions: {e}")
+            return {
+                "success": False,
+                "data": [],
+                "count": 0,
+                "message": f"Error retrieving distributions: {str(e)}"
+            }

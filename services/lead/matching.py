@@ -9,6 +9,7 @@ from typing import Dict, Any, List
 from datetime import datetime
 from pathlib import Path
 from models.lead import DetailedCriteria
+from models.whatsapp_listing import WhatsAppListingData
 
 
 class PropertyMatchingService:
@@ -18,7 +19,7 @@ class PropertyMatchingService:
     async def match_properties_from_criteria(
         criteria: DetailedCriteria,
         limit: int = 100
-    ) -> List[Dict[str, Any]]:
+    ) -> List[WhatsAppListingData]:
         """
         Match WhatsApp listings from Supabase based on lead criteria.
 
@@ -95,10 +96,10 @@ class PropertyMatchingService:
 
                 if budget_min_rupees > 0:
                     query = query.gte("price", price_min)
-                    filters_applied.append(f"price >= {price_min} ({price_min/10_000_000:.2f}Cr)")
+                    filters_applied.append(f"price >= {price_min}")
                 if budget_max_rupees != float('inf'):
                     query = query.lte("price", price_max)
-                    filters_applied.append(f"price <= {price_max} ({price_max/10_000_000:.2f}Cr)")
+                    filters_applied.append(f"price <= {price_max}")
 
             # FILTER 3: Property Type (Exact match - AND logic)
             if criteria.property.property_type:
@@ -119,7 +120,7 @@ class PropertyMatchingService:
                 }
                 matching_message_type = req_type_mapping.get(criteria.property.req_type, criteria.property.req_type)
                 query = query.eq("message_type", matching_message_type)
-                filters_applied.append(f"message_type = '{matching_message_type}' (inverted from req_type '{criteria.property.req_type}')")
+                filters_applied.append(f"message_type = '{matching_message_type}'")
 
             # FILTER 5: Furnishing Status (Exact match - AND logic)
             if criteria.property.furnishing_status:
@@ -185,14 +186,31 @@ class PropertyMatchingService:
 
             # EXECUTE QUERY
             response = query.execute()
-            matched_properties = response.data if response.data else []
+            raw_properties = response.data if response.data else []
+
+            # LOG RAW RESULTS FROM SUPABASE
+            query_log.append(f"\nRaw results from Supabase: {len(raw_properties)} properties")
+
+            # Convert raw dicts to WhatsAppListingData Pydantic models
+            matched_properties = []
+            invalid_count = 0
+            for prop_dict in raw_properties:
+                try:
+                    prop = WhatsAppListingData(**prop_dict)
+                    matched_properties.append(prop)
+                except Exception as e:
+                    invalid_count += 1
+                    print(f"[PropertyMatching] ⚠️  Skipping invalid property: {prop_dict.get('id')}, error: {e}")
+                    continue
 
             # LOG RESULTS
-            query_log.append(f"\nResult: {len(matched_properties)} properties found")
+            query_log.append(f"Valid properties after validation: {len(matched_properties)} properties")
+            if invalid_count > 0:
+                query_log.append(f"Skipped invalid properties: {invalid_count}")
             query_log.append(f"{'='*50}\n")
 
             log_file = Path(__file__).parent.parent.parent / "data" / "query_debug.log"
-            with open(log_file, 'a', encoding='utf-8') as f:
+            with open(log_file, 'w', encoding='utf-8') as f:
                 f.write("\n".join(query_log) + "\n")
 
             print(f"[PropertyMatching] ✓ Found {len(matched_properties)} properties (query logged to {log_file})")

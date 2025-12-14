@@ -17,7 +17,11 @@ from .schemas import (
     ExtractDetailedCriteriaRequest,
     ExtractDetailedCriteriaResponse,
     CreateLeadRequest,
-    CreateLeadResponse
+    CreateLeadResponse,
+    UpdateLeadRequest,
+    UpdateLeadStatusRequest,
+    UpdateLeadMatchedPropertiesRequest,
+    ListLeadsResponse
 )
 
 __all__ = [
@@ -29,5 +33,9 @@ __all__ = [
     "ExtractDetailedCriteriaRequest",
     "ExtractDetailedCriteriaResponse",
     "CreateLeadRequest",
-    "CreateLeadResponse"
+    "CreateLeadResponse",
+    "UpdateLeadRequest",
+    "UpdateLeadStatusRequest",
+    "UpdateLeadMatchedPropertiesRequest",
+    "ListLeadsResponse"
 ]

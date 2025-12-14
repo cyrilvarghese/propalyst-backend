@@ -1,7 +1,7 @@
 [
   {
-    "id": "f1133c1a-91a5-4898-a7a2-2427e1ec37dd",
-    "query": "3BHK in Whitefield, budget 5 crores, possession in 6 months",
+    "id": "472d44e1-0749-4776-895e-80c4f3a1a487",
+    "query": "3BHK in indiranagar, budget 5 crores, possession in 6 months",
     "extracted_criteria": {
       "property": {
         "bhk": 3,
@@ -10,69 +10,6 @@
         "area_sqft_min": null,
         "area_sqft_max": null,
         "property_type": null,
-        "property_age": null,
-        "location": "Whitefield",
-        "req_type": "demand_buy",
-        "locations": [
-          "Whitefield"
-        ],
-        "plot_size_min": null,
-        "plot_size_max": null,
-        "built_up_area_min": null,
-        "built_up_area_max": null,
-        "property_status": "under_construction",
-        "furnishing_status": null,
-        "special_features": []
-      },
-      "proximity": {
-        "near_school": false,
-        "near_airport": false,
-        "near_hospital": false,
-        "near_shopping_mall": false
-      },
-      "user_journey": {
-        "possession_timeline": "6 months",
-        "time_in_market": null,
-        "agents_contacted": null,
-        "work_locations": []
-      }
-    },
-    "matched_properties": [],
-    "nearby_localities": [
-      {
-        "name": "Marathahalli",
-        "distance_km": 6.4
-      },
-      {
-        "name": "Kadugodi",
-        "distance_km": 4.0
-      },
-      {
-        "name": "Sarjapur Road",
-        "distance_km": 13.0
-      },
-      {
-        "name": "Hoodi",
-        "distance_km": 6.0
-      },
-      {
-        "name": "Varthur",
-        "distance_km": 6.5
-      }
-    ],
-    "created_at": "2025-12-13T16:17:23.594759"
-  },
-  {
-    "id": "ffd48c59-c9db-4911-94ed-9afc18d8ed1b",
-    "query": "3BHK in Indiranagar  villa, budget upto 15 crores, possession in 6 months",
-    "extracted_criteria": {
-      "property": {
-        "bhk": 3,
-        "budget_min": null,
-        "budget_max": 15.0,
-        "area_sqft_min": null,
-        "area_sqft_max": null,
-        "property_type": "villa",
         "property_age": null,
         "location": "Indiranagar",
         "req_type": "demand_buy",
@@ -102,77 +39,7 @@
     },
     "missing_criteria": [
       "area",
-      "property_age",
-      "proximity_preferences",
-      "time_in_market",
-      "agents_contacted"
-    ],
-    "matched_properties": [],
-    "nearby_localities": [
-      {
-        "name": "CV Raman Nagar",
-        "distance_km": 3.0
-      },
-      {
-        "name": "Domlur",
-        "distance_km": 3.5
-      },
-      {
-        "name": "HAL Layout",
-        "distance_km": 2.5
-      },
-      {
-        "name": "Ulsoor",
-        "distance_km": 2.0
-      },
-      {
-        "name": "Koramangala",
-        "distance_km": 6.0
-      }
-    ],
-    "created_at": "2025-12-13T16:21:22.652562"
-  },
-  {
-    "id": "a108b210-e52e-437e-80bf-f0322be3707f",
-    "query": "Indiranagar apartment, budget upto 15 crores, possession in 6 months",
-    "extracted_criteria": {
-      "property": {
-        "bhk": null,
-        "budget_min": null,
-        "budget_max": 15.0,
-        "area_sqft_min": null,
-        "area_sqft_max": null,
-        "property_type": "apartment",
-        "property_age": null,
-        "location": "Indiranagar",
-        "req_type": "demand_buy",
-        "locations": [
-          "Indiranagar"
-        ],
-        "plot_size_min": null,
-        "plot_size_max": null,
-        "built_up_area_min": null,
-        "built_up_area_max": null,
-        "property_status": "under_construction",
-        "furnishing_status": null,
-        "special_features": []
-      },
-      "proximity": {
-        "near_school": false,
-        "near_airport": false,
-        "near_hospital": false,
-        "near_shopping_mall": false
-      },
-      "user_journey": {
-        "possession_timeline": "6 months",
-        "time_in_market": null,
-        "agents_contacted": null,
-        "work_locations": []
-      }
-    },
-    "missing_criteria": [
-      "bhk",
-      "area",
+      "property_type",
       "property_age",
       "proximity_preferences",
       "time_in_market",
@@ -180,54 +47,1443 @@
     ],
     "matched_properties": [
       {
-        "id": "c909c0ce-f439-4ce1-bb16-f42777942df9",
+        "id": "55ec3e12-5a5c-4815-89bf-de67317fe8cf",
+        "source_message_id": null,
+        "message_date": "2025-12-08T16:10:51+00:00",
+        "agent_contact": null,
+        "agent_name": null,
+        "company_name": null,
+        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children’s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
+        "message_type": "supply_sale",
         "property_type": "apartment",
-        "location": "HRBR, OMBR, Kasturinagar or Indiranagar",
+        "area_sqft": 2800.0,
         "bedroom_count": 3,
-        "area_sqft": null,
-        "price": 30000000,
-        "price_text": "Rs.3cr",
-        "message_type": "demand_buy",
-        "agent_name": "+91 95912 92090",
+        "price": 59000000.0,
+        "price_text": "5.9Cr",
+        "location": "Indiranagar",
+        "project_name": "Divyasree Life",
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "gated_community",
+          "high_floor",
+          "negotiable"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-12T06:14:56.846961+00:00",
+        "sender_name": "Naresh S"
+      },
+      {
+        "id": "162ad359-c667-4dbd-a940-72bec9504db5",
+        "source_message_id": null,
+        "message_date": "2025-12-04T13:44:00+00:00",
+        "agent_contact": null,
+        "agent_name": null,
+        "company_name": null,
+        "raw_message": "Available \n⭐: Flat \n1) 2,100 sqft (1st Floor)\n2) 3 Bedrooms (Fans, Lights and Cupboards)\n3) 4 Bathrooms (Kohler Fittings)\n4) Modular Kitchen\n5) 4 Balconies\n6) Lift\n7) 2 Car Park\n8) Power Backup (Generator)\n9) West Facing Door\n10) South Facing Building\n: 2nd Main, 1st Stage, Indiranagar, Bangalore, \nPrice 3.5 cr negotiable",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 2100.0,
+        "bedroom_count": 3,
+        "price": 35000000.0,
+        "price_text": "3.5 cr negotiable",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "west",
+        "special_features": [
+          "modular_kitchen",
+          "lift",
+          "power_backup",
+          "negotiable"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-10T16:03:15.176014+00:00",
+        "sender_name": "+91 99869 97461"
+      },
+      {
+        "id": "4ff7e3bc-1914-44c7-80c1-34c00a2bfaf5",
+        "source_message_id": null,
+        "message_date": "2025-10-25T16:19:26+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ INDIRANAGAR 2ND STAGE\n3 BHK, 1900 Sft., Brandnew Semi Furn.\nPRICE : Rs. 3.75 CR.\n\n    Kindly revert ONLY WITH DIRECT ENQUIRES.\n\n_THANKS & REGARDS,_\nZEESHAN.G\n*_DZire Realtors_*\n📱: +91-7847 83 83 83",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 22,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T11:18:09.869202+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "e3e64ac2-506b-409a-8bc4-cab975b640bb",
+        "source_message_id": null,
+        "message_date": "2025-10-13T12:33:43+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 19,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T10:53:38.278294+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "79307b81-b3d8-4d2f-819b-3bc14e48e23b",
+        "source_message_id": null,
+        "message_date": "2025-10-03T11:14:09+00:00",
+        "agent_contact": "8105213550 / 9980513550",
+        "agent_name": "Abhishek / Farhat Shahbudin",
+        "company_name": null,
+        "raw_message": "Apartment  available for sale\n*Defence colony  indiranagar*\nFirst floor\nEast facing\n1664 sq.ft.\n3 bedrooms\n3 toilets\nkitchen\nSale price : *2.90 Crores + registration*\nAbhishek / Farhat Shahbudin\n8105213550 / 9980513550\n*Golden Nest Realtors*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1664.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "2.90 Crores + registration",
+        "location": "Indiranagar",
+        "project_name": "Golden Nest Realtors",
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "east",
+        "special_features": [
+          "registration_extra"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-28T10:18:34.037060+00:00",
+        "sender_name": "~ GnestAbhi"
+      },
+      {
+        "id": "ceba835d-85d3-4d30-b12f-a321e82ee1f8",
+        "source_message_id": null,
+        "message_date": "2025-10-01T15:31:00+00:00",
         "agent_contact": "9591292090",
-        "message_date": "2025-11-03T14:45:00+00:00",
-        "raw_message": "1) Require 3 or 4BHK Flat for Purchase in HRBR, OMBR, Kasturinagar or Indiranagar Budget Rs.3cr......also interested in under construction or yet to start project\nCONTACT - 9591292090"
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "Indiranagar 1st Stage Penthouse 3.5BHK of 2000sft + 1000sft terrace semifurnished available for Sale at Rs 2.25cr\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 22500000.0,
+        "price_text": "Rs 2.25cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 5,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:19:00.117276+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "a57fb658-14e3-4532-8899-2db2a3c04846",
+        "source_message_id": null,
+        "message_date": "2025-09-18T13:40:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 18,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:12:56.021240+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
+      },
+      {
+        "id": "69a70fbb-424c-488a-b859-a543ab010f50",
+        "source_message_id": null,
+        "message_date": "2025-09-17T18:46:11+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 17,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T09:31:02.366577+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "c617d908-362a-433b-bb89-4d47715221f0",
+        "source_message_id": null,
+        "message_date": "2025-09-13T13:31:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "10) Indiranagar 1st Stage Penthouse 3.5BHK of 2000sft + 1000sft terrace semifurnished available for Sale at Rs 2.25cr\n\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 22500000.0,
+        "price_text": "Rs 2.25cr",
+        "location": "Indiranagar 1st Stage",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "penthouse",
+          "terrace"
+        ],
+        "llm_json": {
+          "split_index": 10,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:08:34.348550+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "de32cb7d-ec3f-4d88-bc9e-d9913f72a118",
+        "source_message_id": null,
+        "message_date": "2025-09-08T14:05:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "1)Distress Sale! Indiranagar 1st Stage Penthouse 3.5BHK of 2000sft +1000sft terrace semifurnished available for Sale at Rs 2.30cr\n\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 23000000.0,
+        "price_text": "Rs 2.30cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "penthouse",
+          "terrace"
+        ],
+        "llm_json": {
+          "split_index": 1,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:04:48.436056+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "6f62fef2-be08-478b-9ec6-f5dfa3656277",
+        "source_message_id": null,
+        "message_date": "2025-09-08T13:49:24+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "Indiranagar 2nd Stage",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 14,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T09:06:24.851126+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "b308e0d4-37b0-410f-8df2-e63cc2e0504b",
+        "source_message_id": null,
+        "message_date": "2025-08-29T10:53:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "2) Indiranagar Penthouse 3.5BHK of 3000sft semifurnished available for Sale at Rs 2.90cr\n\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "Rs 2.90cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 2,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:50:46.828380+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "ea5ea6d3-94c4-408f-9705-bfdbd5d927c3",
+        "source_message_id": null,
+        "message_date": "2025-08-28T11:26:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 12,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:49:06.921468+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
+      },
+      {
+        "id": "007f696e-6ed7-4986-ac38-0cdc4c978168",
+        "source_message_id": null,
+        "message_date": "2025-08-25T12:51:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "2) Indiranagar Penthouse 3.5BHK of 3000sft semifurnished available for Sale at Rs 2.90cr\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "Rs 2.90cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 2,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:45:58.665523+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "8a3c8f29-10e7-44ed-8dbe-3dec7daa6d9b",
+        "source_message_id": null,
+        "message_date": "2025-08-19T10:07:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 14,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:39:08.095149+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
+      },
+      {
+        "id": "a8064c8b-d706-4e95-9fac-98a7bd0dec9d",
+        "source_message_id": null,
+        "message_date": "2025-08-18T12:29:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "1) Indiranagar Penthouse 3.5BHK of 3000sft semifurnished available for Sale at Rs 2.90cr\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "Rs 2.90cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 1,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:38:14.085277+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "a34643e3-4720-49af-98e3-938f11d6db35",
+        "source_message_id": null,
+        "message_date": "2025-08-08T19:19:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 14,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:29:18.821048+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
       }
     ],
     "nearby_localities": [
+      {
+        "name": "Domlur",
+        "distance_km": 1.5
+      },
+      {
+        "name": "HAL 2nd Stage",
+        "distance_km": 2.0
+      },
+      {
+        "name": "CV Raman Nagar",
+        "distance_km": 3.5
+      },
+      {
+        "name": "Ulsoor",
+        "distance_km": 3.5
+      },
+      {
+        "name": "Koramangala",
+        "distance_km": 5.5
+      }
+    ],
+    "created_at": "2025-12-14T07:30:43.774113"
+  },
+  {
+    "id": "0afd139a-a748-48de-b853-cf183b1e3805",
+    "query": "3BHK villa in indiranagar, budget 5 crores, area up to 3000 sq.ft.",
+    "extracted_criteria": {
+      "property": {
+        "bhk": 3,
+        "budget_min": null,
+        "budget_max": 5.0,
+        "area_sqft_min": null,
+        "area_sqft_max": 3000.0,
+        "property_type": "villa",
+        "property_age": null,
+        "location": "indiranagar",
+        "req_type": "demand_buy",
+        "locations": [
+          "indiranagar"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": null,
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": null,
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "property_age",
+      "proximity_preferences",
+      "possession_timeline",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "Domlur",
+        "distance_km": 2.0
+      },
+      {
+        "name": "HAL 2nd Stage",
+        "distance_km": 1.0
+      },
+      {
+        "name": "Ulsoor",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Koramangala",
+        "distance_km": 5.0
+      },
+      {
+        "name": "CV Raman Nagar",
+        "distance_km": 4.0
+      }
+    ],
+    "created_at": "2025-12-14T14:52:39.459291",
+    "status": "new"
+  },
+  {
+    "id": "0bee3eaa-d820-4f93-9082-c39103b931a2",
+    "query": "3BHK villa in indiranagar, budget 5 crores, area up to 3000 sq.ft.",
+    "extracted_criteria": {
+      "property": {
+        "bhk": 3,
+        "budget_min": null,
+        "budget_max": 5.0,
+        "area_sqft_min": null,
+        "area_sqft_max": 3000.0,
+        "property_type": "villa",
+        "property_age": null,
+        "location": "Indiranagar",
+        "req_type": "demand_buy",
+        "locations": [
+          "Indiranagar"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": null,
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": null,
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "property_age",
+      "proximity_preferences",
+      "possession_timeline",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "Domlur",
+        "distance_km": 2.0
+      },
+      {
+        "name": "Ulsoor",
+        "distance_km": 3.0
+      },
+      {
+        "name": "CV Raman Nagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Koramangala",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Old Airport Road",
+        "distance_km": 5.0
+      }
+    ],
+    "created_at": "2025-12-14T14:53:16.657980",
+    "status": "new"
+  },
+  {
+    "id": "e3dbb2df-2fe7-41b1-a6f9-d5f7f7f5aa39",
+    "query": "3BHK villa in indiranagar, budget 5 crores, area up to 3000 sq.ft.",
+    "extracted_criteria": {
+      "property": {
+        "bhk": 3,
+        "budget_min": null,
+        "budget_max": 5.0,
+        "area_sqft_min": null,
+        "area_sqft_max": 3000.0,
+        "property_type": "villa",
+        "property_age": null,
+        "location": "Indiranagar",
+        "req_type": "demand_buy",
+        "locations": [
+          "Indiranagar"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": null,
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": null,
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "property_age",
+      "proximity_preferences",
+      "possession_timeline",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "Kodihalli",
+        "distance_km": 3.0
+      },
       {
         "name": "CV Raman Nagar",
         "distance_km": 3.0
       },
       {
         "name": "Domlur",
-        "distance_km": 2.5
-      },
-      {
-        "name": "Murugeshpalya",
         "distance_km": 3.5
       },
       {
-        "name": "Ulsoor",
-        "distance_km": 2.0
+        "name": "Murugeshpalya",
+        "distance_km": 2.5
       },
       {
         "name": "Koramangala",
-        "distance_km": 6.0
+        "distance_km": 5.0
       }
     ],
-    "created_at": "2025-12-13T16:28:18.974289"
+    "created_at": "2025-12-14T14:55:03.538290",
+    "status": "new"
   },
   {
-    "id": "fb919d8c-9a07-4c0c-bd67-20f2584072de",
-    "query": "Indiranagar apartment, budget upto 15 crores, possession in 6 months",
+    "id": "aa0c8079-eaba-4666-9b67-2dc07e9db3c5",
+    "query": "3BHK villa in indiranagar, budget 5 crores, area up to 3000 sq.ft.",
     "extracted_criteria": {
       "property": {
-        "bhk": null,
+        "bhk": 3,
         "budget_min": null,
-        "budget_max": 15.0,
+        "budget_max": 5.0,
         "area_sqft_min": null,
-        "area_sqft_max": null,
+        "area_sqft_max": 3000.0,
+        "property_type": "villa",
+        "property_age": null,
+        "location": "Indiranagar",
+        "req_type": "demand_buy",
+        "locations": [
+          "Indiranagar"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": null,
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": null,
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "property_age",
+      "proximity_preferences",
+      "possession_timeline",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [],
+    "nearby_localities": [
+      {
+        "name": "Domlur",
+        "distance_km": 2.0
+      },
+      {
+        "name": "Ulsoor",
+        "distance_km": 3.0
+      },
+      {
+        "name": "CV Raman Nagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Koramangala",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Old Airport Road",
+        "distance_km": 5.0
+      }
+    ],
+    "created_at": "2025-12-14T14:58:25.393969",
+    "status": "new"
+  },
+  {
+    "id": "d9a17b7b-1f12-4017-a3c3-2720a49c7621",
+    "query": "3BHK apartment in indiranagar, budget 5 crores, area up to 3000 sq.ft., possession in 6 months",
+    "extracted_criteria": {
+      "property": {
+        "bhk": 3,
+        "budget_min": null,
+        "budget_max": 5.0,
+        "area_sqft_min": null,
+        "area_sqft_max": 3000.0,
+        "property_type": "apartment",
+        "property_age": null,
+        "location": "Indiranagar",
+        "req_type": "demand_buy",
+        "locations": [
+          "Indiranagar"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": null,
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": "6 months",
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "property_age",
+      "proximity_preferences",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [
+      {
+        "id": "55ec3e12-5a5c-4815-89bf-de67317fe8cf",
+        "source_message_id": null,
+        "message_date": "2025-12-08T16:10:51+00:00",
+        "agent_contact": null,
+        "agent_name": null,
+        "company_name": null,
+        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children’s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 2800.0,
+        "bedroom_count": 3,
+        "price": 59000000.0,
+        "price_text": "5.9Cr",
+        "location": "Indiranagar",
+        "project_name": "Divyasree Life",
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "gated_community",
+          "high_floor",
+          "negotiable"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-12T06:14:56.846961+00:00",
+        "sender_name": "Naresh S"
+      },
+      {
+        "id": "162ad359-c667-4dbd-a940-72bec9504db5",
+        "source_message_id": null,
+        "message_date": "2025-12-04T13:44:00+00:00",
+        "agent_contact": null,
+        "agent_name": null,
+        "company_name": null,
+        "raw_message": "Available \n⭐: Flat \n1) 2,100 sqft (1st Floor)\n2) 3 Bedrooms (Fans, Lights and Cupboards)\n3) 4 Bathrooms (Kohler Fittings)\n4) Modular Kitchen\n5) 4 Balconies\n6) Lift\n7) 2 Car Park\n8) Power Backup (Generator)\n9) West Facing Door\n10) South Facing Building\n: 2nd Main, 1st Stage, Indiranagar, Bangalore, \nPrice 3.5 cr negotiable",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 2100.0,
+        "bedroom_count": 3,
+        "price": 35000000.0,
+        "price_text": "3.5 cr negotiable",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "west",
+        "special_features": [
+          "modular_kitchen",
+          "lift",
+          "power_backup",
+          "negotiable"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-10T16:03:15.176014+00:00",
+        "sender_name": "+91 99869 97461"
+      },
+      {
+        "id": "4ff7e3bc-1914-44c7-80c1-34c00a2bfaf5",
+        "source_message_id": null,
+        "message_date": "2025-10-25T16:19:26+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ INDIRANAGAR 2ND STAGE\n3 BHK, 1900 Sft., Brandnew Semi Furn.\nPRICE : Rs. 3.75 CR.\n\n    Kindly revert ONLY WITH DIRECT ENQUIRES.\n\n_THANKS & REGARDS,_\nZEESHAN.G\n*_DZire Realtors_*\n📱: +91-7847 83 83 83",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 22,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T11:18:09.869202+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "e3e64ac2-506b-409a-8bc4-cab975b640bb",
+        "source_message_id": null,
+        "message_date": "2025-10-13T12:33:43+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 19,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T10:53:38.278294+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "79307b81-b3d8-4d2f-819b-3bc14e48e23b",
+        "source_message_id": null,
+        "message_date": "2025-10-03T11:14:09+00:00",
+        "agent_contact": "8105213550 / 9980513550",
+        "agent_name": "Abhishek / Farhat Shahbudin",
+        "company_name": null,
+        "raw_message": "Apartment  available for sale\n*Defence colony  indiranagar*\nFirst floor\nEast facing\n1664 sq.ft.\n3 bedrooms\n3 toilets\nkitchen\nSale price : *2.90 Crores + registration*\nAbhishek / Farhat Shahbudin\n8105213550 / 9980513550\n*Golden Nest Realtors*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1664.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "2.90 Crores + registration",
+        "location": "Indiranagar",
+        "project_name": "Golden Nest Realtors",
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "east",
+        "special_features": [
+          "registration_extra"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-28T10:18:34.037060+00:00",
+        "sender_name": "~ GnestAbhi"
+      },
+      {
+        "id": "ceba835d-85d3-4d30-b12f-a321e82ee1f8",
+        "source_message_id": null,
+        "message_date": "2025-10-01T15:31:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "Indiranagar 1st Stage Penthouse 3.5BHK of 2000sft + 1000sft terrace semifurnished available for Sale at Rs 2.25cr\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 22500000.0,
+        "price_text": "Rs 2.25cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 5,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:19:00.117276+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "a57fb658-14e3-4532-8899-2db2a3c04846",
+        "source_message_id": null,
+        "message_date": "2025-09-18T13:40:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 18,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:12:56.021240+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
+      },
+      {
+        "id": "69a70fbb-424c-488a-b859-a543ab010f50",
+        "source_message_id": null,
+        "message_date": "2025-09-17T18:46:11+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 17,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T09:31:02.366577+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "c617d908-362a-433b-bb89-4d47715221f0",
+        "source_message_id": null,
+        "message_date": "2025-09-13T13:31:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "10) Indiranagar 1st Stage Penthouse 3.5BHK of 2000sft + 1000sft terrace semifurnished available for Sale at Rs 2.25cr\n\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 22500000.0,
+        "price_text": "Rs 2.25cr",
+        "location": "Indiranagar 1st Stage",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "penthouse",
+          "terrace"
+        ],
+        "llm_json": {
+          "split_index": 10,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:08:34.348550+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "de32cb7d-ec3f-4d88-bc9e-d9913f72a118",
+        "source_message_id": null,
+        "message_date": "2025-09-08T14:05:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "1)Distress Sale! Indiranagar 1st Stage Penthouse 3.5BHK of 2000sft +1000sft terrace semifurnished available for Sale at Rs 2.30cr\n\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 23000000.0,
+        "price_text": "Rs 2.30cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "penthouse",
+          "terrace"
+        ],
+        "llm_json": {
+          "split_index": 1,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:04:48.436056+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "6f62fef2-be08-478b-9ec6-f5dfa3656277",
+        "source_message_id": null,
+        "message_date": "2025-09-08T13:49:24+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "Indiranagar 2nd Stage",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 14,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T09:06:24.851126+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "b308e0d4-37b0-410f-8df2-e63cc2e0504b",
+        "source_message_id": null,
+        "message_date": "2025-08-29T10:53:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "2) Indiranagar Penthouse 3.5BHK of 3000sft semifurnished available for Sale at Rs 2.90cr\n\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "Rs 2.90cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 2,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:50:46.828380+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "ea5ea6d3-94c4-408f-9705-bfdbd5d927c3",
+        "source_message_id": null,
+        "message_date": "2025-08-28T11:26:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 12,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:49:06.921468+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
+      },
+      {
+        "id": "007f696e-6ed7-4986-ac38-0cdc4c978168",
+        "source_message_id": null,
+        "message_date": "2025-08-25T12:51:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "2) Indiranagar Penthouse 3.5BHK of 3000sft semifurnished available for Sale at Rs 2.90cr\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "Rs 2.90cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 2,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:45:58.665523+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "8a3c8f29-10e7-44ed-8dbe-3dec7daa6d9b",
+        "source_message_id": null,
+        "message_date": "2025-08-19T10:07:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 14,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:39:08.095149+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
+      },
+      {
+        "id": "a8064c8b-d706-4e95-9fac-98a7bd0dec9d",
+        "source_message_id": null,
+        "message_date": "2025-08-18T12:29:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "1) Indiranagar Penthouse 3.5BHK of 3000sft semifurnished available for Sale at Rs 2.90cr\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "Rs 2.90cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 1,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:38:14.085277+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "a34643e3-4720-49af-98e3-938f11d6db35",
+        "source_message_id": null,
+        "message_date": "2025-08-08T19:19:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 14,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:29:18.821048+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
+      }
+    ],
+    "nearby_localities": [
+      {
+        "name": "Domlur",
+        "distance_km": 2.0
+      },
+      {
+        "name": "Ulsoor",
+        "distance_km": 3.0
+      },
+      {
+        "name": "CV Raman Nagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Koramangala",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Old Airport Road",
+        "distance_km": 5.0
+      }
+    ],
+    "created_at": "2025-12-14T15:15:18.790782",
+    "status": "new"
+  },
+  {
+    "id": "d6b30dc0-6378-4697-986f-82efa06bf0b2",
+    "query": "3BHK apartment in indiranagar, budget 5 crores, area up to 3000 sq.ft., possession in 6 months",
+    "extracted_criteria": {
+      "property": {
+        "bhk": 3,
+        "budget_min": null,
+        "budget_max": 5.0,
+        "area_sqft_min": null,
+        "area_sqft_max": 3000.0,
         "property_type": "apartment",
         "property_age": null,
         "location": "Indiranagar",
@@ -257,14 +1513,537 @@
       }
     },
     "missing_criteria": [
-      "bhk",
-      "area",
       "property_age",
       "proximity_preferences",
       "time_in_market",
       "agents_contacted"
     ],
-    "matched_properties": [],
+    "matched_properties": [
+      {
+        "id": "55ec3e12-5a5c-4815-89bf-de67317fe8cf",
+        "source_message_id": null,
+        "message_date": "2025-12-08T16:10:51+00:00",
+        "agent_contact": null,
+        "agent_name": null,
+        "company_name": null,
+        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children’s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 2800.0,
+        "bedroom_count": 3,
+        "price": 59000000.0,
+        "price_text": "5.9Cr",
+        "location": "Indiranagar",
+        "project_name": "Divyasree Life",
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "gated_community",
+          "high_floor",
+          "negotiable"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-12T06:14:56.846961+00:00",
+        "sender_name": "Naresh S"
+      },
+      {
+        "id": "162ad359-c667-4dbd-a940-72bec9504db5",
+        "source_message_id": null,
+        "message_date": "2025-12-04T13:44:00+00:00",
+        "agent_contact": null,
+        "agent_name": null,
+        "company_name": null,
+        "raw_message": "Available \n⭐: Flat \n1) 2,100 sqft (1st Floor)\n2) 3 Bedrooms (Fans, Lights and Cupboards)\n3) 4 Bathrooms (Kohler Fittings)\n4) Modular Kitchen\n5) 4 Balconies\n6) Lift\n7) 2 Car Park\n8) Power Backup (Generator)\n9) West Facing Door\n10) South Facing Building\n: 2nd Main, 1st Stage, Indiranagar, Bangalore, \nPrice 3.5 cr negotiable",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 2100.0,
+        "bedroom_count": 3,
+        "price": 35000000.0,
+        "price_text": "3.5 cr negotiable",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "west",
+        "special_features": [
+          "modular_kitchen",
+          "lift",
+          "power_backup",
+          "negotiable"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-10T16:03:15.176014+00:00",
+        "sender_name": "+91 99869 97461"
+      },
+      {
+        "id": "4ff7e3bc-1914-44c7-80c1-34c00a2bfaf5",
+        "source_message_id": null,
+        "message_date": "2025-10-25T16:19:26+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ INDIRANAGAR 2ND STAGE\n3 BHK, 1900 Sft., Brandnew Semi Furn.\nPRICE : Rs. 3.75 CR.\n\n    Kindly revert ONLY WITH DIRECT ENQUIRES.\n\n_THANKS & REGARDS,_\nZEESHAN.G\n*_DZire Realtors_*\n📱: +91-7847 83 83 83",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 22,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T11:18:09.869202+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "e3e64ac2-506b-409a-8bc4-cab975b640bb",
+        "source_message_id": null,
+        "message_date": "2025-10-13T12:33:43+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 19,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T10:53:38.278294+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "79307b81-b3d8-4d2f-819b-3bc14e48e23b",
+        "source_message_id": null,
+        "message_date": "2025-10-03T11:14:09+00:00",
+        "agent_contact": "8105213550 / 9980513550",
+        "agent_name": "Abhishek / Farhat Shahbudin",
+        "company_name": null,
+        "raw_message": "Apartment  available for sale\n*Defence colony  indiranagar*\nFirst floor\nEast facing\n1664 sq.ft.\n3 bedrooms\n3 toilets\nkitchen\nSale price : *2.90 Crores + registration*\nAbhishek / Farhat Shahbudin\n8105213550 / 9980513550\n*Golden Nest Realtors*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1664.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "2.90 Crores + registration",
+        "location": "Indiranagar",
+        "project_name": "Golden Nest Realtors",
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "east",
+        "special_features": [
+          "registration_extra"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-28T10:18:34.037060+00:00",
+        "sender_name": "~ GnestAbhi"
+      },
+      {
+        "id": "ceba835d-85d3-4d30-b12f-a321e82ee1f8",
+        "source_message_id": null,
+        "message_date": "2025-10-01T15:31:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "Indiranagar 1st Stage Penthouse 3.5BHK of 2000sft + 1000sft terrace semifurnished available for Sale at Rs 2.25cr\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 22500000.0,
+        "price_text": "Rs 2.25cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 5,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:19:00.117276+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "a57fb658-14e3-4532-8899-2db2a3c04846",
+        "source_message_id": null,
+        "message_date": "2025-09-18T13:40:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 18,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:12:56.021240+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
+      },
+      {
+        "id": "69a70fbb-424c-488a-b859-a543ab010f50",
+        "source_message_id": null,
+        "message_date": "2025-09-17T18:46:11+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 17,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T09:31:02.366577+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "c617d908-362a-433b-bb89-4d47715221f0",
+        "source_message_id": null,
+        "message_date": "2025-09-13T13:31:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "10) Indiranagar 1st Stage Penthouse 3.5BHK of 2000sft + 1000sft terrace semifurnished available for Sale at Rs 2.25cr\n\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 22500000.0,
+        "price_text": "Rs 2.25cr",
+        "location": "Indiranagar 1st Stage",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "penthouse",
+          "terrace"
+        ],
+        "llm_json": {
+          "split_index": 10,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:08:34.348550+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "de32cb7d-ec3f-4d88-bc9e-d9913f72a118",
+        "source_message_id": null,
+        "message_date": "2025-09-08T14:05:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "1)Distress Sale! Indiranagar 1st Stage Penthouse 3.5BHK of 2000sft +1000sft terrace semifurnished available for Sale at Rs 2.30cr\n\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 23000000.0,
+        "price_text": "Rs 2.30cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "penthouse",
+          "terrace"
+        ],
+        "llm_json": {
+          "split_index": 1,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:04:48.436056+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "6f62fef2-be08-478b-9ec6-f5dfa3656277",
+        "source_message_id": null,
+        "message_date": "2025-09-08T13:49:24+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "Indiranagar 2nd Stage",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 14,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T09:06:24.851126+00:00",
+        "sender_name": "Dzire-Realtors"
+      },
+      {
+        "id": "b308e0d4-37b0-410f-8df2-e63cc2e0504b",
+        "source_message_id": null,
+        "message_date": "2025-08-29T10:53:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "2) Indiranagar Penthouse 3.5BHK of 3000sft semifurnished available for Sale at Rs 2.90cr\n\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "Rs 2.90cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 2,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:50:46.828380+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "ea5ea6d3-94c4-408f-9705-bfdbd5d927c3",
+        "source_message_id": null,
+        "message_date": "2025-08-28T11:26:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 12,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:49:06.921468+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
+      },
+      {
+        "id": "007f696e-6ed7-4986-ac38-0cdc4c978168",
+        "source_message_id": null,
+        "message_date": "2025-08-25T12:51:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "2) Indiranagar Penthouse 3.5BHK of 3000sft semifurnished available for Sale at Rs 2.90cr\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "Rs 2.90cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 2,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:45:58.665523+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "8a3c8f29-10e7-44ed-8dbe-3dec7daa6d9b",
+        "source_message_id": null,
+        "message_date": "2025-08-19T10:07:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "INDIRANAGAR 2ND STAGE",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 14,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:39:08.095149+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
+      },
+      {
+        "id": "a8064c8b-d706-4e95-9fac-98a7bd0dec9d",
+        "source_message_id": null,
+        "message_date": "2025-08-18T12:29:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "1) Indiranagar Penthouse 3.5BHK of 3000sft semifurnished available for Sale at Rs 2.90cr\nCONTACT - 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3000.0,
+        "bedroom_count": 3,
+        "price": 29000000.0,
+        "price_text": "Rs 2.90cr",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": 1,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:38:14.085277+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "a34643e3-4720-49af-98e3-938f11d6db35",
+        "source_message_id": null,
+        "message_date": "2025-08-08T19:19:00+00:00",
+        "agent_contact": "+91-7847 83 83 83",
+        "agent_name": "ZEESHAN.G",
+        "company_name": null,
+        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1900.0,
+        "bedroom_count": 3,
+        "price": 37500000.0,
+        "price_text": "Rs. 3.75 CR.",
+        "location": "Indiranagar",
+        "project_name": null,
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "brandnew"
+        ],
+        "llm_json": {
+          "split_index": 14,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T16:29:18.821048+00:00",
+        "sender_name": "Zeeshan S DZire. Realtors Rb"
+      }
+    ],
     "nearby_localities": [
       {
         "name": "Domlur",
@@ -272,59 +2051,153 @@
       },
       {
         "name": "Ulsoor",
-        "distance_km": 3.5
+        "distance_km": 3.0
       },
       {
         "name": "CV Raman Nagar",
-        "distance_km": 4.0
+        "distance_km": 3.0
       },
       {
         "name": "Koramangala",
-        "distance_km": 5.0
+        "distance_km": 3.0
       },
       {
         "name": "Marathahalli",
-        "distance_km": 8.0
+        "distance_km": 5.0
       }
     ],
-    "created_at": "2025-12-13T16:38:45.299230"
+    "created_at": "2025-12-14T15:23:20.331684",
+    "status": "new"
   },
   {
-    "id": "2a0675ee-e2f8-49e9-96ae-94da86398294",
-    "query": "Our client is keen to purchase a ready to occupy indipendent house built on a plot size of 3500 to 4000 sq ft . The total built up size of the house could be 3500 to 4500 sq ft with an orientation of 2 bedroom. On ground floor and 2 bedroom on upper. Floor . The house should additionally have maids room & toilet and a small garden . Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
+    "id": "1bc0e764-4faa-4e47-b658-184a1245b6e3",
+    "query": "3BHK in indiranagar, budget 5 crores, possession in 6 months near hospitals and schools",
     "extracted_criteria": {
       "property": {
-        "bhk": 4,
-        "budget_min": null,
-        "budget_max": null,
+        "bhk": 3,
+        "budget_min": 5.0,
+        "budget_max": 5.0,
         "area_sqft_min": null,
         "area_sqft_max": null,
-        "property_type": "independent_house",
+        "property_type": null,
         "property_age": null,
-        "location": "Ulsoor",
+        "location": "Indiranagar",
         "req_type": "demand_buy",
         "locations": [
-          "Ulsoor",
-          "Cooke town",
-          "Cox town",
-          "Benson Town",
-          "R T Nagar",
-          "Jaymahal",
-          "Indiranagar",
-          "Vasantha nagar",
-          "Kumara park",
-          "Richmond town"
+          "Indiranagar"
         ],
-        "plot_size_min": 3500.0,
-        "plot_size_max": 4000.0,
-        "built_up_area_min": 3500.0,
-        "built_up_area_max": 4500.0,
-        "property_status": "ready_to_move",
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": "under_construction",
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": true,
+        "near_airport": false,
+        "near_hospital": true,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": "6 months",
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "area",
+      "property_type",
+      "property_age",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [
+      {
+        "id": "55ec3e12-5a5c-4815-89bf-de67317fe8cf",
+        "source_message_id": null,
+        "message_date": "2025-12-08T16:10:51+00:00",
+        "agent_contact": null,
+        "agent_name": null,
+        "company_name": null,
+        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children’s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 2800.0,
+        "bedroom_count": 3,
+        "price": 59000000.0,
+        "price_text": "5.9Cr",
+        "location": "Indiranagar",
+        "project_name": "Divyasree Life",
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "gated_community",
+          "high_floor",
+          "negotiable"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-12T06:14:56.846961+00:00",
+        "sender_name": "Naresh S"
+      }
+    ],
+    "nearby_localities": [
+      {
+        "name": "Domlur",
+        "distance_km": 2.0
+      },
+      {
+        "name": "Ulsoor",
+        "distance_km": 3.0
+      },
+      {
+        "name": "CV Raman Nagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Koramangala",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Old Airport Road",
+        "distance_km": 5.0
+      }
+    ],
+    "created_at": "2025-12-14T16:56:35.438961",
+    "status": "new"
+  },
+  {
+    "id": "93245cfc-a6e8-48e7-955f-dbe6ff0fb10a",
+    "query": "Purchase Requirement – Pre-Leased Co-Living / Business Hotel Student Housing Preferred Target ROI: 8% Budget: ₹8–10 Cr",
+    "extracted_criteria": {
+      "property": {
+        "bhk": null,
+        "budget_min": 8.0,
+        "budget_max": 10.0,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": null,
+        "property_age": null,
+        "location": null,
+        "req_type": "demand_buy",
+        "locations": [],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": null,
         "furnishing_status": null,
         "special_features": [
-          "maids_room",
-          "garden",
-          "2 bedroom on ground floor and 2 bedroom on upper floor"
+          "Pre-Leased Co-Living / Business Hotel Student Housing",
+          "Target ROI: 8%"
         ]
       },
       "proximity": {
@@ -341,152 +2214,49 @@
       }
     },
     "missing_criteria": [
-      "budget",
+      "bhk",
+      "area",
+      "property_type",
       "property_age",
+      "location",
       "proximity_preferences",
       "possession_timeline",
       "time_in_market",
       "agents_contacted"
     ],
     "matched_properties": [],
-    "nearby_localities": [
-      {
-        "name": "Jogupalya",
-        "distance_km": 2.4
-      },
-      {
-        "name": "Indira Nagar",
-        "distance_km": 2.9
-      },
-      {
-        "name": "Cox Town",
-        "distance_km": 2.96
-      },
-      {
-        "name": "Frazer Town",
-        "distance_km": 3.06
-      },
-      {
-        "name": "Shivaji Nagar",
-        "distance_km": 3.94
-      }
-    ],
-    "created_at": "2025-12-13T16:57:10.050129"
+    "nearby_localities": [],
+    "created_at": "2025-12-14T17:30:28.086708",
+    "status": "new"
   },
   {
-    "id": "5066ac80-daef-44ac-9493-7d6487f21830",
-    "query": "Our client is keen to purchase a ready to occupy indipendent house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
+    "id": "07d1f3df-018a-44f7-8f9a-bd0c7bd0949e",
+    "query": "Purchase Requirement – Pre-Leased Co-Living / Business Hotel Student Housing Preferred Target ROI: 8% Budget: ₹8–10 Cr",
     "extracted_criteria": {
       "property": {
         "bhk": null,
-        "budget_min": null,
-        "budget_max": null,
+        "budget_min": 8.0,
+        "budget_max": 10.0,
         "area_sqft_min": null,
         "area_sqft_max": null,
-        "property_type": "independent_house",
+        "property_type": null,
         "property_age": null,
-        "location": "Ulsoor",
+        "location": null,
         "req_type": "demand_buy",
-        "locations": [
-          "Ulsoor",
-          "Cooke town",
-          "Cox town",
-          "Benson Town",
-          "R T Nagar",
-          "Jaymahal",
-          "Indiranagar",
-          "Vasantha nagar",
-          "Kumara park",
-          "Richmond town"
-        ],
+        "locations": [],
         "plot_size_min": null,
         "plot_size_max": null,
         "built_up_area_min": null,
         "built_up_area_max": null,
-        "property_status": "ready_to_move",
+        "property_status": null,
         "furnishing_status": null,
-        "special_features": []
-      },
-      "proximity": {
-        "near_school": false,
-        "near_airport": false,
-        "near_hospital": false,
-        "near_shopping_mall": false
-      },
-      "user_journey": {
-        "possession_timeline": "ready to move",
-        "time_in_market": null,
-        "agents_contacted": null,
-        "work_locations": []
-      }
-    },
-    "missing_criteria": [
-      "bhk",
-      "budget",
-      "area",
-      "property_age",
-      "proximity_preferences",
-      "time_in_market",
-      "agents_contacted"
-    ],
-    "matched_properties": [],
-    "nearby_localities": [
-      {
-        "name": "Jogupalya",
-        "distance_km": 2.4
-      },
-      {
-        "name": "Indira Nagar",
-        "distance_km": 2.9
-      },
-      {
-        "name": "Cox Town",
-        "distance_km": 2.96
-      },
-      {
-        "name": "Frazer Town",
-        "distance_km": 3.06
-      },
-      {
-        "name": "Shivaji Nagar",
-        "distance_km": 3.94
-      }
-    ],
-    "created_at": "2025-12-13T16:59:59.226014"
-  },
-  {
-    "id": "a6e58902-73e0-43de-aec2-1d05ae8cfb44",
-    "query": "Our client is keen to purchase a ready to occupy indipendent house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
-    "extracted_criteria": {
-      "property": {
-        "bhk": null,
-        "budget_min": null,
-        "budget_max": null,
-        "area_sqft_min": null,
-        "area_sqft_max": null,
-        "property_type": "independent_house",
-        "property_age": null,
-        "location": "Ulsoor",
-        "req_type": "demand_buy",
-        "locations": [
-          "Ulsoor",
-          "Cooke town",
-          "Cox town",
-          "Benson Town",
-          "R T Nagar",
-          "Jaymahal",
-          "Indiranagar",
-          "Vasantha nagar",
-          "Kumara park",
-          "Richmond town"
-        ],
-        "plot_size_min": null,
-        "plot_size_max": null,
-        "built_up_area_min": null,
-        "built_up_area_max": null,
-        "property_status": "ready_to_move",
-        "furnishing_status": null,
-        "special_features": []
+        "special_features": [
+          "Pre-Leased",
+          "Co-Living",
+          "Business Hotel",
+          "Student Housing",
+          "Target ROI: 8%"
+        ]
       },
       "proximity": {
         "near_school": false,
@@ -503,254 +2273,10 @@
     },
     "missing_criteria": [
       "bhk",
-      "budget",
       "area",
+      "property_type",
       "property_age",
-      "proximity_preferences",
-      "possession_timeline",
-      "time_in_market",
-      "agents_contacted"
-    ],
-    "matched_properties": [],
-    "nearby_localities": [
-      {
-        "name": "MG Road",
-        "distance_km": 1.0
-      },
-      {
-        "name": "Frazer Town",
-        "distance_km": 1.0
-      },
-      {
-        "name": "Shivajinagar",
-        "distance_km": 3.0
-      },
-      {
-        "name": "Indiranagar",
-        "distance_km": 3.0
-      },
-      {
-        "name": "Koramangala",
-        "distance_km": 7.0
-      }
-    ],
-    "created_at": "2025-12-13T17:00:46.009829"
-  },
-  {
-    "id": "1fc4f111-9090-484f-9716-f757dc5c0265",
-    "query": "Our client is keen to purchase a ready to occupy indipendent house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
-    "extracted_criteria": {
-      "property": {
-        "bhk": null,
-        "budget_min": null,
-        "budget_max": null,
-        "area_sqft_min": null,
-        "area_sqft_max": null,
-        "property_type": "independent_house",
-        "property_age": null,
-        "location": "Ulsoor",
-        "req_type": "demand_buy",
-        "locations": [
-          "Ulsoor",
-          "Cooke town",
-          "Cox town",
-          "Benson Town",
-          "R T Nagar",
-          "Jaymahal",
-          "Indiranagar",
-          "Vasantha nagar",
-          "Kumara park",
-          "Richmond town"
-        ],
-        "plot_size_min": null,
-        "plot_size_max": null,
-        "built_up_area_min": null,
-        "built_up_area_max": null,
-        "property_status": "ready_to_move",
-        "furnishing_status": null,
-        "special_features": []
-      },
-      "proximity": {
-        "near_school": false,
-        "near_airport": false,
-        "near_hospital": false,
-        "near_shopping_mall": false
-      },
-      "user_journey": {
-        "possession_timeline": "ready to move",
-        "time_in_market": null,
-        "agents_contacted": null,
-        "work_locations": []
-      }
-    },
-    "missing_criteria": [
-      "bhk",
-      "budget",
-      "area",
-      "property_age",
-      "proximity_preferences",
-      "time_in_market",
-      "agents_contacted"
-    ],
-    "matched_properties": [],
-    "nearby_localities": [
-      {
-        "name": "Commercial Street",
-        "distance_km": 2.0
-      },
-      {
-        "name": "Jogupalya",
-        "distance_km": 2.4
-      },
-      {
-        "name": "MG Road",
-        "distance_km": 2.5
-      },
-      {
-        "name": "Frazer Town",
-        "distance_km": 2.5
-      },
-      {
-        "name": "Shivajinagar",
-        "distance_km": 3.0
-      }
-    ],
-    "created_at": "2025-12-13T17:24:21.959752"
-  },
-  {
-    "id": "229ff739-10b0-4544-8a96-348d19040c06",
-    "query": "Our client is keen to purchase a ready to occupy indipendent house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
-    "extracted_criteria": {
-      "property": {
-        "bhk": null,
-        "budget_min": null,
-        "budget_max": null,
-        "area_sqft_min": null,
-        "area_sqft_max": null,
-        "property_type": "independent_house",
-        "property_age": null,
-        "location": "Ulsoor",
-        "req_type": "demand_buy",
-        "locations": [
-          "Ulsoor",
-          "Cooke town",
-          "Cox town",
-          "Benson Town",
-          "R T Nagar",
-          "Jaymahal",
-          "Indiranagar",
-          "Vasantha nagar",
-          "Kumara park",
-          "Richmond town"
-        ],
-        "plot_size_min": null,
-        "plot_size_max": null,
-        "built_up_area_min": null,
-        "built_up_area_max": null,
-        "property_status": "ready_to_move",
-        "furnishing_status": null,
-        "special_features": []
-      },
-      "proximity": {
-        "near_school": false,
-        "near_airport": false,
-        "near_hospital": false,
-        "near_shopping_mall": false
-      },
-      "user_journey": {
-        "possession_timeline": null,
-        "time_in_market": null,
-        "agents_contacted": null,
-        "work_locations": []
-      }
-    },
-    "missing_criteria": [
-      "bhk",
-      "budget",
-      "area",
-      "property_age",
-      "proximity_preferences",
-      "possession_timeline",
-      "time_in_market",
-      "agents_contacted"
-    ],
-    "matched_properties": [],
-    "nearby_localities": [
-      {
-        "name": "MG Road",
-        "distance_km": 1.0
-      },
-      {
-        "name": "Jogupalya",
-        "distance_km": 2.4
-      },
-      {
-        "name": "Indiranagar",
-        "distance_km": 3.0
-      },
-      {
-        "name": "Frazer Town",
-        "distance_km": 3.0
-      },
-      {
-        "name": "Shivajinagar",
-        "distance_km": 3.0
-      }
-    ],
-    "created_at": "2025-12-13T17:26:17.865655"
-  },
-  {
-    "id": "f858b67c-04e0-45b7-b74e-50fb1032fdf7",
-    "query": "Our client is keen to purchase a ready to occupy indipendent house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
-    "extracted_criteria": {
-      "property": {
-        "bhk": null,
-        "budget_min": null,
-        "budget_max": null,
-        "area_sqft_min": null,
-        "area_sqft_max": null,
-        "property_type": "independent_house",
-        "property_age": null,
-        "location": "Ulsoor",
-        "req_type": "demand_buy",
-        "locations": [
-          "Ulsoor",
-          "Cooke town",
-          "Cox town",
-          "Benson Town",
-          "R T Nagar",
-          "Jaymahal",
-          "Indiranagar",
-          "Vasantha nagar",
-          "Kumara park",
-          "Richmond town"
-        ],
-        "plot_size_min": null,
-        "plot_size_max": null,
-        "built_up_area_min": null,
-        "built_up_area_max": null,
-        "property_status": "ready_to_move",
-        "furnishing_status": null,
-        "special_features": []
-      },
-      "proximity": {
-        "near_school": false,
-        "near_airport": false,
-        "near_hospital": false,
-        "near_shopping_mall": false
-      },
-      "user_journey": {
-        "possession_timeline": null,
-        "time_in_market": null,
-        "agents_contacted": null,
-        "work_locations": []
-      }
-    },
-    "missing_criteria": [
-      "bhk",
-      "budget",
-      "area",
-      "property_age",
+      "location",
       "proximity_preferences",
       "possession_timeline",
       "time_in_market",
@@ -758,276 +2284,354 @@
     ],
     "matched_properties": [
       {
-        "id": "66d2379f-f5d3-4598-8278-ab6cbfb5168d",
-        "property_type": "independent_house",
-        "location": "BENSON TOWN",
-        "bedroom_count": null,
-        "area_sqft": null,
-        "price": 70000000,
-        "price_text": "7 cr max",
-        "message_type": "demand_buy",
-        "agent_name": "~ Farhad Ataul Haque",
-        "agent_contact": null,
-        "message_date": "2025-11-19T19:36:40+00:00",
-        "raw_message": "Urgent requirement\n\nGood livable Independent house for purchase in BENSON TOWN. \nBudget :7 cr max. \n\nIndirect but genuine enquiry"
-      },
-      {
-        "id": "b9f266ef-b641-4bb9-ac1a-db9c7e24bbd4",
-        "property_type": "independent_house",
-        "location": "Central Bangalore – Indiranagar, Old Airport Road",
-        "bedroom_count": 4,
-        "area_sqft": null,
-        "price": null,
-        "price_text": "5 – 6 Cr",
-        "message_type": "demand_buy",
-        "agent_name": "Abhishek, Babu",
-        "agent_contact": "81052 13550, 91642 13550",
-        "message_date": "2025-10-30T12:06:17+00:00",
-        "raw_message": "🌟 *WANTED - Premium Property Alert* ! 🌟\n\n🏡 4 BHK Modern Penthouse / Independent House\n📍 Location: *Central Bangalore – Indiranagar, Old Airport Road* \n🛋️ Semi-Furnished\n💰 Budget: ₹5 – 6 Cr\n\n📞 Contact ..."
-      },
-      {
-        "id": "02643d0c-c982-4ea9-990f-b0685d27183e",
-        "property_type": "independent_house",
-        "location": "Indiranagar Surrounding, New Tippasandara, Kodihalli, Jeevabhimanagar",
-        "bedroom_count": null,
-        "area_sqft": null,
-        "price": 47500000,
-        "price_text": "4.75 cr - 5 cr",
-        "message_type": "demand_buy",
-        "agent_name": "Anees Z Husain",
-        "agent_contact": "9844313606",
-        "message_date": "2025-09-16T12:42:43+00:00",
-        "raw_message": "Dear Associates, \n\nPURCHASE REQUIREMENT \n\n40/60 Site or Site with a House can be any facing \n\nINDIRANAGAR SURROUNDING \nNEW TIPPASANDARA \nKODIHALLI \nJEEVABHIMANAGAR \n\n4.75 cr - 5 cr. Can extend budget ..."
-      },
-      {
-        "id": "b59871a2-e58f-46cd-8b11-9b905f9a9540",
-        "property_type": "independent_house",
-        "location": "M G Road",
-        "bedroom_count": null,
-        "area_sqft": 3500,
-        "price": 100000000,
-        "price_text": "10 cr",
-        "message_type": "demand_buy",
-        "agent_name": "~ Suraajet",
-        "agent_contact": "9945323691",
-        "message_date": "2025-09-14T18:31:46+00:00",
-        "raw_message": "Purchase Requirement :\n\nOur client wants to buy a ready to live independent house built on a 3000 to 4000 sq ft plot with a minimum of 4 bhk with 4 toilets , spacious living , dining and some garden a..."
-      }
-    ],
-    "nearby_localities": [
-      {
-        "name": "Jogupalya",
-        "distance_km": 2.4
-      },
-      {
-        "name": "Indira Nagar",
-        "distance_km": 2.9
-      },
-      {
-        "name": "Cox Town",
-        "distance_km": 2.96
-      },
-      {
-        "name": "Frazer Town",
-        "distance_km": 3.06
-      },
-      {
-        "name": "Shivaji Nagar",
-        "distance_km": 3.94
-      }
-    ],
-    "created_at": "2025-12-13T17:40:06.047579"
-  },
-  {
-    "id": "19346b40-e4b6-494e-90a8-00869c187c04",
-    "query": "Our client is keen to purchase a ready to occupy 4bhk house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
-    "extracted_criteria": {
-      "property": {
-        "bhk": 4,
-        "budget_min": null,
-        "budget_max": null,
-        "area_sqft_min": null,
-        "area_sqft_max": null,
-        "property_type": "independent_house",
-        "property_age": null,
-        "location": "Ulsoor",
-        "req_type": "demand_buy",
-        "locations": [
-          "Ulsoor",
-          "Cooke town",
-          "Cox town",
-          "Benson Town",
-          "R T Nagar",
-          "Jaymahal",
-          "Indiranagar",
-          "Vasantha nagar",
-          "Kumara park",
-          "Richmond town"
-        ],
-        "plot_size_min": null,
-        "plot_size_max": null,
-        "built_up_area_min": null,
-        "built_up_area_max": null,
-        "property_status": "ready_to_move",
-        "furnishing_status": null,
-        "special_features": []
-      },
-      "proximity": {
-        "near_school": false,
-        "near_airport": false,
-        "near_hospital": false,
-        "near_shopping_mall": false
-      },
-      "user_journey": {
-        "possession_timeline": null,
-        "time_in_market": null,
-        "agents_contacted": null,
-        "work_locations": []
-      }
-    },
-    "missing_criteria": [
-      "budget",
-      "area",
-      "property_age",
-      "proximity_preferences",
-      "possession_timeline",
-      "time_in_market",
-      "agents_contacted"
-    ],
-    "matched_properties": [
-      {
-        "id": "b9f266ef-b641-4bb9-ac1a-db9c7e24bbd4",
-        "property_type": "independent_house",
-        "location": "Central Bangalore – Indiranagar, Old Airport Road",
-        "bedroom_count": 4,
-        "area_sqft": null,
-        "price": null,
-        "price_text": "5 – 6 Cr",
-        "message_type": "demand_buy",
-        "agent_name": "Abhishek, Babu",
-        "agent_contact": "81052 13550, 91642 13550",
-        "message_date": "2025-10-30T12:06:17+00:00",
-        "raw_message": "🌟 *WANTED - Premium Property Alert* ! 🌟\n\n🏡 4 BHK Modern Penthouse / Independent House\n📍 Location: *Central Bangalore – Indiranagar, Old Airport Road* \n🛋️ Semi-Furnished\n💰 Budget: ₹5 – 6 Cr\n\n📞 Contact ..."
-      }
-    ],
-    "nearby_localities": [
-      {
-        "name": "Indiranagar",
-        "distance_km": 3.0
-      },
-      {
-        "name": "Shivajinagar",
-        "distance_km": 3.0
-      },
-      {
-        "name": "Frazer Town",
-        "distance_km": 2.5
-      },
-      {
-        "name": "MG Road",
-        "distance_km": 2.0
-      },
-      {
-        "name": "Commercial Street",
-        "distance_km": 2.0
-      }
-    ],
-    "created_at": "2025-12-13T17:41:41.027823"
-  },
-  {
-    "id": "9a0e25fd-23a4-407c-afd7-2572b38a01c7",
-    "query": "Our client is keen to purchase a ready to occupy 4bhk house built in Locations like Ulsoor, Cooke town, Cox town, Benson Town, R T Nagar , Jaymahal , Indiranagar , Vasantha nagar , Kumara park , Richmond town etc are suitable for this client .",
-    "extracted_criteria": {
-      "property": {
-        "bhk": 4,
-        "budget_min": null,
-        "budget_max": null,
-        "area_sqft_min": null,
-        "area_sqft_max": null,
-        "property_type": "independent_house",
-        "property_age": null,
-        "location": "Ulsoor",
-        "req_type": "demand_buy",
-        "locations": [
-          "Ulsoor",
-          "Cooke town",
-          "Cox town",
-          "Benson Town",
-          "R T Nagar",
-          "Jaymahal",
-          "Indiranagar",
-          "Vasantha nagar",
-          "Kumara park",
-          "Richmond town"
-        ],
-        "plot_size_min": null,
-        "plot_size_max": null,
-        "built_up_area_min": null,
-        "built_up_area_max": null,
-        "property_status": "ready_to_move",
-        "furnishing_status": null,
-        "special_features": []
-      },
-      "proximity": {
-        "near_school": false,
-        "near_airport": false,
-        "near_hospital": false,
-        "near_shopping_mall": false
-      },
-      "user_journey": {
-        "possession_timeline": null,
-        "time_in_market": null,
-        "agents_contacted": null,
-        "work_locations": []
-      }
-    },
-    "missing_criteria": [
-      "budget",
-      "area",
-      "property_age",
-      "proximity_preferences",
-      "possession_timeline",
-      "time_in_market",
-      "agents_contacted"
-    ],
-    "matched_properties": [
-      {
-        "id": "454e8e4c-0e53-4005-948c-a5bdbd77a438",
-        "property_type": "independent_house",
-        "location": "Cooke Town",
-        "bedroom_count": 4,
-        "area_sqft": 2600,
-        "price": 35000000,
-        "price_text": "Rs 3.50cr",
+        "id": "5b32f236-eca4-4865-91a0-f64ae2706c58",
+        "source_message_id": null,
+        "message_date": "2025-11-29T10:46:00+00:00",
+        "agent_contact": "8788073812",
+        "agent_name": "RAJU",
+        "company_name": null,
+        "raw_message": "🍻 *KHARADI PUNE FULLY FURNISHED BAR AND RESTAURANT FOR SALE* 🍻\n📌 Details:\n•\tSize: 1250sqft Indoor + 1700sqft Outdoor\n•\tSeating: 130+ guests\n•\tLiquor License (active, not surrendered)\n•\tMore than 96 kitchen equipment items\n•\tComplete AC ducting & interior setup\n•\tDedicated (6 No.) 2-wheeler & (3 No.) 4-wheeler parking\n•\tOperational for 5 years, closed in April 2025\n•\tOwner relocated and unable to manage Multiple Businesses\n💼 Ideal plug-and-play setup for bar/restaurant operators.\n\n*Sale price - ₹7.50CR*\n\n*CALL RAJU 87880 73812*",
         "message_type": "supply_sale",
-        "agent_name": "+91 95912 92090",
-        "agent_contact": "9591292090",
-        "message_date": "2025-09-04T11:53:00+00:00",
-        "raw_message": "10) Cooke Town 23x41 Independent House with a built up of 2600sft 4BHK triplex semifurnished for Rent Rs 1.25 Lakhs or Sale Rs 3.50cr\nCONTACT - 9591292090"
+        "property_type": "office",
+        "area_sqft": 2950.0,
+        "bedroom_count": null,
+        "price": 75000000.0,
+        "price_text": "₹7.50CR",
+        "location": "KHARADI PUNE",
+        "project_name": null,
+        "furnishing_status": "fully_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "bar_restaurant",
+          "liquor_license_active",
+          "plug_and_play",
+          "parking"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-05T08:09:37.288703+00:00",
+        "sender_name": "+91 95790 35245"
+      },
+      {
+        "id": "a6813dd9-baa4-4834-bbdd-468e396f8fd9",
+        "source_message_id": null,
+        "message_date": "2025-11-12T09:56:11+00:00",
+        "agent_contact": "9845413513",
+        "agent_name": "Ruchi",
+        "company_name": null,
+        "raw_message": "🏢 Commercial Space for Sale – Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n📍 Just 450 meters from Forum Mall, Kanakapura Road – Bangalore\n🔑 5052 SQ FT | ₹15,000 per SQ FT (All Inclusive)-5th Floor\n🚗 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\nFirst and Second Floors have been leased to IKEA\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\n\n📞 Call Ruchi @ 9845413513\n🏢 Jade Property Consultants\n🌐 www.jadeconsultants.in\n\nChannel Partners to All Leading Builders in Bangalore",
+        "message_type": "supply_sale",
+        "property_type": "office",
+        "area_sqft": 5052.0,
+        "bedroom_count": null,
+        "price": 75780000.0,
+        "price_text": "₹15,000 per SQ FT (All Inclusive)-5th Floor",
+        "location": "Kanakapura Road",
+        "project_name": "Purva ZenTech Business Park",
+        "furnishing_status": "bare_shell",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "all_inclusive",
+          "grade_a_commercial",
+          "excellent_visibility",
+          "high_footfall",
+          "fast_developing_zone",
+          "ready_infrastructure",
+          "metro_nearby"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-27T16:31:37.714738+00:00",
+        "sender_name": "~ Ruchi Govil"
+      },
+      {
+        "id": "e1e6f7dd-da82-4972-83e8-65d4e08e0f0c",
+        "source_message_id": null,
+        "message_date": "2025-11-11T12:39:30+00:00",
+        "agent_contact": "9845413513",
+        "agent_name": "Ruchi",
+        "company_name": null,
+        "raw_message": "🏢 Commercial Space for Sale – Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n📍 Just 450 meters from Forum Mall, Kanakapura Road – Bangalore\n🔑 5052 SQ FT | ₹15,000 per SQ FT (All Inclusive)-5th Floor\n🚗 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\nFirst and Second Floors have been leased to IKEA\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\nGreat appreciation potential\n\n📞 Call Ruchi @ 9845413513\n🏢 Jade Property Consultants\n\nChannel Partners to All Leading Builders in Bangalore",
+        "message_type": "supply_sale",
+        "property_type": "office",
+        "area_sqft": 5052.0,
+        "bedroom_count": null,
+        "price": 75780000.0,
+        "price_text": "₹15,000 per SQ FT (All Inclusive)-5th Floor",
+        "location": "Kanakapura Road",
+        "project_name": "Purva ZenTech Business Park",
+        "furnishing_status": "bare_shell",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "near_mall",
+          "grade_a",
+          "high_footfall",
+          "investment",
+          "parking_5"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-27T16:29:58.445667+00:00",
+        "sender_name": "~ Ruchi Govil"
+      },
+      {
+        "id": "357c96c8-cf2a-423a-8991-1bcbe8231099",
+        "source_message_id": null,
+        "message_date": "2025-11-06T22:48:47+00:00",
+        "agent_contact": "9606959405",
+        "agent_name": "A Murli BiB Personal",
+        "company_name": null,
+        "raw_message": "📍Prime RMV Behind 80ft road.\n\n Fully Furnished Co-Living commercial building for Sale. \n\nThis premium co-living property, built on a 60x40 site with a total built-up area of 11,000 sq. ft. \n\nSingle owner\nBDA \"A\" Katha\nRental yield - 9-10 lakhs per  month\n5 years old building\n\nPrice- 12 cr ( Negotiable)\nContact - 9606959405",
+        "message_type": "supply_sale",
+        "property_type": "commercial",
+        "area_sqft": 11000.0,
+        "bedroom_count": null,
+        "price": 120000000.0,
+        "price_text": "12 cr ( Negotiable)",
+        "location": "RMV",
+        "project_name": null,
+        "furnishing_status": "fully_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "co_living",
+          "BDA \"A\" Katha",
+          "negotiable"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-28T11:44:40.283958+00:00",
+        "sender_name": "A Murli BiB Personal"
+      },
+      {
+        "id": "ba9026c4-b3b9-4e1f-bb98-7b5d48dfc4cb",
+        "source_message_id": null,
+        "message_date": "2025-11-06T10:07:41+00:00",
+        "agent_contact": "9845413513",
+        "agent_name": "Ruchi",
+        "company_name": null,
+        "raw_message": "🏢 Commercial Space for Sale – Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n📍 Just 450 meters from Forum Mall, Kanakapura Road – Bangalore\n🔑 5052 SQ FT | ₹15,000 per SQ FT (All Inclusive)-5th Floor\n🚗 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\nFirst and Second Floors have been leased to IKEA\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\nGreat appreciation potential\n\n📞 Call Ruchi @ 9845413513\n🏢 Jade Property Consultants\n🌐 www.jadeconsultants.in\n\nChannel Partners to All Leading Builders in Bangalore",
+        "message_type": "supply_sale",
+        "property_type": "office",
+        "area_sqft": 5052.0,
+        "bedroom_count": null,
+        "price": 75780000.0,
+        "price_text": "₹15,000 per SQ FT (All Inclusive)-5th Floor",
+        "location": "Kanakapura Road",
+        "project_name": "Purva ZenTech Business Park",
+        "furnishing_status": "bare_shell",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "grade_a",
+          "leased_to_ikea",
+          "5_car_parking",
+          "excellent_visibility",
+          "high_footfall",
+          "fast_developing_zone",
+          "ready_infrastructure",
+          "great_appreciation_potential"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-27T16:11:48.530533+00:00",
+        "sender_name": "~ Ruchi Govil"
+      },
+      {
+        "id": "8bba0199-2945-4c91-84d9-d85a186958c9",
+        "source_message_id": null,
+        "message_date": "2025-10-27T12:14:50+00:00",
+        "agent_contact": null,
+        "agent_name": "Chandan Homiez Realty X BiB",
+        "company_name": null,
+        "raw_message": "*Elegant Penthouse for Sale – Judicial Layout*\n\nExperience the timeless charm of Old Bangalore — serene tree-lined streets, calm surroundings, and refined living — all in this boutique duplex penthouse that beautifully blends exclusivity with comfort.\n\nProperty Highlights:\n\nBuilt-up Area: 4,200 sq.ft. + 525 sq.ft. private terrace\n\nConfiguration: 4 spacious bedrooms | Duplex layout\n\nAmbience: Feels like an independent home within a secure, low-density apartment community\n\nInteriors & Specifications:\n\nFully custom-designed by an American architect, showcasing premium craftsmanship\n\nReal walnut solid wood flooring and IPE wood terrace decking\n\nCentral air-conditioning in bedrooms and kitchen\n\nImported modular kitchen with high-end fittings\n\nSpanish marble flooring, bespoke brass curtain rods and handles, and handcrafted furnishings\n\nEvery detail — from materials to finishes — curated for elegance and durability\n\n100% Vastu-compliant, ensuring harmony and balance in the home\n\nPrice: ₹6.5 Crores\n\nThis penthouse is ideal for those who appreciate privacy, design excellence, and the peaceful greenery of Judicial Layout — while staying connected to major schools, clubs, and business hubs.",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 4200.0,
+        "bedroom_count": null,
+        "price": 65000000.0,
+        "price_text": "₹6.5 Crores",
+        "location": "Judicial Layout",
+        "project_name": null,
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "duplex",
+          "private_terrace",
+          "secure_community",
+          "custom_designed",
+          "vastu_compliant"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-27T16:54:24.876909+00:00",
+        "sender_name": "Chandan Homiez Realty X BiB"
+      },
+      {
+        "id": "d94cd888-c69c-40cb-95c4-eed6949e679f",
+        "source_message_id": null,
+        "message_date": "2025-10-18T20:01:00+00:00",
+        "agent_contact": null,
+        "agent_name": "+91 93923 08370",
+        "company_name": null,
+        "raw_message": "Resort for sale in doodabalapura\n10,CR negotiable  \n Result good maintenance \n Clear desert 100% meeting \n 12 home \n Monthly business\n 10. \n In 2  acre \n Clear property  \n Location: https://g.co/kgs/Vgvja8i\nDM me for more details",
+        "message_type": "supply_sale",
+        "property_type": "resort",
+        "area_sqft": null,
+        "bedroom_count": null,
+        "price": 100000000.0,
+        "price_text": "10 Cr negotiable",
+        "location": "doodabalapura",
+        "project_name": null,
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "negotiable"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-05T03:27:44.042346+00:00",
+        "sender_name": "+91 93923 08370"
+      },
+      {
+        "id": "edd2221e-fabb-4a31-b38c-b0a932f8205c",
+        "source_message_id": null,
+        "message_date": "2025-10-16T12:56:09+00:00",
+        "agent_contact": "+91-7204555080",
+        "agent_name": "Habib",
+        "company_name": null,
+        "raw_message": "*Boutique Luxury Residential Apartment For SALE in Indira Nagar*.\nIn CBD Area (Central Business District).\n\n❇️ Project Name : Builder Floor, \nDeveloped by a Reputed Builders. Only 4 Units - Each Floor One Unit.\n📍 Location : Indira Nagar, Near 12th Main, (Close to Defence Colony)\n\nUn Furnished : Brand New.\n🚙 Car parks : 2 Nos,\n\n*📐 Super Built-Up Area*\n\n\t•\t4 BHK – 3,682 Sqft,\n5 Balconies.\n\n Price Quoted   ₹8.90 Cr.\n\nAmenities: Car Parking, Power Back Up, Lift.\n\nPossession By March 2026.\n\n📱 Contact: Prudent Estate - For More Information.\nHabib @ +91-7204555080/9886237026,\nLatif +91-9036466567.\n📧 enquiry@prudentestate.com \n🌍 www.prudentestate.com ‎",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 3682.0,
+        "bedroom_count": null,
+        "price": 89000000.0,
+        "price_text": "₹8.90 Cr",
+        "location": "Indira Nagar",
+        "project_name": "Builder Floor",
+        "furnishing_status": "unfurnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "car_parking",
+          "power_backup",
+          "lift",
+          "cbd_area"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-27T18:11:10.455432+00:00",
+        "sender_name": "~ Prudent Estate"
+      },
+      {
+        "id": "fa10baa5-6511-4b29-b42e-61d61c98d680",
+        "source_message_id": null,
+        "message_date": "2025-10-13T16:17:33+00:00",
+        "agent_contact": "9845413513",
+        "agent_name": "Ruchi",
+        "company_name": null,
+        "raw_message": "🏢 Commercial Space for Sale – Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n📍 Just 450 meters from Forum Mall, Kanakapura Road – Bangalore\n🔑 5052 SQ FT | ₹15,000 per SQ FT (All Inclusive)-5th Floor\n🚗 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\nGreat appreciation potential\n\n📞 Call Ruchi @ 9845413513\n🏢 Jade Property Consultants\n🌐 www.jadeconsultants.in\n\nChannel Partners to All Leading Builders in Bangalore",
+        "message_type": "supply_sale",
+        "property_type": "office",
+        "area_sqft": 5052.0,
+        "bedroom_count": null,
+        "price": 75780000.0,
+        "price_text": "₹15,000 per SQ FT (All Inclusive)",
+        "location": "Kanakapura Road",
+        "project_name": "Purva ZenTech Business Park",
+        "furnishing_status": "bare_shell",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "all_inclusive",
+          "grade_a_commercial",
+          "high_footfall_zone",
+          "fast_developing_zone",
+          "ready_infrastructure",
+          "great_appreciation_potential"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-27T18:04:36.350560+00:00",
+        "sender_name": "~ Ruchi Govil"
+      },
+      {
+        "id": "b418958b-239b-40b4-9997-11c531fb1040",
+        "source_message_id": null,
+        "message_date": "2025-10-11T09:31:00+00:00",
+        "agent_contact": null,
+        "agent_name": "Prabandh Properties",
+        "company_name": null,
+        "raw_message": "🙏OM NAMO VENKATESHAYA🙏\n\n🏭 Commercial Property for Sale / Rent – Near Dabaspet Industrial Area 🏭\n\n📐 Total Area: 25,500 sq. ft.\n🏢 Built-up Shed: 11,000 sq. ft.\n⚡ Power: 60 KWA\n💧 Borewell Available\n🧱 750 Mould\n💰 Price: ₹2,700 per sq. ft.\n\n📍 Location Highlights:\n\nJust 500 meters from the Highway\n\n150 ft Roadside Frontage\n\nOnly 1 km to Dabaspet Industrial Area\n\n3 km from Peripheral Ring Road\n\nOpen Zone – suitable for any type of industry\n\nAn excellent opportunity for industrial setup or investment in a fast-developing zone!\n\n📞 Contact Prabandh Properties today to rent or purchase this premium commercial property.\n\n#business #smallbusinesssupportingsmallbusiness \n#industrial \n#investment \n#investor \n#investors\n                 https://www.instagram.com/p/DPp5l5rkva0/?igsh=MTNha2FnejdweWhvZA==",
+        "message_type": "supply_sale",
+        "property_type": "office",
+        "area_sqft": 25500.0,
+        "bedroom_count": null,
+        "price": 68850000.0,
+        "price_text": "₹2,700 per sq. ft.",
+        "location": "Dabaspet Industrial Area",
+        "project_name": null,
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "gated_community",
+          "industrial",
+          "investment"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-04T18:05:34.128102+00:00",
+        "sender_name": "+91 99022 54935"
       }
     ],
-    "nearby_localities": [
-      {
-        "name": "Indiranagar",
-        "distance_km": 3.5
-      },
-      {
-        "name": "MG Road",
-        "distance_km": 1.5
-      },
-      {
-        "name": "Frazer Town",
-        "distance_km": 2.5
-      },
-      {
-        "name": "Shivajinagar",
-        "distance_km": 3.0
-      },
-      {
-        "name": "Jogupalya",
-        "distance_km": 2.4
-      }
-    ],
-    "created_at": "2025-12-13T17:44:41.106889"
+    "nearby_localities": [],
+    "created_at": "2025-12-14T17:35:56.262174",
+    "status": "new"
   }
 ]
