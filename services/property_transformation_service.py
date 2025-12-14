@@ -55,6 +55,7 @@ class PropertyTransformationService:
         listing_id = whatsapp_listing.get("id")
         message_date = whatsapp_listing.get("message_date")
         created_at = whatsapp_listing.get("created_at", message_date)
+        sender_name = whatsapp_listing.get("sender_name")
 
         # Parse message_date datetime if string
         if isinstance(message_date, str):
@@ -102,6 +103,7 @@ class PropertyTransformationService:
             # Core identification
             "id": listing_id,
             "source": "whatsapp",
+            "sender_name": sender_name,
 
             # Basic property info
             "title": title,

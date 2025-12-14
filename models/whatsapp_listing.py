@@ -30,7 +30,6 @@ class WhatsAppListingLLMOutput(BaseModel):
     special_features: List[str] = Field(default_factory=list, description="Feature tags like corner_plot, lake_view, gated_community")
     llm_notes: Optional[str] = Field(None, description="Free text notes from LLM")
 
-
 class WhatsAppListingData(BaseModel):
     """Model representing complete extracted listing data"""
     id: str
@@ -55,6 +54,7 @@ class WhatsAppListingData(BaseModel):
     special_features: List[str] = Field(default_factory=list)
     llm_json: Optional[dict] = None
     created_at: datetime
+    sender_name: Optional[str] = None
 
 
 class WhatsAppListingExtractionResponse(BaseModel):

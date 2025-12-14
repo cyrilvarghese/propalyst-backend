@@ -40,7 +40,7 @@ class UnifiedPropertyListing(BaseModel):
     # Core identification
     id: str = Field(..., description="UUID of the listing")
     source: str = Field(..., description="Data source: 'whatsapp' or 'properties'")
-
+    sender_name: Optional[str] = Field(None, description="Name of the sender")
     # Basic property info
     title: Optional[str] = Field(None, description="Property title or project name")
     description: Optional[str] = Field(None, description="Property description")
