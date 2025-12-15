@@ -14,6 +14,7 @@ from pathlib import Path
 from enum import Enum
 
 from services.supabase_service import SupabaseService
+from config.whatsapp_config import RECENT_MESSAGES_CUTOFF_DAYS
 
 
 class WhatsAppFormatType(str, Enum):
@@ -407,8 +408,8 @@ class WhatsAppParserService:
             List of unprocessed message dictionaries
         """
         try:
-            # Calculate cutoff date (4 months ago)
-            cutoff_date = (datetime.now() - timedelta(days=120)).isoformat()
+            # Calculate cutoff date using configured threshold
+            cutoff_date = (datetime.now() - timedelta(days=RECENT_MESSAGES_CUTOFF_DAYS)).isoformat()
 
             client = SupabaseService._get_client()
             response = client.table("whatsapp_raw_messages")\

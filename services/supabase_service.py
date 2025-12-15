@@ -7,10 +7,12 @@ Handles connections and queries to Supabase database.
 
 import os
 from typing import List, Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 from supabase import create_client, Client
 from dotenv import load_dotenv
 from google import genai
+
+from config.whatsapp_config import RECENT_MESSAGES_CUTOFF_DAYS
 
 load_dotenv()
 
@@ -1857,12 +1859,10 @@ class SupabaseService:
             - Progress percentage
         """
         try:
-            from datetime import datetime, timedelta
-
             client = cls._get_client()
 
-            # Calculate cutoff date (4 months ago)
-            cutoff_date = (datetime.now() - timedelta(days=120)).isoformat()
+            # Calculate cutoff date using configured threshold
+            cutoff_date = (datetime.now() - timedelta(days=RECENT_MESSAGES_CUTOFF_DAYS)).isoformat()
 
             # Total raw messages (all time)
             total_raw_response = client.table("whatsapp_raw_messages")\

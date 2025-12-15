@@ -10,6 +10,7 @@ from fastapi import APIRouter, HTTPException
 from datetime import datetime, timedelta
 
 from services.supabase_service import SupabaseService
+from config.whatsapp_config import RECENT_MESSAGES_CUTOFF_DAYS
 
 
 router = APIRouter(
@@ -36,8 +37,8 @@ async def get_raw_message_stats():
     try:
         client = SupabaseService._get_client()
 
-        # Calculate cutoff date (4 months ago)
-        cutoff_date = (datetime.now() - timedelta(days=120)).isoformat()
+        # Calculate cutoff date using configured threshold
+        cutoff_date = (datetime.now() - timedelta(days=RECENT_MESSAGES_CUTOFF_DAYS)).isoformat()
 
         # Get total count of ALL messages (using count API for efficiency)
         total_response = client.table("whatsapp_raw_messages")\
