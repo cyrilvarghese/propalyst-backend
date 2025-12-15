@@ -11,7 +11,7 @@ Centralized configuration for WhatsApp message processing.
 # Number of days to look back for "recent" messages
 # Only messages within this window are processed by LLM
 # Older messages are kept in DB but not sent to LLM
-RECENT_MESSAGES_CUTOFF_DAYS = 366  # 1year
+RECENT_MESSAGES_CUTOFF_DAYS = 180  # 1year
 
 # ============================================================================
 # Processing Configuration
