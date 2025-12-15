@@ -217,10 +217,10 @@ class WhatsAppParserService:
                     current_line_number = line_num
 
                 except ValueError as e:
-                    # Failed to parse datetime, skip this line
-                    print(f"[WhatsAppParser] Failed to parse datetime at line {line_num}: {e}")
-                    current_message = None
-                    continue
+                    # Failed to parse datetime - this is a critical error
+                    error_msg = f"Failed to parse datetime at line {line_num}: {e}. Line content: {line_cleaned[:100]}"
+                    print(f"[WhatsAppParser] ✗ {error_msg}")
+                    raise ValueError(error_msg)
 
             elif current_message and line_cleaned.strip():
                 # Multi-line message continuation
