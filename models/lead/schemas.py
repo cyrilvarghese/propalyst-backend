@@ -214,6 +214,18 @@ class CreateLeadRequest(BaseModel):
         examples=["3BHK in Whitefield, budget 5 crores, possession in 6 months"]
     )
 
+    name: str = Field(
+        ...,
+        min_length=1,
+        description="Name of the lead (person's name)"
+    )
+
+    contact_number: str = Field(
+        ...,
+        min_length=10,
+        description="Contact number of the lead"
+    )
+
 
 class CreateLeadResponse(BaseModel):
     """Lead creation response"""
@@ -226,6 +238,16 @@ class CreateLeadResponse(BaseModel):
     query: str = Field(
         ...,
         description="Original natural language query"
+    )
+
+    name: str = Field(
+        ...,
+        description="Name of the lead (person's name)"
+    )
+
+    contact_number: str = Field(
+        ...,
+        description="Contact number of the lead"
     )
 
     extracted_criteria: DetailedCriteria = Field(
@@ -266,6 +288,18 @@ class UpdateLeadRequest(BaseModel):
         ...,
         min_length=1,
         description="Natural language query to re-extract criteria and re-match properties"
+    )
+
+    name: Optional[str] = Field(
+        None,
+        min_length=1,
+        description="Optional: Update name of the lead"
+    )
+
+    contact_number: Optional[str] = Field(
+        None,
+        min_length=10,
+        description="Optional: Update contact number of the lead"
     )
 
     status: Optional[str] = Field(

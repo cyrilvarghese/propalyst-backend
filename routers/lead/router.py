@@ -104,6 +104,8 @@ async def list_leads():
             lead_obj = CreateLeadResponse(
                 lead_id=lead["id"],
                 query=lead.get("query", ""),
+                name=lead.get("name", "Unknown Lead"),
+                contact_number=lead.get("contact_number", ""),
                 extracted_criteria=DetailedCriteria(**lead["extracted_criteria"]),
                 missing_criteria=lead.get("missing_criteria", []),
                 matched_properties=lead.get("matched_properties", []),
@@ -160,6 +162,8 @@ async def get_lead(lead_id: str):
         lead_obj = CreateLeadResponse(
             lead_id=lead["id"],
             query=lead.get("query", ""),
+            name=lead.get("name", "Unknown Lead"),
+            contact_number=lead.get("contact_number", ""),
             extracted_criteria=DetailedCriteria(**lead["extracted_criteria"]),
             missing_criteria=lead.get("missing_criteria", []),
             matched_properties=lead.get("matched_properties", []),
@@ -238,12 +242,15 @@ async def update_lead(lead_id: str, request: UpdateLeadRequest):
         lead["nearby_localities"] = preserved_nearby_localities  # Keep existing localities
         lead["last_updated_at"] = datetime.now().isoformat()
 
+        # Optional: Update name and contact_number if provided
+        if request.name:
+            lead["name"] = request.name
+        if request.contact_number:
+            lead["contact_number"] = request.contact_number
+
         # Optional: Update status if provided
         if request.status:
             lead["status"] = request.status
-        else:
-            # If status not provided, keep existing status
-            pass
 
         # STEP 4: Save updated leads
         LeadPersistenceService.save_leads(leads_data)
@@ -252,6 +259,8 @@ async def update_lead(lead_id: str, request: UpdateLeadRequest):
         lead_obj = CreateLeadResponse(
             lead_id=lead["id"],
             query=lead["query"],
+            name=lead["name"],
+            contact_number=lead["contact_number"],
             extracted_criteria=DetailedCriteria(**lead["extracted_criteria"]),
             missing_criteria=lead["missing_criteria"],
             matched_properties=lead["matched_properties"],
@@ -315,6 +324,8 @@ async def update_lead_status(lead_id: str, request: UpdateLeadStatusRequest):
         lead_obj = CreateLeadResponse(
             lead_id=lead["id"],
             query=lead.get("query", ""),
+            name=lead.get("name", "Unknown Lead"),
+            contact_number=lead.get("contact_number", ""),
             extracted_criteria=DetailedCriteria(**lead["extracted_criteria"]),
             missing_criteria=lead.get("missing_criteria", []),
             matched_properties=lead.get("matched_properties", []),
@@ -431,7 +442,7 @@ async def create_lead(request: CreateLeadRequest):
 
         print("[1/3] ⚙️  Extracting criteria from query...")
         # Create lead
-        result = await LeadService.create_lead(request.query)
+        result = await LeadService.create_lead(request.query, request.name, request.contact_number)
 
         if not result["success"]:
             print(f"❌ Criteria extraction failed: {result['message']}")

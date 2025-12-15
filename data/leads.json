@@ -53,7 +53,7 @@
         "agent_contact": null,
         "agent_name": null,
         "company_name": null,
-        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children’s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
+        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children\u2019s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 2800.0,
@@ -86,7 +86,7 @@
         "agent_contact": null,
         "agent_name": null,
         "company_name": null,
-        "raw_message": "Available \n⭐: Flat \n1) 2,100 sqft (1st Floor)\n2) 3 Bedrooms (Fans, Lights and Cupboards)\n3) 4 Bathrooms (Kohler Fittings)\n4) Modular Kitchen\n5) 4 Balconies\n6) Lift\n7) 2 Car Park\n8) Power Backup (Generator)\n9) West Facing Door\n10) South Facing Building\n: 2nd Main, 1st Stage, Indiranagar, Bangalore, \nPrice 3.5 cr negotiable",
+        "raw_message": "Available \n\u2b50: Flat \n1) 2,100 sqft (1st Floor)\n2) 3 Bedrooms (Fans, Lights and Cupboards)\n3) 4 Bathrooms (Kohler Fittings)\n4) Modular Kitchen\n5) 4 Balconies\n6) Lift\n7) 2 Car Park\n8) Power Backup (Generator)\n9) West Facing Door\n10) South Facing Building\n: 2nd Main, 1st Stage, Indiranagar, Bangalore, \nPrice 3.5 cr negotiable",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 2100.0,
@@ -120,7 +120,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ INDIRANAGAR 2ND STAGE\n3 BHK, 1900 Sft., Brandnew Semi Furn.\nPRICE : Rs. 3.75 CR.\n\n    Kindly revert ONLY WITH DIRECT ENQUIRES.\n\n_THANKS & REGARDS,_\nZEESHAN.G\n*_DZire Realtors_*\n📱: +91-7847 83 83 83",
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n \u270f\ufe0f INDIRANAGAR 2ND STAGE\n3 BHK, 1900 Sft., Brandnew Semi Furn.\nPRICE : Rs. 3.75 CR.\n\n    Kindly revert ONLY WITH DIRECT ENQUIRES.\n\n_THANKS & REGARDS,_\nZEESHAN.G\n*_DZire Realtors_*\n\ud83d\udcf1: +91-7847 83 83 83",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -151,7 +151,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -182,7 +182,7 @@
         "agent_contact": "8105213550 / 9980513550",
         "agent_name": "Abhishek / Farhat Shahbudin",
         "company_name": null,
-        "raw_message": "Apartment  available for sale\n*Defence colony  indiranagar*\nFirst floor\nEast facing\n1664 sq.ft.\n3 bedrooms\n3 toilets\nkitchen\nSale price : *2.90 Crores + registration*\nAbhishek / Farhat Shahbudin\n8105213550 / 9980513550\n*Golden Nest Realtors*",
+        "raw_message": "Apartment  available for sale\n*Defence colony  indiranagar*\nFirst floor\nEast facing\n1664 sq.ft.\n3 bedrooms\n3 toilets\nkitchen\nSale price : *2.90 Crores + registration*\nAbhishek / Farhat Shahbudin\n8105213550 / 9980513550\n*Golden\u00a0Nest\u00a0Realtors*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1664.0,
@@ -204,7 +204,7 @@
           "split_from_original": false
         },
         "created_at": "2025-11-28T10:18:34.037060+00:00",
-        "sender_name": "~ GnestAbhi"
+        "sender_name": "~\u202fGnestAbhi"
       },
       {
         "id": "ceba835d-85d3-4d30-b12f-a321e82ee1f8",
@@ -242,7 +242,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "\u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -273,7 +273,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -368,7 +368,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -428,7 +428,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -486,7 +486,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "\u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -546,7 +546,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -593,7 +593,9 @@
         "distance_km": 5.5
       }
     ],
-    "created_at": "2025-12-14T07:30:43.774113"
+    "created_at": "2025-12-14T07:30:43.774113",
+    "name": "Rajesh Kumar",
+    "contact_number": "9876543210"
   },
   {
     "id": "0afd139a-a748-48de-b853-cf183b1e3805",
@@ -664,7 +666,9 @@
       }
     ],
     "created_at": "2025-12-14T14:52:39.459291",
-    "status": "new"
+    "status": "new",
+    "name": "Priya Sharma",
+    "contact_number": "9876543210"
   },
   {
     "id": "0bee3eaa-d820-4f93-9082-c39103b931a2",
@@ -735,7 +739,9 @@
       }
     ],
     "created_at": "2025-12-14T14:53:16.657980",
-    "status": "new"
+    "status": "new",
+    "name": "Amit Patel",
+    "contact_number": "9876543210"
   },
   {
     "id": "e3dbb2df-2fe7-41b1-a6f9-d5f7f7f5aa39",
@@ -806,7 +812,9 @@
       }
     ],
     "created_at": "2025-12-14T14:55:03.538290",
-    "status": "new"
+    "status": "new",
+    "name": "Sneha Verma",
+    "contact_number": "9876543210"
   },
   {
     "id": "aa0c8079-eaba-4666-9b67-2dc07e9db3c5",
@@ -877,7 +885,9 @@
       }
     ],
     "created_at": "2025-12-14T14:58:25.393969",
-    "status": "new"
+    "status": "new",
+    "name": "Vikram Singh",
+    "contact_number": "9876543210"
   },
   {
     "id": "d9a17b7b-1f12-4017-a3c3-2720a49c7621",
@@ -931,7 +941,7 @@
         "agent_contact": null,
         "agent_name": null,
         "company_name": null,
-        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children’s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
+        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children\u2019s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 2800.0,
@@ -964,7 +974,7 @@
         "agent_contact": null,
         "agent_name": null,
         "company_name": null,
-        "raw_message": "Available \n⭐: Flat \n1) 2,100 sqft (1st Floor)\n2) 3 Bedrooms (Fans, Lights and Cupboards)\n3) 4 Bathrooms (Kohler Fittings)\n4) Modular Kitchen\n5) 4 Balconies\n6) Lift\n7) 2 Car Park\n8) Power Backup (Generator)\n9) West Facing Door\n10) South Facing Building\n: 2nd Main, 1st Stage, Indiranagar, Bangalore, \nPrice 3.5 cr negotiable",
+        "raw_message": "Available \n\u2b50: Flat \n1) 2,100 sqft (1st Floor)\n2) 3 Bedrooms (Fans, Lights and Cupboards)\n3) 4 Bathrooms (Kohler Fittings)\n4) Modular Kitchen\n5) 4 Balconies\n6) Lift\n7) 2 Car Park\n8) Power Backup (Generator)\n9) West Facing Door\n10) South Facing Building\n: 2nd Main, 1st Stage, Indiranagar, Bangalore, \nPrice 3.5 cr negotiable",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 2100.0,
@@ -998,7 +1008,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ INDIRANAGAR 2ND STAGE\n3 BHK, 1900 Sft., Brandnew Semi Furn.\nPRICE : Rs. 3.75 CR.\n\n    Kindly revert ONLY WITH DIRECT ENQUIRES.\n\n_THANKS & REGARDS,_\nZEESHAN.G\n*_DZire Realtors_*\n📱: +91-7847 83 83 83",
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n \u270f\ufe0f INDIRANAGAR 2ND STAGE\n3 BHK, 1900 Sft., Brandnew Semi Furn.\nPRICE : Rs. 3.75 CR.\n\n    Kindly revert ONLY WITH DIRECT ENQUIRES.\n\n_THANKS & REGARDS,_\nZEESHAN.G\n*_DZire Realtors_*\n\ud83d\udcf1: +91-7847 83 83 83",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1029,7 +1039,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1060,7 +1070,7 @@
         "agent_contact": "8105213550 / 9980513550",
         "agent_name": "Abhishek / Farhat Shahbudin",
         "company_name": null,
-        "raw_message": "Apartment  available for sale\n*Defence colony  indiranagar*\nFirst floor\nEast facing\n1664 sq.ft.\n3 bedrooms\n3 toilets\nkitchen\nSale price : *2.90 Crores + registration*\nAbhishek / Farhat Shahbudin\n8105213550 / 9980513550\n*Golden Nest Realtors*",
+        "raw_message": "Apartment  available for sale\n*Defence colony  indiranagar*\nFirst floor\nEast facing\n1664 sq.ft.\n3 bedrooms\n3 toilets\nkitchen\nSale price : *2.90 Crores + registration*\nAbhishek / Farhat Shahbudin\n8105213550 / 9980513550\n*Golden\u00a0Nest\u00a0Realtors*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1664.0,
@@ -1082,7 +1092,7 @@
           "split_from_original": false
         },
         "created_at": "2025-11-28T10:18:34.037060+00:00",
-        "sender_name": "~ GnestAbhi"
+        "sender_name": "~\u202fGnestAbhi"
       },
       {
         "id": "ceba835d-85d3-4d30-b12f-a321e82ee1f8",
@@ -1120,7 +1130,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "\u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1151,7 +1161,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1246,7 +1256,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1306,7 +1316,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1364,7 +1374,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "\u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1424,7 +1434,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1472,7 +1482,9 @@
       }
     ],
     "created_at": "2025-12-14T15:15:18.790782",
-    "status": "new"
+    "status": "new",
+    "name": "Anjali Gupta",
+    "contact_number": "9876543210"
   },
   {
     "id": "d6b30dc0-6378-4697-986f-82efa06bf0b2",
@@ -1526,7 +1538,7 @@
         "agent_contact": null,
         "agent_name": null,
         "company_name": null,
-        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children’s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
+        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children\u2019s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 2800.0,
@@ -1559,7 +1571,7 @@
         "agent_contact": null,
         "agent_name": null,
         "company_name": null,
-        "raw_message": "Available \n⭐: Flat \n1) 2,100 sqft (1st Floor)\n2) 3 Bedrooms (Fans, Lights and Cupboards)\n3) 4 Bathrooms (Kohler Fittings)\n4) Modular Kitchen\n5) 4 Balconies\n6) Lift\n7) 2 Car Park\n8) Power Backup (Generator)\n9) West Facing Door\n10) South Facing Building\n: 2nd Main, 1st Stage, Indiranagar, Bangalore, \nPrice 3.5 cr negotiable",
+        "raw_message": "Available \n\u2b50: Flat \n1) 2,100 sqft (1st Floor)\n2) 3 Bedrooms (Fans, Lights and Cupboards)\n3) 4 Bathrooms (Kohler Fittings)\n4) Modular Kitchen\n5) 4 Balconies\n6) Lift\n7) 2 Car Park\n8) Power Backup (Generator)\n9) West Facing Door\n10) South Facing Building\n: 2nd Main, 1st Stage, Indiranagar, Bangalore, \nPrice 3.5 cr negotiable",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 2100.0,
@@ -1593,7 +1605,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ INDIRANAGAR 2ND STAGE\n3 BHK, 1900 Sft., Brandnew Semi Furn.\nPRICE : Rs. 3.75 CR.\n\n    Kindly revert ONLY WITH DIRECT ENQUIRES.\n\n_THANKS & REGARDS,_\nZEESHAN.G\n*_DZire Realtors_*\n📱: +91-7847 83 83 83",
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n \u270f\ufe0f INDIRANAGAR 2ND STAGE\n3 BHK, 1900 Sft., Brandnew Semi Furn.\nPRICE : Rs. 3.75 CR.\n\n    Kindly revert ONLY WITH DIRECT ENQUIRES.\n\n_THANKS & REGARDS,_\nZEESHAN.G\n*_DZire Realtors_*\n\ud83d\udcf1: +91-7847 83 83 83",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1624,7 +1636,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale in BANGALORE :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale in BANGALORE :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1655,7 +1667,7 @@
         "agent_contact": "8105213550 / 9980513550",
         "agent_name": "Abhishek / Farhat Shahbudin",
         "company_name": null,
-        "raw_message": "Apartment  available for sale\n*Defence colony  indiranagar*\nFirst floor\nEast facing\n1664 sq.ft.\n3 bedrooms\n3 toilets\nkitchen\nSale price : *2.90 Crores + registration*\nAbhishek / Farhat Shahbudin\n8105213550 / 9980513550\n*Golden Nest Realtors*",
+        "raw_message": "Apartment  available for sale\n*Defence colony  indiranagar*\nFirst floor\nEast facing\n1664 sq.ft.\n3 bedrooms\n3 toilets\nkitchen\nSale price : *2.90 Crores + registration*\nAbhishek / Farhat Shahbudin\n8105213550 / 9980513550\n*Golden\u00a0Nest\u00a0Realtors*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1664.0,
@@ -1677,7 +1689,7 @@
           "split_from_original": false
         },
         "created_at": "2025-11-28T10:18:34.037060+00:00",
-        "sender_name": "~ GnestAbhi"
+        "sender_name": "~\u202fGnestAbhi"
       },
       {
         "id": "ceba835d-85d3-4d30-b12f-a321e82ee1f8",
@@ -1715,7 +1727,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "\u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1746,7 +1758,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,*\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1841,7 +1853,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1901,7 +1913,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn.\n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -1959,7 +1971,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "\u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\nKindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -2019,7 +2031,7 @@
         "agent_contact": "+91-7847 83 83 83",
         "agent_name": "ZEESHAN.G",
         "company_name": null,
-        "raw_message": "Apartments available for Sale :\n\n ✏️ *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n📱: *+91-7847 83 83 83*",
+        "raw_message": "Apartments available for Sale :\n\n \u270f\ufe0f *INDIRANAGAR 2ND STAGE*\n*3 BHK*, 1900 Sft., Brandnew Semi Furn. \n*PRICE : Rs. 3.75 CR.*\n\n    Kindly revert *ONLY WITH DIRECT ENQUIRES.*\n\n_THANKS & REGARDS,_\n*ZEESHAN.G*\n*_DZire Realtors_*\n\ud83d\udcf1: *+91-7847 83 83 83*",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 1900.0,
@@ -2067,7 +2079,9 @@
       }
     ],
     "created_at": "2025-12-14T15:23:20.331684",
-    "status": "new"
+    "status": "new",
+    "name": "Rohan Desai",
+    "contact_number": "9876543210"
   },
   {
     "id": "1bc0e764-4faa-4e47-b658-184a1245b6e3",
@@ -2122,7 +2136,7 @@
         "agent_contact": null,
         "agent_name": null,
         "company_name": null,
-        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children’s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
+        "raw_message": "For Sale\nProject Name: Divyasree Life , 3BHK, 5.9Cr\nLocation: Near Indiranagar / ORR, excellent access to Whitefield & Koramangala\nArea: 2800 sq. ft. (3BHK) - attached servant room and bathroom\nFloor: 10th Floor (with personal lift access)\nStatus: Almost complete\nPossession: January 2026\nParking: 2 dedicated parking slots\nAmenities: Heated swimming pool, central AC, gym, theatre, tennis court, children\u2019s play areas, clubhouse\nInteriors: Wooden flooring, premium fittings, private lift lobby",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 2800.0,
@@ -2172,11 +2186,13 @@
       }
     ],
     "created_at": "2025-12-14T16:56:35.438961",
-    "status": "new"
+    "status": "new",
+    "name": "Pooja Nair",
+    "contact_number": "9876543210"
   },
   {
     "id": "93245cfc-a6e8-48e7-955f-dbe6ff0fb10a",
-    "query": "Purchase Requirement – Pre-Leased Co-Living / Business Hotel Student Housing Preferred Target ROI: 8% Budget: ₹8–10 Cr",
+    "query": "Purchase Requirement \u2013 Pre-Leased Co-Living / Business Hotel Student Housing Preferred Target ROI: 8% Budget: \u20b98\u201310 Cr",
     "extracted_criteria": {
       "property": {
         "bhk": null,
@@ -2227,11 +2243,13 @@
     "matched_properties": [],
     "nearby_localities": [],
     "created_at": "2025-12-14T17:30:28.086708",
-    "status": "new"
+    "status": "new",
+    "name": "Arjun Iyer",
+    "contact_number": "9876543210"
   },
   {
     "id": "07d1f3df-018a-44f7-8f9a-bd0c7bd0949e",
-    "query": "Purchase Requirement – Pre-Leased Co-Living / Business Hotel Student Housing Preferred Target ROI: 8% Budget: ₹8–10 Cr",
+    "query": "Purchase Requirement \u2013 Pre-Leased Co-Living / Business Hotel Student Housing Preferred Target ROI: 8% Budget: \u20b98\u201310 Cr",
     "extracted_criteria": {
       "property": {
         "bhk": null,
@@ -2290,13 +2308,13 @@
         "agent_contact": "8788073812",
         "agent_name": "RAJU",
         "company_name": null,
-        "raw_message": "🍻 *KHARADI PUNE FULLY FURNISHED BAR AND RESTAURANT FOR SALE* 🍻\n📌 Details:\n•\tSize: 1250sqft Indoor + 1700sqft Outdoor\n•\tSeating: 130+ guests\n•\tLiquor License (active, not surrendered)\n•\tMore than 96 kitchen equipment items\n•\tComplete AC ducting & interior setup\n•\tDedicated (6 No.) 2-wheeler & (3 No.) 4-wheeler parking\n•\tOperational for 5 years, closed in April 2025\n•\tOwner relocated and unable to manage Multiple Businesses\n💼 Ideal plug-and-play setup for bar/restaurant operators.\n\n*Sale price - ₹7.50CR*\n\n*CALL RAJU 87880 73812*",
+        "raw_message": "\ud83c\udf7b *KHARADI PUNE FULLY FURNISHED BAR AND RESTAURANT FOR SALE* \ud83c\udf7b\n\ud83d\udccc Details:\n\u2022\tSize: 1250sqft Indoor + 1700sqft Outdoor\n\u2022\tSeating: 130+ guests\n\u2022\tLiquor License (active, not surrendered)\n\u2022\tMore than 96 kitchen equipment items\n\u2022\tComplete AC ducting & interior setup\n\u2022\tDedicated (6 No.) 2-wheeler & (3 No.) 4-wheeler parking\n\u2022\tOperational for 5 years, closed in April 2025\n\u2022\tOwner relocated and unable to manage Multiple Businesses\n\ud83d\udcbc Ideal plug-and-play setup for bar/restaurant operators.\n\n*Sale price - \u20b97.50CR*\n\n*CALL RAJU 87880 73812*",
         "message_type": "supply_sale",
         "property_type": "office",
         "area_sqft": 2950.0,
         "bedroom_count": null,
         "price": 75000000.0,
-        "price_text": "₹7.50CR",
+        "price_text": "\u20b97.50CR",
         "location": "KHARADI PUNE",
         "project_name": null,
         "furnishing_status": "fully_furnished",
@@ -2324,13 +2342,13 @@
         "agent_contact": "9845413513",
         "agent_name": "Ruchi",
         "company_name": null,
-        "raw_message": "🏢 Commercial Space for Sale – Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n📍 Just 450 meters from Forum Mall, Kanakapura Road – Bangalore\n🔑 5052 SQ FT | ₹15,000 per SQ FT (All Inclusive)-5th Floor\n🚗 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\nFirst and Second Floors have been leased to IKEA\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\n\n📞 Call Ruchi @ 9845413513\n🏢 Jade Property Consultants\n🌐 www.jadeconsultants.in\n\nChannel Partners to All Leading Builders in Bangalore",
+        "raw_message": "\ud83c\udfe2 Commercial Space for Sale \u2013 Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n\ud83d\udccd Just 450 meters from Forum Mall, Kanakapura Road \u2013 Bangalore\n\ud83d\udd11 5052 SQ FT | \u20b915,000 per SQ FT (All Inclusive)-5th Floor\n\ud83d\ude97 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\nFirst and Second Floors have been leased to IKEA\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\n\n\ud83d\udcde Call Ruchi @ 9845413513\n\ud83c\udfe2 Jade Property Consultants\n\ud83c\udf10 www.jadeconsultants.in\n\nChannel Partners to All Leading Builders in Bangalore",
         "message_type": "supply_sale",
         "property_type": "office",
         "area_sqft": 5052.0,
         "bedroom_count": null,
         "price": 75780000.0,
-        "price_text": "₹15,000 per SQ FT (All Inclusive)-5th Floor",
+        "price_text": "\u20b915,000 per SQ FT (All Inclusive)-5th Floor",
         "location": "Kanakapura Road",
         "project_name": "Purva ZenTech Business Park",
         "furnishing_status": "bare_shell",
@@ -2352,7 +2370,7 @@
           "split_from_original": false
         },
         "created_at": "2025-11-27T16:31:37.714738+00:00",
-        "sender_name": "~ Ruchi Govil"
+        "sender_name": "~\u202fRuchi Govil"
       },
       {
         "id": "e1e6f7dd-da82-4972-83e8-65d4e08e0f0c",
@@ -2361,13 +2379,13 @@
         "agent_contact": "9845413513",
         "agent_name": "Ruchi",
         "company_name": null,
-        "raw_message": "🏢 Commercial Space for Sale – Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n📍 Just 450 meters from Forum Mall, Kanakapura Road – Bangalore\n🔑 5052 SQ FT | ₹15,000 per SQ FT (All Inclusive)-5th Floor\n🚗 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\nFirst and Second Floors have been leased to IKEA\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\nGreat appreciation potential\n\n📞 Call Ruchi @ 9845413513\n🏢 Jade Property Consultants\n\nChannel Partners to All Leading Builders in Bangalore",
+        "raw_message": "\ud83c\udfe2 Commercial Space for Sale \u2013 Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n\ud83d\udccd Just 450 meters from Forum Mall, Kanakapura Road \u2013 Bangalore\n\ud83d\udd11 5052 SQ FT | \u20b915,000 per SQ FT (All Inclusive)-5th Floor\n\ud83d\ude97 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\nFirst and Second Floors have been leased to IKEA\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\nGreat appreciation potential\n\n\ud83d\udcde Call Ruchi @ 9845413513\n\ud83c\udfe2 Jade Property Consultants\n\nChannel Partners to All Leading Builders in Bangalore",
         "message_type": "supply_sale",
         "property_type": "office",
         "area_sqft": 5052.0,
         "bedroom_count": null,
         "price": 75780000.0,
-        "price_text": "₹15,000 per SQ FT (All Inclusive)-5th Floor",
+        "price_text": "\u20b915,000 per SQ FT (All Inclusive)-5th Floor",
         "location": "Kanakapura Road",
         "project_name": "Purva ZenTech Business Park",
         "furnishing_status": "bare_shell",
@@ -2387,7 +2405,7 @@
           "split_from_original": false
         },
         "created_at": "2025-11-27T16:29:58.445667+00:00",
-        "sender_name": "~ Ruchi Govil"
+        "sender_name": "~\u202fRuchi Govil"
       },
       {
         "id": "357c96c8-cf2a-423a-8991-1bcbe8231099",
@@ -2396,7 +2414,7 @@
         "agent_contact": "9606959405",
         "agent_name": "A Murli BiB Personal",
         "company_name": null,
-        "raw_message": "📍Prime RMV Behind 80ft road.\n\n Fully Furnished Co-Living commercial building for Sale. \n\nThis premium co-living property, built on a 60x40 site with a total built-up area of 11,000 sq. ft. \n\nSingle owner\nBDA \"A\" Katha\nRental yield - 9-10 lakhs per  month\n5 years old building\n\nPrice- 12 cr ( Negotiable)\nContact - 9606959405",
+        "raw_message": "\ud83d\udccdPrime RMV Behind 80ft road.\n\n Fully Furnished Co-Living commercial building for Sale. \n\nThis premium co-living property, built on a 60x40 site with a total built-up area of 11,000 sq. ft. \n\nSingle owner\nBDA \"A\" Katha\nRental yield - 9-10 lakhs per  month\n5 years old building\n\nPrice- 12 cr ( Negotiable)\nContact - 9606959405",
         "message_type": "supply_sale",
         "property_type": "commercial",
         "area_sqft": 11000.0,
@@ -2429,13 +2447,13 @@
         "agent_contact": "9845413513",
         "agent_name": "Ruchi",
         "company_name": null,
-        "raw_message": "🏢 Commercial Space for Sale – Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n📍 Just 450 meters from Forum Mall, Kanakapura Road – Bangalore\n🔑 5052 SQ FT | ₹15,000 per SQ FT (All Inclusive)-5th Floor\n🚗 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\nFirst and Second Floors have been leased to IKEA\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\nGreat appreciation potential\n\n📞 Call Ruchi @ 9845413513\n🏢 Jade Property Consultants\n🌐 www.jadeconsultants.in\n\nChannel Partners to All Leading Builders in Bangalore",
+        "raw_message": "\ud83c\udfe2 Commercial Space for Sale \u2013 Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n\ud83d\udccd Just 450 meters from Forum Mall, Kanakapura Road \u2013 Bangalore\n\ud83d\udd11 5052 SQ FT | \u20b915,000 per SQ FT (All Inclusive)-5th Floor\n\ud83d\ude97 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\nFirst and Second Floors have been leased to IKEA\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\nGreat appreciation potential\n\n\ud83d\udcde Call Ruchi @ 9845413513\n\ud83c\udfe2 Jade Property Consultants\n\ud83c\udf10 www.jadeconsultants.in\n\nChannel Partners to All Leading Builders in Bangalore",
         "message_type": "supply_sale",
         "property_type": "office",
         "area_sqft": 5052.0,
         "bedroom_count": null,
         "price": 75780000.0,
-        "price_text": "₹15,000 per SQ FT (All Inclusive)-5th Floor",
+        "price_text": "\u20b915,000 per SQ FT (All Inclusive)-5th Floor",
         "location": "Kanakapura Road",
         "project_name": "Purva ZenTech Business Park",
         "furnishing_status": "bare_shell",
@@ -2458,7 +2476,7 @@
           "split_from_original": false
         },
         "created_at": "2025-11-27T16:11:48.530533+00:00",
-        "sender_name": "~ Ruchi Govil"
+        "sender_name": "~\u202fRuchi Govil"
       },
       {
         "id": "8bba0199-2945-4c91-84d9-d85a186958c9",
@@ -2467,13 +2485,13 @@
         "agent_contact": null,
         "agent_name": "Chandan Homiez Realty X BiB",
         "company_name": null,
-        "raw_message": "*Elegant Penthouse for Sale – Judicial Layout*\n\nExperience the timeless charm of Old Bangalore — serene tree-lined streets, calm surroundings, and refined living — all in this boutique duplex penthouse that beautifully blends exclusivity with comfort.\n\nProperty Highlights:\n\nBuilt-up Area: 4,200 sq.ft. + 525 sq.ft. private terrace\n\nConfiguration: 4 spacious bedrooms | Duplex layout\n\nAmbience: Feels like an independent home within a secure, low-density apartment community\n\nInteriors & Specifications:\n\nFully custom-designed by an American architect, showcasing premium craftsmanship\n\nReal walnut solid wood flooring and IPE wood terrace decking\n\nCentral air-conditioning in bedrooms and kitchen\n\nImported modular kitchen with high-end fittings\n\nSpanish marble flooring, bespoke brass curtain rods and handles, and handcrafted furnishings\n\nEvery detail — from materials to finishes — curated for elegance and durability\n\n100% Vastu-compliant, ensuring harmony and balance in the home\n\nPrice: ₹6.5 Crores\n\nThis penthouse is ideal for those who appreciate privacy, design excellence, and the peaceful greenery of Judicial Layout — while staying connected to major schools, clubs, and business hubs.",
+        "raw_message": "*Elegant Penthouse for Sale \u2013 Judicial Layout*\n\nExperience the timeless charm of Old Bangalore \u2014 serene tree-lined streets, calm surroundings, and refined living \u2014 all in this boutique duplex penthouse that beautifully blends exclusivity with comfort.\n\nProperty Highlights:\n\nBuilt-up Area: 4,200 sq.ft. + 525 sq.ft. private terrace\n\nConfiguration: 4 spacious bedrooms | Duplex layout\n\nAmbience: Feels like an independent home within a secure, low-density apartment community\n\nInteriors & Specifications:\n\nFully custom-designed by an American architect, showcasing premium craftsmanship\n\nReal walnut solid wood flooring and IPE wood terrace decking\n\nCentral air-conditioning in bedrooms and kitchen\n\nImported modular kitchen with high-end fittings\n\nSpanish marble flooring, bespoke brass curtain rods and handles, and handcrafted furnishings\n\nEvery detail \u2014 from materials to finishes \u2014 curated for elegance and durability\n\n100% Vastu-compliant, ensuring harmony and balance in the home\n\nPrice: \u20b96.5 Crores\n\nThis penthouse is ideal for those who appreciate privacy, design excellence, and the peaceful greenery of Judicial Layout \u2014 while staying connected to major schools, clubs, and business hubs.",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 4200.0,
         "bedroom_count": null,
         "price": 65000000.0,
-        "price_text": "₹6.5 Crores",
+        "price_text": "\u20b96.5 Crores",
         "location": "Judicial Layout",
         "project_name": null,
         "furnishing_status": null,
@@ -2533,13 +2551,13 @@
         "agent_contact": "+91-7204555080",
         "agent_name": "Habib",
         "company_name": null,
-        "raw_message": "*Boutique Luxury Residential Apartment For SALE in Indira Nagar*.\nIn CBD Area (Central Business District).\n\n❇️ Project Name : Builder Floor, \nDeveloped by a Reputed Builders. Only 4 Units - Each Floor One Unit.\n📍 Location : Indira Nagar, Near 12th Main, (Close to Defence Colony)\n\nUn Furnished : Brand New.\n🚙 Car parks : 2 Nos,\n\n*📐 Super Built-Up Area*\n\n\t•\t4 BHK – 3,682 Sqft,\n5 Balconies.\n\n Price Quoted   ₹8.90 Cr.\n\nAmenities: Car Parking, Power Back Up, Lift.\n\nPossession By March 2026.\n\n📱 Contact: Prudent Estate - For More Information.\nHabib @ +91-7204555080/9886237026,\nLatif +91-9036466567.\n📧 enquiry@prudentestate.com \n🌍 www.prudentestate.com ‎",
+        "raw_message": "*Boutique Luxury Residential Apartment For SALE in Indira Nagar*.\nIn CBD Area (Central Business District).\n\n\u2747\ufe0f Project Name : Builder Floor, \nDeveloped by a Reputed Builders. Only 4 Units - Each Floor One Unit.\n\ud83d\udccd Location : Indira Nagar, Near 12th Main, (Close to Defence Colony)\n\nUn Furnished : Brand New.\n\ud83d\ude99 Car parks : 2 Nos,\n\n*\ud83d\udcd0 Super Built-Up Area*\n\n\t\u2022\t4 BHK \u2013 3,682 Sqft,\n5 Balconies.\n\n Price Quoted   \u20b98.90 Cr.\n\nAmenities: Car Parking, Power Back Up, Lift.\n\nPossession By March 2026.\n\n\ud83d\udcf1 Contact: Prudent Estate - For More Information.\nHabib @ +91-7204555080/9886237026,\nLatif +91-9036466567.\n\ud83d\udce7 enquiry@prudentestate.com \n\ud83c\udf0d www.prudentestate.com \u200e",
         "message_type": "supply_sale",
         "property_type": "apartment",
         "area_sqft": 3682.0,
         "bedroom_count": null,
         "price": 89000000.0,
-        "price_text": "₹8.90 Cr",
+        "price_text": "\u20b98.90 Cr",
         "location": "Indira Nagar",
         "project_name": "Builder Floor",
         "furnishing_status": "unfurnished",
@@ -2558,7 +2576,7 @@
           "split_from_original": false
         },
         "created_at": "2025-11-27T18:11:10.455432+00:00",
-        "sender_name": "~ Prudent Estate"
+        "sender_name": "~\u202fPrudent Estate"
       },
       {
         "id": "fa10baa5-6511-4b29-b42e-61d61c98d680",
@@ -2567,13 +2585,13 @@
         "agent_contact": "9845413513",
         "agent_name": "Ruchi",
         "company_name": null,
-        "raw_message": "🏢 Commercial Space for Sale – Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n📍 Just 450 meters from Forum Mall, Kanakapura Road – Bangalore\n🔑 5052 SQ FT | ₹15,000 per SQ FT (All Inclusive)-5th Floor\n🚗 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\nGreat appreciation potential\n\n📞 Call Ruchi @ 9845413513\n🏢 Jade Property Consultants\n🌐 www.jadeconsultants.in\n\nChannel Partners to All Leading Builders in Bangalore",
+        "raw_message": "\ud83c\udfe2 Commercial Space for Sale \u2013 Prime Location near Forum Mall Kanakapura Road @ Purva ZenTech Business Park\n\n\ud83d\udccd Just 450 meters from Forum Mall, Kanakapura Road \u2013 Bangalore\n\ud83d\udd11 5052 SQ FT | \u20b915,000 per SQ FT (All Inclusive)-5th Floor\n\ud83d\ude97 Includes 5 Car Parking Spaces\n\nProperty Highlights:\n\nGrade-A commercial development\n\nIdeal for offices, clinics, showrooms, or investment\n\nExcellent visibility and accessibility\n\nLocated in a high-footfall and fast-developing zone\n\nReady infrastructure with all amenities\n\nGreat appreciation potential\n\n\ud83d\udcde Call Ruchi @ 9845413513\n\ud83c\udfe2 Jade Property Consultants\n\ud83c\udf10 www.jadeconsultants.in\n\nChannel Partners to All Leading Builders in Bangalore",
         "message_type": "supply_sale",
         "property_type": "office",
         "area_sqft": 5052.0,
         "bedroom_count": null,
         "price": 75780000.0,
-        "price_text": "₹15,000 per SQ FT (All Inclusive)",
+        "price_text": "\u20b915,000 per SQ FT (All Inclusive)",
         "location": "Kanakapura Road",
         "project_name": "Purva ZenTech Business Park",
         "furnishing_status": "bare_shell",
@@ -2594,7 +2612,7 @@
           "split_from_original": false
         },
         "created_at": "2025-11-27T18:04:36.350560+00:00",
-        "sender_name": "~ Ruchi Govil"
+        "sender_name": "~\u202fRuchi Govil"
       },
       {
         "id": "b418958b-239b-40b4-9997-11c531fb1040",
@@ -2603,13 +2621,13 @@
         "agent_contact": null,
         "agent_name": "Prabandh Properties",
         "company_name": null,
-        "raw_message": "🙏OM NAMO VENKATESHAYA🙏\n\n🏭 Commercial Property for Sale / Rent – Near Dabaspet Industrial Area 🏭\n\n📐 Total Area: 25,500 sq. ft.\n🏢 Built-up Shed: 11,000 sq. ft.\n⚡ Power: 60 KWA\n💧 Borewell Available\n🧱 750 Mould\n💰 Price: ₹2,700 per sq. ft.\n\n📍 Location Highlights:\n\nJust 500 meters from the Highway\n\n150 ft Roadside Frontage\n\nOnly 1 km to Dabaspet Industrial Area\n\n3 km from Peripheral Ring Road\n\nOpen Zone – suitable for any type of industry\n\nAn excellent opportunity for industrial setup or investment in a fast-developing zone!\n\n📞 Contact Prabandh Properties today to rent or purchase this premium commercial property.\n\n#business #smallbusinesssupportingsmallbusiness \n#industrial \n#investment \n#investor \n#investors\n                 https://www.instagram.com/p/DPp5l5rkva0/?igsh=MTNha2FnejdweWhvZA==",
+        "raw_message": "\ud83d\ude4fOM NAMO VENKATESHAYA\ud83d\ude4f\n\n\ud83c\udfed Commercial Property for Sale / Rent \u2013 Near Dabaspet Industrial Area \ud83c\udfed\n\n\ud83d\udcd0 Total Area: 25,500 sq. ft.\n\ud83c\udfe2 Built-up Shed: 11,000 sq. ft.\n\u26a1 Power: 60 KWA\n\ud83d\udca7 Borewell Available\n\ud83e\uddf1 750 Mould\n\ud83d\udcb0 Price: \u20b92,700 per sq. ft.\n\n\ud83d\udccd Location Highlights:\n\nJust 500 meters from the Highway\n\n150 ft Roadside Frontage\n\nOnly 1 km to Dabaspet Industrial Area\n\n3 km from Peripheral Ring Road\n\nOpen Zone \u2013 suitable for any type of industry\n\nAn excellent opportunity for industrial setup or investment in a fast-developing zone!\n\n\ud83d\udcde Contact Prabandh Properties today to rent or purchase this premium commercial property.\n\n#business #smallbusinesssupportingsmallbusiness \n#industrial \n#investment \n#investor \n#investors\n                 https://www.instagram.com/p/DPp5l5rkva0/?igsh=MTNha2FnejdweWhvZA==",
         "message_type": "supply_sale",
         "property_type": "office",
         "area_sqft": 25500.0,
         "bedroom_count": null,
         "price": 68850000.0,
-        "price_text": "₹2,700 per sq. ft.",
+        "price_text": "\u20b92,700 per sq. ft.",
         "location": "Dabaspet Industrial Area",
         "project_name": null,
         "furnishing_status": null,
@@ -2632,6 +2650,485 @@
     ],
     "nearby_localities": [],
     "created_at": "2025-12-14T17:35:56.262174",
-    "status": "new"
+    "status": "new",
+    "name": "Divya Menon",
+    "contact_number": "9876543210"
+  },
+  {
+    "id": "61eb1efb-e3f5-44fe-b6cf-8adfd3cfb112",
+    "query": "3bhk hennur 8 crores\n\n",
+    "extracted_criteria": {
+      "property": {
+        "bhk": 3,
+        "budget_min": null,
+        "budget_max": 8.0,
+        "area_sqft_min": null,
+        "area_sqft_max": null,
+        "property_type": null,
+        "property_age": null,
+        "location": "Hennur",
+        "req_type": "demand_buy",
+        "locations": [
+          "Hennur"
+        ],
+        "plot_size_min": null,
+        "plot_size_max": null,
+        "built_up_area_min": null,
+        "built_up_area_max": null,
+        "property_status": null,
+        "furnishing_status": null,
+        "special_features": []
+      },
+      "proximity": {
+        "near_school": false,
+        "near_airport": false,
+        "near_hospital": false,
+        "near_shopping_mall": false
+      },
+      "user_journey": {
+        "possession_timeline": null,
+        "time_in_market": null,
+        "agents_contacted": null,
+        "work_locations": []
+      }
+    },
+    "missing_criteria": [
+      "area",
+      "property_type",
+      "property_age",
+      "proximity_preferences",
+      "possession_timeline",
+      "time_in_market",
+      "agents_contacted"
+    ],
+    "matched_properties": [
+      {
+        "id": "0412c8c0-af78-4548-877c-9fa8f23a6904",
+        "source_message_id": null,
+        "message_date": "2025-12-09T15:00:00+00:00",
+        "agent_contact": null,
+        "agent_name": null,
+        "company_name": null,
+        "raw_message": "Available for sale @  Salarpuria Sattva aspire, Hennur main road.\n\nType: 3BHK\nSuper built-up area : 1904 square feet.\nFloor: 11th\nPrice: 1.80Crs\nCar parks: 3nos",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1904.0,
+        "bedroom_count": 3,
+        "price": 18000000.0,
+        "price_text": "1.80Crs",
+        "location": "Hennur",
+        "project_name": "Salarpuria Sattva Aspire",
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-10T16:21:28.044354+00:00",
+        "sender_name": "+91 98867 86039"
+      },
+      {
+        "id": "9789afc8-1d21-4d4e-a3d2-a151ee9937d4",
+        "source_message_id": null,
+        "message_date": "2025-11-26T21:00:53+00:00",
+        "agent_contact": "9901980318",
+        "agent_name": "Anitha.A",
+        "company_name": null,
+        "raw_message": "RESALE ALERT, HENNUR\n\nNew 3 BHK Fully furnished flat for sale \n1800 sqft\nEast facing (complete vastu Complaint)\n2nd floor \n2.20 cr slightly negotiable \n\nFor more details feel free to contact me.\n\nAnitha.A\n9901980318",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1800.0,
+        "bedroom_count": 3,
+        "price": 22000000.0,
+        "price_text": "2.20 cr slightly negotiable",
+        "location": "Hennur",
+        "project_name": null,
+        "furnishing_status": "fully_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "east",
+        "special_features": [
+          "vastu_compliant",
+          "negotiable"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-12-01T16:25:42.670463+00:00",
+        "sender_name": "Naresh  Shetty"
+      },
+      {
+        "id": "f55abced-2006-40cf-8fec-a9b84f865589",
+        "source_message_id": null,
+        "message_date": "2025-11-16T12:13:21+00:00",
+        "agent_contact": null,
+        "agent_name": "~\u202fAk",
+        "company_name": null,
+        "raw_message": "Dear all we have 3bhk 1818sft for resale in sobha Victoria park hennur   East facing looking for immediate closer above 7th floor asking price is 2.7cr negotiable please Dm",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1818.0,
+        "bedroom_count": 3,
+        "price": 27000000.0,
+        "price_text": "2.7cr negotiable",
+        "location": "hennur",
+        "project_name": "sobha Victoria park",
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "east",
+        "special_features": [
+          "negotiable",
+          "above_7th_floor"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-28T12:03:45.288997+00:00",
+        "sender_name": "~\u202fAk"
+      },
+      {
+        "id": "f1dc9a0e-4c6b-4d63-a3c1-399e15c816f3",
+        "source_message_id": null,
+        "message_date": "2025-11-01T14:15:00+00:00",
+        "agent_contact": "+91 99860 99506",
+        "agent_name": "Mohammed Hussain",
+        "company_name": null,
+        "raw_message": "For Sale : 3BHK + Servant Room\n\nProperty Details:\n\nProject Name: Sattva Summit Gold\nLocation: Hennur Main Road, near Decathlon\n\nType: 3BHK + Servant Room\nSize: 2,320 sq. ft.\nFloor: higher (Exclusive \u2013 only one apartment per floor)\nFacing: East\nParking: 1 Covered Car Park\n\nPrice: \u20b92.5 Crore nego\n\nRevert back with direct enquiries \nCommission side by side \n\nRegards \nMohammed Hussain \nKipro Propertys",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 2320.0,
+        "bedroom_count": 3,
+        "price": 25000000.0,
+        "price_text": "2.5 Crore nego",
+        "location": "Hennur Main Road",
+        "project_name": "Sattva Summit Gold",
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "east",
+        "special_features": [
+          "negotiable",
+          "servant_room",
+          "exclusive_floor"
+        ],
+        "llm_json": {
+          "split_index": 1,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-05T04:23:41.471344+00:00",
+        "sender_name": "+91 99860 99506"
+      },
+      {
+        "id": "8003e38b-7755-44ad-9272-272e94c3a857",
+        "source_message_id": null,
+        "message_date": "2025-10-23T17:04:00+00:00",
+        "agent_contact": "+91 99860 99506",
+        "agent_name": "Mohammed Hussain",
+        "company_name": null,
+        "raw_message": "Dear Associates \n\nFor Sale : 3BHK + Servant Room ( 2 flats for sale ) at Sattva Summit Gold, Hennur Main Road\n\nProperty Details:\n\nProject Name: Sattva Summit Gold\nLocation: Hennur Main Road, near Decathlon\n\nType: 3BHK + Servant Room\nSize: 2,320 sq. ft.\nFloor: higher (Exclusive \u2013 only one apartment per floor)\nFacing: East\nParking: 1 Covered Car Park\n\nPrice: \u20b92.5 Crore nego\n\nRevert back with direct enquiries \nCommission side by side \n\nRegards \nMohammed Hussain \nKipro Propertys",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 2320.0,
+        "bedroom_count": 3,
+        "price": 25000000.0,
+        "price_text": "\u20b92.5 Crore nego",
+        "location": "Hennur Main Road",
+        "project_name": "Sattva Summit Gold",
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "east",
+        "special_features": [
+          "negotiable",
+          "high_floor"
+        ],
+        "llm_json": {
+          "split_index": 1,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-05T03:45:05.774070+00:00",
+        "sender_name": "+91 99860 99506"
+      },
+      {
+        "id": "4cca4517-018d-479f-9248-c511a89fed32",
+        "source_message_id": null,
+        "message_date": "2025-09-30T15:39:00+00:00",
+        "agent_contact": "9591292090",
+        "agent_name": "+91 95912 92090",
+        "company_name": null,
+        "raw_message": "9) Salarpuria Sattva Aspire, Hennur\nType: 3BHK\nSuper built-up area : 1904 square feet.\nFloor: higher floor\nPrice: 1.80Crs\nCar parks: 3nos\n\nContact : 9591292090",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1904.0,
+        "bedroom_count": 3,
+        "price": 18000000.0,
+        "price_text": "1.80Crs",
+        "location": "Hennur",
+        "project_name": "Salarpuria Sattva Aspire",
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "higher_floor",
+          "3 car parks"
+        ],
+        "llm_json": {
+          "split_index": 9,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-12-04T17:18:24.923205+00:00",
+        "sender_name": "+91 95912 92090"
+      },
+      {
+        "id": "61a9b196-723e-4f3d-9a6f-814cb198c19f",
+        "source_message_id": null,
+        "message_date": "2025-09-25T17:59:07+00:00",
+        "agent_contact": "91-96068 31134",
+        "agent_name": "Taj Realtors",
+        "company_name": null,
+        "raw_message": "*Filtered Sale Properties listed with Taj Realtors*\n\n10. *Mantri Webcity \u2013 Hennur*\n   \u2022 3 BHK Flat | 1750 qft | 17th | West\n     Price: \u20b91.80 Cr | Un-Furnished | 1 Car Park\n\nFor more details on these filtered listings or to schedule site visits, please feel free to reach out to us.\n\nThanks & Regards,\n*Taj Realtors*\n\ud83c\udf10 Website: www.tajrealtors.in\n\ud83d\udcde Call: 91-96068 31134\n\u2709 Email: Info@tajrealtors.in",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1750.0,
+        "bedroom_count": 3,
+        "price": 18000000.0,
+        "price_text": "\u20b91.80 Cr",
+        "location": "Hennur",
+        "project_name": "Mantri Webcity",
+        "furnishing_status": "unfurnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "west",
+        "special_features": [],
+        "llm_json": {
+          "split_index": 20,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T10:06:11.600607+00:00",
+        "sender_name": "~\u202fTaj Realtors"
+      },
+      {
+        "id": "89d45776-ffce-460b-9818-ccf7fe80ac12",
+        "source_message_id": null,
+        "message_date": "2025-09-21T11:18:43+00:00",
+        "agent_contact": "91-96068 31134",
+        "agent_name": "Taj Realtors",
+        "company_name": null,
+        "raw_message": "Direct Sale Properties listed with Taj Realtors\n\n6. Mantri Webcity \u2013 Hennur\n   \u2022 3 BHK Flat | 1750 qft | 17th | West\n     Price: \u20b91.80 Cr | Un-Furnished | 1 Car Park\n\nFor more details on these direct listings or to schedule site visits, please feel free to reach out to us.\n\nThanks & Regards,\nTaj Realtors\n\ud83c\udf10 Website: www.tajrealtors.in\n\ud83d\udcde Call: 91-96068 31134\n\u2709 Email: Info@tajrealtors.in",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1750.0,
+        "bedroom_count": 3,
+        "price": 18000000.0,
+        "price_text": "\u20b91.80 Cr",
+        "location": "Hennur",
+        "project_name": "Mantri Webcity",
+        "furnishing_status": "unfurnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "west",
+        "special_features": [],
+        "llm_json": {
+          "split_index": 8,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T09:55:41.451825+00:00",
+        "sender_name": "~\u202fTaj Realtors"
+      },
+      {
+        "id": "b781c3da-bc93-4b35-918d-da8b186b7ada",
+        "source_message_id": null,
+        "message_date": "2025-09-20T15:00:40+00:00",
+        "agent_contact": "91-96068 31134",
+        "agent_name": "Taj Realtors",
+        "company_name": null,
+        "raw_message": "Direct Sale/Rental Properties listed with Taj Realtors\n\n10. Mantri Webcity \u2013 Hennur\n   \u2022 3 BHK Flat | 1750 qft | 17th | West\n     Price: \u20b91.80 Cr | Un-Furnished | 1 Car Park\n\nThanks & Regards,\nTaj Realtors\n\ud83c\udf10 Website: www.tajrealtors.in\n\ud83d\udcde Call: 91-96068 31134\n\u2709 Email: Info@tajrealtors.in",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1750.0,
+        "bedroom_count": 3,
+        "price": 18000000.0,
+        "price_text": "\u20b91.80 Cr",
+        "location": "Hennur",
+        "project_name": "Mantri Webcity",
+        "furnishing_status": "unfurnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "west",
+        "special_features": [],
+        "llm_json": {
+          "split_index": 20,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T09:38:06.092469+00:00",
+        "sender_name": "~\u202fTaj Realtors"
+      },
+      {
+        "id": "b3394d72-e587-4dd4-b987-bb2b1f5b23ac",
+        "source_message_id": null,
+        "message_date": "2025-09-20T10:31:55+00:00",
+        "agent_contact": "+91-96068 31134",
+        "agent_name": "Taj Realtors",
+        "company_name": null,
+        "raw_message": "\ud83d\udce2 *Availability Alert \u2013 Direct Inventory - Sale Residential Flat *\n\n*For Sale_* 3 BHK 1750 qft Residential Flat at Mantri Webcity - Hennur*\n\n*\ud83c\udd94 Property ID*: 148\n*\ud83c\udfe2 Project*: Mantri Webcity\n*\ud83d\udccc Property Type*: Residential Flat\n*\ud83e\uddf1 Configuration*: 3 BHK\n*\ud83d\udcd0 Size*: 1750 qft\n*\ud83d\udcb0 Price*: 1.80 Cr\n*\ud83e\uddf1 Floor*: 17th\n*\ud83e\udded Facing*: West\n*\ud83d\udecb Furnishing*: Un-Furnished\n*\ud83d\ude97 Car Park*: 1\n*\ud83d\udcf6 Availability Status*: Ready for Registration\n*\ud83d\udccc Property Source*: Direct\n\n*\ud83d\udcf8 View Photos*: \n\n*Call or email to schedule your visit*\n\nThank you!\n\ud83c\udf10 *Website:* www.tajrealtors.in\n\ud83d\udcde *Call:* +91-96068 31134\n\u2709 *Email:* Info@tajrealtors.in",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1750.0,
+        "bedroom_count": 3,
+        "price": 18000000.0,
+        "price_text": "1.80 Cr",
+        "location": "Hennur",
+        "project_name": "Mantri Webcity",
+        "furnishing_status": "unfurnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "west",
+        "special_features": [],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-28T09:36:45.241862+00:00",
+        "sender_name": "~\u202fTaj Realtors"
+      },
+      {
+        "id": "d1e298c1-b1ce-43a3-a985-2da02bcb46b9",
+        "source_message_id": null,
+        "message_date": "2025-09-08T08:53:46+00:00",
+        "agent_contact": "9008943611",
+        "agent_name": "BOB",
+        "company_name": null,
+        "raw_message": "\ud83c\udfe1 *SRK Properties \u2013 Apartment Inventory (For Sale)*\n\n1\ufe0f\u20e33\ufe0f\u20e3 *Hennur (15 mins from Manyata Tech Park)*\n\ud83d\udcd0 3BHK | 1600 sq.ft | 3 Baths\n\ud83e\udded East Facing\n\ud83d\udcb0 \u20b91.12 Cr (\u20b97000/sq.ft)\n\n\ud83d\udcde For Enquiries / Site Visits\n\n*Contact BOB*:\n\ud83d\udcf2 9008943611 \n      9663542823",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1600.0,
+        "bedroom_count": 3,
+        "price": 11200000.0,
+        "price_text": "\u20b91.12 Cr (\u20b97000/sq.ft)",
+        "location": "Hennur",
+        "project_name": null,
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": "east",
+        "special_features": [
+          "metro_nearby"
+        ],
+        "llm_json": {
+          "split_index": 14,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T09:05:18.376073+00:00",
+        "sender_name": "~\u202fLion Dr S Raghavendra Babu"
+      },
+      {
+        "id": "0cb2a83a-8b91-4336-8032-e8279d0b5ae6",
+        "source_message_id": null,
+        "message_date": "2025-08-29T13:56:20+00:00",
+        "agent_contact": "9845413513",
+        "agent_name": "Ruchi",
+        "company_name": null,
+        "raw_message": "\ud83c\udfe1 3BHK Flat for Sale \u2013 PLama Heights, Hennur Gardens, Bengaluru\n\n\ud83d\udccd Location: Lama Heights, Punappa Layout, Hennur Gardens, Bengaluru \u2013 560043 (Behind D-Mart Supermarket)\n\ud83d\udcb0 Price: \u20b91.35 Crore (Negotiable)\n\ud83d\udcd0 Super Built-up Area: 1667 sq.ft\n\ud83d\udccf Carpet Area: 1309 sq.ft\n\ud83d\udecf Bedrooms: 3\n\ud83d\ude97 Parking: 1 Covered Car Parking\n\ud83c\udfe2 Project Name: PLama Heights\n\ud83d\udd11 Status: Ready to Move\n    Prime Location \n\n*Call Ruchi @ 9845413513 for details**Jade Property Consultants*",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 1667.0,
+        "bedroom_count": 3,
+        "price": 13500000.0,
+        "price_text": "\u20b91.35 Crore (Negotiable)",
+        "location": "Hennur Gardens",
+        "project_name": "PLama Heights",
+        "furnishing_status": null,
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "negotiable",
+          "ready_to_move",
+          "prime_location"
+        ],
+        "llm_json": {
+          "split_index": null,
+          "message_type": "supply_sale",
+          "split_from_original": false
+        },
+        "created_at": "2025-11-28T05:32:39.072124+00:00",
+        "sender_name": "~\u202fRuchi Govil"
+      },
+      {
+        "id": "3f80a724-311d-428c-9e45-35324b814458",
+        "source_message_id": null,
+        "message_date": "2025-08-28T15:28:54+00:00",
+        "agent_contact": "+91-9620057678",
+        "agent_name": "Gavin",
+        "company_name": null,
+        "raw_message": "*3BHK for Sale*\nSattva Gold Summit \nHennur Road\n2225sqft\nSemi Furnished \n2 Car Parks\nPrice:2.4cr\n\nPlease revert with direct clients only \n\nRegards,\nGavin\nDias & Edwards Real Estate \nMob:+91-9620057678",
+        "message_type": "supply_sale",
+        "property_type": "apartment",
+        "area_sqft": 2225.0,
+        "bedroom_count": 3,
+        "price": 24000000.0,
+        "price_text": "2.4cr",
+        "location": "Hennur Road",
+        "project_name": "Sattva Gold Summit",
+        "furnishing_status": "semi_furnished",
+        "parking_count": null,
+        "parking_text": null,
+        "facing_direction": null,
+        "special_features": [
+          "2 car parks"
+        ],
+        "llm_json": {
+          "split_index": 1,
+          "message_type": "supply_sale",
+          "split_from_original": true
+        },
+        "created_at": "2025-11-28T05:30:54.506084+00:00",
+        "sender_name": "~\u202fDias Edwards Real Estate"
+      }
+    ],
+    "nearby_localities": [
+      {
+        "name": "Horamavu",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Kalyan Nagar",
+        "distance_km": 3.0
+      },
+      {
+        "name": "Banaswadi",
+        "distance_km": 4.0
+      },
+      {
+        "name": "Nagawara",
+        "distance_km": 5.0
+      },
+      {
+        "name": "Kothanur",
+        "distance_km": 4.0
+      }
+    ],
+    "created_at": "2025-12-14T17:48:26.306926",
+    "status": "new",
+    "name": "Sanjay Chopra",
+    "contact_number": "9876543210"
   }
 ]

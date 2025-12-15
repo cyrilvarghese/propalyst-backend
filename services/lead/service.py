@@ -37,7 +37,7 @@ class LeadService:
         return await LocalitiesService.find_nearby_localities(location, limit)
 
     @classmethod
-    async def create_lead(cls, query: str) -> Dict[str, Any]:
+    async def create_lead(cls, query: str, name: str, contact_number: str) -> Dict[str, Any]:
         """
         Create a lead from natural language query.
 
@@ -52,6 +52,8 @@ class LeadService:
         Args:
             query: Natural language property search query
                    Example: "3BHK in Whitefield, budget 5 crores, possession in 6 months"
+            name: Name of the lead (person's name)
+            contact_number: Contact number of the lead
 
         Returns:
             Dict with success, data (CreateLeadResponse), message
@@ -88,6 +90,8 @@ class LeadService:
             lead_data = CreateLeadResponse(
                 lead_id=lead_id,
                 query=query,
+                name=name,
+                contact_number=contact_number,
                 extracted_criteria=criteria,
                 missing_criteria=criteria_response.missing_criteria,
                 matched_properties=[prop.dict() for prop in matched_properties],
@@ -100,6 +104,8 @@ class LeadService:
             lead_dict = {
                 "id": lead_id,
                 "query": query,
+                "name": name,
+                "contact_number": contact_number,
                 "extracted_criteria": criteria.dict(),
                 "missing_criteria": criteria_response.missing_criteria,
                 "matched_properties": [prop.dict() for prop in matched_properties],

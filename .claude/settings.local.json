@@ -22,7 +22,8 @@
       "Bash(python -m py_compile:*)",
       "Bash(rm:*)",
       "Bash(python:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(python3:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

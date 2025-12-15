@@ -99,8 +99,7 @@ async def upload_file(
             "messages_parsed": len(messages),
             "messages_inserted": insert_result['messages_inserted'],
             "messages_skipped": insert_result['messages_skipped'],
-            "total_duplicates": insert_result.get('total_duplicates', 0),
-            "duplicate_pairs": insert_result.get('duplicate_pairs', []),
+            "duplicates": insert_result.get('duplicates', []),
             "ready_for_llm": ready_for_llm_count,
             "message": f"Upload complete! {insert_result['messages_inserted']} new messages inserted, {insert_result['messages_skipped']} duplicates found. {ready_for_llm_count} messages ready for LLM processing (last 4 months)."
         }

@@ -295,7 +295,7 @@ class WhatsAppParserService:
             messages: List of parsed message dictionaries
 
         Returns:
-            Dict with counts of inserted and skipped messages
+            Dict with counts of inserted and skipped messages, including duplicate details for debugging
         """
         if not messages:
             return {
@@ -308,11 +308,15 @@ class WhatsAppParserService:
         try:
             # Add hash to each message
             messages_with_hash = []
+            hash_to_message = {}  # Map hash -> original message for debugging
+
             for msg in messages:
                 msg_copy = msg.copy()
 
                 # Calculate hash for deduplication
-                msg_copy['message_hash'] = cls.calculate_message_hash(msg)
+                msg_hash = cls.calculate_message_hash(msg)
+                msg_copy['message_hash'] = msg_hash
+                hash_to_message[msg_hash] = msg
 
                 # Convert datetime to ISO format
                 if isinstance(msg_copy.get('message_date'), datetime):
@@ -323,73 +327,60 @@ class WhatsAppParserService:
             client = SupabaseService._get_client()
             print(f"[WhatsAppParser] ✓ Prepared {len(messages_with_hash)} messages with hashes")
 
-            # Use PostgreSQL's ON CONFLICT DO NOTHING to handle duplicates atomically
-            # This handles both database duplicates AND within-batch duplicates automatically
-            inserted_count = 0
-            skipped_count = 0
+            # Get all hashes we're trying to insert
+            batch_hashes = [msg['message_hash'] for msg in messages_with_hash]
 
-            try:
-                # Try upsert with ignore_duplicates first (cleanest approach)
-                print(f"[WhatsAppParser] Inserting {len(messages_with_hash)} messages (duplicates ignored via ON CONFLICT)...")
+            # Query which hashes already exist - batch in chunks to avoid URL length limit
+            QUERY_CHUNK_SIZE = 200  # Safe limit for .in_() queries
+            existing_hashes = set()
 
-                # Upsert will ignore conflicts on the message_hash unique constraint
-                response = client.table("whatsapp_raw_messages")\
-                    .upsert(
-                        messages_with_hash,
-                        on_conflict="message_hash",
-                        ignore_duplicates=True
-                    )\
+            for i in range(0, len(batch_hashes), QUERY_CHUNK_SIZE):
+                chunk = batch_hashes[i:i + QUERY_CHUNK_SIZE]
+                existing_response = client.table("whatsapp_raw_messages")\
+                    .select("message_hash")\
+                    .in_("message_hash", chunk)\
                     .execute()
+                chunk_hashes = {r['message_hash'] for r in (existing_response.data or [])}
+                existing_hashes.update(chunk_hashes)
+                print(f"[WhatsAppParser] Checked chunk {i//QUERY_CHUNK_SIZE + 1}: {len(chunk_hashes)} duplicates found")
 
-                inserted_count = len(response.data) if response.data else 0
-                skipped_count = len(messages_with_hash) - inserted_count
+            # Identify duplicates BEFORE insert
+            duplicate_records = []
+            new_messages = []
+            for msg in messages_with_hash:
+                if msg['message_hash'] in existing_hashes:
+                    duplicate_records.append({
+                        "hash": msg['message_hash'],
+                        "sender": msg.get('sender_name'),
+                        "date": msg.get('message_date'),
+                        "text_preview": msg.get('message_text', '')[:100] + ('...' if len(msg.get('message_text', '')) > 100 else '')
+                    })
+                else:
+                    new_messages.append(msg)
 
-                print(f"[WhatsAppParser] ✓ Inserted {inserted_count} new messages, skipped {skipped_count} duplicates")
+            # Insert new messages in batches
+            INSERT_CHUNK_SIZE = 100  # Safe batch size for inserts
+            inserted_count = 0
 
-            except Exception as upsert_error:
-                error_str = str(upsert_error)
-                print(f"[WhatsAppParser] ⚠ Upsert failed: {error_str[:200]}")
+            for i in range(0, len(new_messages), INSERT_CHUNK_SIZE):
+                chunk = new_messages[i:i + INSERT_CHUNK_SIZE]
+                try:
+                    response = client.table("whatsapp_raw_messages").insert(chunk).execute()
+                    chunk_inserted = len(response.data) if response.data else 0
+                    inserted_count += chunk_inserted
+                    print(f"[WhatsAppParser] Inserted chunk {i//INSERT_CHUNK_SIZE + 1}: {chunk_inserted} messages")
+                except Exception as e:
+                    print(f"[WhatsAppParser] ⚠ Insert chunk failed: {str(e)[:100]}")
+                    # Continue with next chunk
 
-                # Fallback: Insert in chunks and catch duplicate key errors
-                print(f"[WhatsAppParser] Falling back to chunked insert with error handling...")
-
-                chunk_size = 100  # Smaller chunks to avoid URL length and handle errors gracefully
-                inserted_count = 0
-                skipped_count = 0
-
-                for i in range(0, len(messages_with_hash), chunk_size):
-                    chunk = messages_with_hash[i:i + chunk_size]
-                    chunk_num = i // chunk_size + 1
-                    total_chunks = (len(messages_with_hash) + chunk_size - 1) // chunk_size
-
-                    try:
-                        chunk_response = client.table("whatsapp_raw_messages").insert(chunk).execute()
-                        chunk_inserted = len(chunk_response.data) if chunk_response.data else 0
-                        inserted_count += chunk_inserted
-                        print(f"[WhatsAppParser] Chunk {chunk_num}/{total_chunks}: inserted {chunk_inserted} messages")
-
-                    except Exception as chunk_error:
-                        chunk_error_str = str(chunk_error)
-
-                        # Check if it's a duplicate key violation (SQLSTATE 23505)
-                        if "duplicate key" in chunk_error_str.lower() or "23505" in chunk_error_str:
-                            # All messages in this chunk are duplicates - skip it
-                            skipped_count += len(chunk)
-                            print(f"[WhatsAppParser] Chunk {chunk_num}/{total_chunks}: all {len(chunk)} duplicates, skipped")
-                        else:
-                            # Other error - log and re-raise
-                            print(f"[WhatsAppParser] ✗ Chunk {chunk_num} error: {chunk_error_str[:200]}")
-                            raise
-
-            print(f"[WhatsAppParser] Final: {inserted_count} inserted, {skipped_count} skipped")
+            print(f"[WhatsAppParser] Final: {inserted_count} inserted, {len(duplicate_records)} duplicates skipped")
 
             return {
                 "success": True,
                 "messages_inserted": inserted_count,
-                "messages_skipped": skipped_count,
-                "duplicate_pairs": [],  # No longer tracking individual pairs
-                "total_duplicates": skipped_count,
-                "message": f"Inserted {inserted_count} messages, skipped {skipped_count} duplicates (handled by ON CONFLICT)"
+                "messages_skipped": len(duplicate_records),
+                "duplicates": duplicate_records,
+                "message": f"Inserted {inserted_count} messages, skipped {len(duplicate_records)} duplicates"
             }
 
         except Exception as e:
@@ -398,8 +389,6 @@ class WhatsAppParserService:
                 "success": False,
                 "messages_inserted": 0,
                 "messages_skipped": 0,
-                "duplicate_pairs": [],
-                "total_duplicates": 0,
                 "message": f"Failed to insert messages: {str(e)}"
             }
 
