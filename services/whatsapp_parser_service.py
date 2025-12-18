@@ -326,12 +326,44 @@ class WhatsAppParserService:
                 messages_with_hash.append(msg_copy)
 
             client = SupabaseService._get_client()
-            print(f"[WhatsAppParser] ✓ Prepared {len(messages_with_hash)} messages with hashes")
+            print(f"\n{'='*80}")
+            print(f"[WhatsAppParser] STEP 1: PARSED MESSAGES")
+            print(f"{'='*80}")
+            print(f"Total messages parsed: {len(messages_with_hash)}")
 
-            # Get all hashes we're trying to insert
-            batch_hashes = [msg['message_hash'] for msg in messages_with_hash]
+            # STEP 1: Deduplicate within current batch (keep first occurrence only)
+            print(f"\n{'='*80}")
+            print(f"[WhatsAppParser] STEP 2: DEDUPLICATING WITHIN BATCH")
+            print(f"{'='*80}")
 
-            # Query which hashes already exist - batch in chunks to avoid URL length limit
+            seen_hashes_in_batch = set()
+            deduplicated_messages = []
+            batch_duplicates = []
+
+            for msg in messages_with_hash:
+                msg_hash = msg['message_hash']
+                if msg_hash in seen_hashes_in_batch:
+                    # Duplicate within batch
+                    batch_duplicates.append({
+                        "hash": msg_hash,
+                        "sender": msg.get('sender_name'),
+                        "date": msg.get('message_date'),
+                        "text_preview": msg.get('message_text', '')[:100] + ('...' if len(msg.get('message_text', '')) > 100 else ''),
+                        "reason": "duplicate_in_batch"
+                    })
+                else:
+                    seen_hashes_in_batch.add(msg_hash)
+                    deduplicated_messages.append(msg)
+
+            print(f"Unique messages in batch: {len(deduplicated_messages)}")
+            print(f"Duplicates within batch (removed): {len(batch_duplicates)}")
+
+            # STEP 2: Check which hashes already exist in database
+            print(f"\n{'='*80}")
+            print(f"[WhatsAppParser] STEP 3: CHECKING AGAINST DATABASE")
+            print(f"{'='*80}")
+
+            batch_hashes = [msg['message_hash'] for msg in deduplicated_messages]
             QUERY_CHUNK_SIZE = 200  # Safe limit for .in_() queries
             existing_hashes = set()
 
@@ -343,23 +375,38 @@ class WhatsAppParserService:
                     .execute()
                 chunk_hashes = {r['message_hash'] for r in (existing_response.data or [])}
                 existing_hashes.update(chunk_hashes)
-                print(f"[WhatsAppParser] Checked chunk {i//QUERY_CHUNK_SIZE + 1}: {len(chunk_hashes)} duplicates found")
+                print(f"  Checked chunk {i//QUERY_CHUNK_SIZE + 1}: {len(chunk_hashes)} unique hashes found in DB")
 
-            # Identify duplicates BEFORE insert
-            duplicate_records = []
+            print(f"Total unique hashes already in DB: {len(existing_hashes)}")
+
+            # STEP 3: Filter out messages that exist in database
+            print(f"\n{'='*80}")
+            print(f"[WhatsAppParser] STEP 4: FILTERING OUT DB DUPLICATES")
+            print(f"{'='*80}")
+
+            duplicate_records = batch_duplicates.copy()  # Start with batch duplicates
             new_messages = []
-            for msg in messages_with_hash:
+
+            for msg in deduplicated_messages:
                 if msg['message_hash'] in existing_hashes:
                     duplicate_records.append({
                         "hash": msg['message_hash'],
                         "sender": msg.get('sender_name'),
                         "date": msg.get('message_date'),
-                        "text_preview": msg.get('message_text', '')[:100] + ('...' if len(msg.get('message_text', '')) > 100 else '')
+                        "text_preview": msg.get('message_text', '')[:100] + ('...' if len(msg.get('message_text', '')) > 100 else ''),
+                        "reason": "exists_in_db"
                     })
                 else:
                     new_messages.append(msg)
 
+            print(f"Messages that already exist in DB: {len(existing_hashes)}")
+            print(f"New messages ready to insert: {len(new_messages)}")
+
             # Insert new messages in batches
+            print(f"\n{'='*80}")
+            print(f"[WhatsAppParser] STEP 5: INSERTING NEW MESSAGES")
+            print(f"{'='*80}")
+
             INSERT_CHUNK_SIZE = 100  # Safe batch size for inserts
             inserted_count = 0
 
@@ -369,12 +416,20 @@ class WhatsAppParserService:
                     response = client.table("whatsapp_raw_messages").insert(chunk).execute()
                     chunk_inserted = len(response.data) if response.data else 0
                     inserted_count += chunk_inserted
-                    print(f"[WhatsAppParser] Inserted chunk {i//INSERT_CHUNK_SIZE + 1}: {chunk_inserted} messages")
+                    print(f"  Chunk {i//INSERT_CHUNK_SIZE + 1}: ✓ Inserted {chunk_inserted} messages")
                 except Exception as e:
-                    print(f"[WhatsAppParser] ⚠ Insert chunk failed: {str(e)[:100]}")
+                    print(f"  Chunk {i//INSERT_CHUNK_SIZE + 1}: ✗ Failed - {str(e)[:100]}")
                     # Continue with next chunk
 
-            print(f"[WhatsAppParser] Final: {inserted_count} inserted, {len(duplicate_records)} duplicates skipped")
+            print(f"\n{'='*80}")
+            print(f"[WhatsAppParser] FINAL SUMMARY")
+            print(f"{'='*80}")
+            print(f"Total parsed:                {len(messages_with_hash)}")
+            print(f"Duplicates within batch:     {len(batch_duplicates)}")
+            print(f"Duplicates in database:      {len(existing_hashes)}")
+            print(f"Successfully inserted:       {inserted_count}")
+            print(f"Total duplicates skipped:    {len(duplicate_records)}")
+            print(f"{'='*80}\n")
 
             return {
                 "success": True,

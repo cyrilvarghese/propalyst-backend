@@ -7,7 +7,7 @@ Combines criteria extraction, property matching, and nearby locality finding.
 """
 
 import uuid
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from datetime import datetime
 
 from models.lead import CreateLeadResponse
@@ -37,7 +37,7 @@ class LeadService:
         return await LocalitiesService.find_nearby_localities(location, limit)
 
     @classmethod
-    async def create_lead(cls, query: str, name: str, contact_number: str) -> Dict[str, Any]:
+    async def create_lead(cls, query: str, name: Optional[str] = None, contact_number: Optional[str] = None) -> Dict[str, Any]:
         """
         Create a lead from natural language query.
 
@@ -52,13 +52,17 @@ class LeadService:
         Args:
             query: Natural language property search query
                    Example: "3BHK in Whitefield, budget 5 crores, possession in 6 months"
-            name: Name of the lead (person's name)
-            contact_number: Contact number of the lead
+            name: Name of the lead (person's name). Optional - defaults to "Unknown Lead"
+            contact_number: Contact number of the lead. Optional - defaults to "Not provided"
 
         Returns:
             Dict with success, data (CreateLeadResponse), message
         """
         try:
+            # Set defaults for optional fields
+            name = name or "Unknown Lead"
+            contact_number = contact_number or "Not provided"
+
             print(f"[LeadService] 📝 Creating lead from query...")
 
             # STEP 1: Extract criteria from natural language

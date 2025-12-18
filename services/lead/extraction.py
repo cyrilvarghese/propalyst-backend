@@ -142,6 +142,18 @@ class CriteriaExtractionService:
             proximity_prefs = ProximityPreferences(**criteria_dict["proximity"])
             user_journey = UserJourney(**criteria_dict["user_journey"])
 
+            # POST-PROCESSING: Apply deterministic defaults for consistency
+            # Fix 1: Always set req_type to 'demand_buy' if not extracted
+            if property_criteria.req_type is None:
+                property_criteria.req_type = "demand_buy"
+                print(f"[CriteriaExtraction] ⚙️  Defaulted req_type to 'demand_buy'")
+
+            # Fix 2: For single budget values, ensure both min and max are set
+            # "budget 5 crores" should apply ±20% range (4-6 crores)
+            if property_criteria.budget_max is not None and property_criteria.budget_min is None:
+                property_criteria.budget_min = property_criteria.budget_max
+                print(f"[CriteriaExtraction] ⚙️  Set budget_min = budget_max ({property_criteria.budget_max}cr) for ±20% range")
+
             criteria = DetailedCriteria(
                 property=property_criteria,
                 proximity=proximity_prefs,

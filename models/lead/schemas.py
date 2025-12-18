@@ -214,16 +214,16 @@ class CreateLeadRequest(BaseModel):
         examples=["3BHK in Whitefield, budget 5 crores, possession in 6 months"]
     )
 
-    name: str = Field(
-        ...,
+    name: Optional[str] = Field(
+        None,
         min_length=1,
-        description="Name of the lead (person's name)"
+        description="Name of the lead (person's name). Optional - defaults to 'Unknown Lead'"
     )
 
-    contact_number: str = Field(
-        ...,
+    contact_number: Optional[str] = Field(
+        None,
         min_length=10,
-        description="Contact number of the lead"
+        description="Contact number of the lead. Optional - defaults to 'Not provided'"
     )
 
 
