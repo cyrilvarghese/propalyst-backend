@@ -26,7 +26,8 @@ router = APIRouter(
 @router.post("/upload-file")
 async def upload_file(
     file: UploadFile = File(..., description="WhatsApp chat export text file"),
-    date_format_preference: str = Form("DD/MM/YY", description="Date format: DD/MM/YY (default, most common) or MM/DD/YY (US format)")
+    date_format_preference: str = Form("DD/MM/YY", description="Date format: DD/MM/YY (default, most common) or MM/DD/YY (US format)"),
+    cutoff_days_from_ui: int = Form(3, description="Number of days to look back for messages (default: 3 days)")
 ):
     """
     STAGE 1: Upload WhatsApp file and parse into raw messages (NO LLM processing)
@@ -43,6 +44,7 @@ async def upload_file(
     **Parameters**:
     - `file`: WhatsApp chat export .txt file
     - `date_format_preference`: Date format in export (default: DD/MM/YY for most countries, use MM/DD/YY for US exports)
+    - `cutoff_days_from_ui`: Number of days to look back for messages (default: 3)
 
     **Benefits**:
     - Fast upload (no LLM calls)
@@ -85,6 +87,16 @@ async def upload_file(
 
         print(f"[WhatsAppRaw] Parsed {len(messages)} messages from file (format: {detected_format.value})")
 
+        # Filter messages by cutoff date (days from now)
+        cutoff_date = datetime.now() - timedelta(days=cutoff_days_from_ui)
+
+        messages_before_cutoff = len(messages)
+        # Filter by cutoff date - message_date was already parsed using date_format_preference
+        messages = [msg for msg in messages if msg.get('message_date') and msg['message_date'] >= cutoff_date]
+        messages_filtered_out = messages_before_cutoff - len(messages)
+
+        print(f"[WhatsAppRaw] Filtered messages: {messages_filtered_out} removed (last {cutoff_days_from_ui} days), {len(messages)} remaining (date_format: {date_format_preference})")
+
         # Insert into raw messages table (with deduplication)
         insert_result = await WhatsAppParserService.insert_raw_messages(messages)
 
@@ -96,12 +108,15 @@ async def upload_file(
 
         return {
             "success": True,
-            "messages_parsed": len(messages),
+            "messages_parsed": messages_before_cutoff,
+            "messages_filtered": messages_filtered_out,
+            "cutoff_days": cutoff_days_from_ui,
+            "cutoff_date": cutoff_date.date().isoformat(),
             "messages_inserted": insert_result['messages_inserted'],
             "messages_skipped": insert_result['messages_skipped'],
             "duplicates": insert_result.get('duplicates', []),
             "ready_for_llm": ready_for_llm_count,
-            "message": f"Upload complete! {insert_result['messages_inserted']} new messages inserted, {insert_result['messages_skipped']} duplicates found. {ready_for_llm_count} messages ready for LLM processing (last 4 months)."
+            "message": f"Upload complete! {messages_filtered_out} messages filtered out (last {cutoff_days_from_ui} days). {insert_result['messages_inserted']} new messages inserted, {insert_result['messages_skipped']} duplicates found. {ready_for_llm_count} messages ready for LLM processing (last 4 months)."
         }
 
     except Exception as e:
