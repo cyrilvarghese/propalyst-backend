@@ -21,6 +21,10 @@ Endpoints:
 - POST /api/propalyst/summary Propalyst summary (via propalyst_router)
 - POST /api/propalyst/areas   Propalyst areas (via propalyst_router)
 - POST /api/property-search    Property search (via search_router)
+- POST /api/broker_agent/sessions   Real estate agent (via broker_agent_router)
+- GET  /api/broker_agent/sessions/{id}   Get question (via broker_agent_router)
+- POST /api/broker_agent/sessions/{id}/answer   Submit answer (via broker_agent_router)
+- GET  /api/broker_agent/sessions/{id}/summary   Get summary (via broker_agent_router)
 
 Run with:
 ---------
@@ -44,6 +48,9 @@ from routers.whatsapp_listings_router import router as whatsapp_listings_router
 from routers.whatsapp_stats_router import router as whatsapp_stats_router
 from routers.matching_supply_router import router as matching_supply_router
 from routers.distributions import router as distributions_router
+
+# Import broker agent router
+from broker_agent import router as broker_agent_router
 
 # Load environment variables from .env file
 load_dotenv()
@@ -97,6 +104,7 @@ app.include_router(whatsapp_stats_router)
 app.include_router(matching_supply_router)
 app.include_router(lead_router)
 app.include_router(distributions_router)
+app.include_router(broker_agent_router)  # Real Estate Agent endpoints
 
 # ============================================================================
 # HEALTH CHECK ENDPOINTS
@@ -125,7 +133,8 @@ async def root():
         "projects": {
             "project_1": "Dynamic UI Generator (one-shot)",
             "project_2": "Propalyst Q&A (multi-step conversations)",
-            "project_3": "Property Search (Gemini grounding)"
+            "project_3": "Property Search (Gemini grounding)",
+            "real_estate_agent": "Real Estate Agent (LangChain conversational agent)"
         },
         "docs": "/docs",
         "endpoints": {
@@ -142,6 +151,12 @@ async def root():
             },
             "project_3": {
                 "property_search": "/api/property-search"
+            },
+            "real_estate_agent": {
+                "create_session": "POST /api/broker_agent/sessions",
+                "get_question": "GET /api/broker_agent/sessions/{session_id}",
+                "submit_answer": "POST /api/broker_agent/sessions/{session_id}/answer",
+                "get_summary": "GET /api/broker_agent/sessions/{session_id}/summary"
             }
         }
     }
