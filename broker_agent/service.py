@@ -16,10 +16,11 @@ import logging
 import json
 from pathlib import Path
 
-from langchain_google_genai import ChatGoogleGenerativeAI
+import google.generativeai as genai
 
 from .state import RealEstateAgentState, create_real_estate_state
 from .graph import create_real_estate_agent_graph
+from .utils import clean_llm_response
 
 logger = logging.getLogger(__name__)
 
@@ -438,7 +439,12 @@ class RealEstateAgentService:
             >>> print(qid)     # "req_type"
         """
         try:
-            llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.3)
+            model = genai.GenerativeModel(
+                model_name="gemini-2.5-flash",
+                generation_config=genai.types.GenerationConfig(
+                    temperature=0.3,
+                ),
+            )
 
             # Build conversation context from state
             conversation_context = cls._build_nlp_context(context)
@@ -453,8 +459,9 @@ class RealEstateAgentService:
                 user_text=user_text,
             )
 
-            response = await llm.ainvoke(prompt)
-            parsed_data = json.loads(response.content.strip())
+            response = await model.generate_content_async(prompt)
+            cleaned_response = clean_llm_response(response.text, format_type="json")
+            parsed_data = json.loads(cleaned_response)
 
             answer = parsed_data.get("answer")
             inferred_question_id = parsed_data.get("question_id") or question_id

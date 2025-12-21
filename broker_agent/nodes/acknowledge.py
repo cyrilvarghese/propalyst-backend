@@ -12,11 +12,12 @@ This node:
 """
 
 from typing import Dict, Any, Optional
-from langchain_google_genai import ChatGoogleGenerativeAI
+import google.generativeai as genai
 from pathlib import Path
 import logging
 
 from ..state import RealEstateAgentState
+from ..utils import clean_llm_response
 
 logger = logging.getLogger(__name__)
 
@@ -48,12 +49,13 @@ class AcknowledgmentPromptLoader:
 # LLM INITIALIZATION
 # ============================================================================
 
-def _get_llm():
-    """Get or create ChatGoogleGenerativeAI instance for acknowledgments"""
-    return ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
-        temperature=0.7,
-        timeout=10,
+def _get_model():
+    """Get or create Gemini model instance for acknowledgments"""
+    return genai.GenerativeModel(
+        model_name="gemini-2.5-flash-lite-preview-09-2025",
+        generation_config=genai.types.GenerationConfig(
+            temperature=0.7,
+        ),
     )
 
 
@@ -219,9 +221,9 @@ async def generate_acknowledgment(state: RealEstateAgentState) -> RealEstateAgen
         )
 
         # Call LLM to generate acknowledgment
-        llm = _get_llm()
-        response = await llm.ainvoke(prompt)
-        acknowledgment_text = response.content.strip()
+        model = _get_model()
+        response = await model.generate_content_async(prompt)
+        acknowledgment_text = clean_llm_response(response.text, format_type="text")
 
         print(f"   ✅ Generated: {acknowledgment_text[:80]}...")
 

@@ -178,6 +178,78 @@ async def create_data(request: DataRequest):
 
 ---
 
+## LLM Response Utilities
+
+**Always use utility functions for cleaning LLM responses**
+
+LLMs often wrap responses in markdown code blocks. Create utility functions to handle this consistently across all LLM calls.
+
+### Pattern
+
+```python
+# utils/llm_utils.py
+import re
+
+def clean_llm_response(response_text: str, format_type: str = "json") -> str:
+    """
+    Clean LLM response by removing markdown code blocks.
+
+    Args:
+        response_text: Raw response from LLM
+        format_type: Type of content ('json', 'text', etc.)
+
+    Returns:
+        Cleaned response text
+
+    Examples:
+        >>> clean_llm_response('```json\\n{"answer": "buy"}\\n```')
+        '{"answer": "buy"}'
+
+        >>> clean_llm_response('```\\nSome text\\n```', 'text')
+        'Some text'
+    """
+    text = response_text.strip()
+
+    # Remove markdown code blocks if present
+    if text.startswith("```"):
+        # Remove opening backticks and language identifier
+        text = re.sub(r'^```(?:json|text|markdown)?\n?', '', text)
+        # Remove closing backticks
+        text = re.sub(r'\n?```$', '', text)
+        text = text.strip()
+
+    return text
+```
+
+### Usage in Services
+
+```python
+# service.py
+from utils.llm_utils import clean_llm_response
+import json
+
+async def parse_with_llm(self, prompt: str):
+    model = genai.GenerativeModel(model_name="gemini-2.5-flash")
+    response = await model.generate_content_async(prompt)
+
+    # Clean response
+    cleaned_text = clean_llm_response(response.text, format_type="json")
+
+    # Parse JSON
+    parsed_data = json.loads(cleaned_text)
+    return parsed_data
+```
+
+### Benefits
+
+- Single source of truth for response cleaning logic
+- Reusable across all LLM calls (acknowledgments, NLP parsing, etc.)
+- Easy to maintain and update
+- Consistent behavior across the codebase
+- Handles multiple markdown formats
+
+---
+
 ## Naming Conventions
 
 **Files:**

@@ -7,7 +7,7 @@ LATEST ANSWER:
 The client just said: {formatted_answer}
 
 YOUR TASK:
-Generate a natural, warm acknowledgment (1-2 sentences) that:
+Generate a natural, warm acknowledgment (1 sentence) that:
 1. Acknowledges what they just said naturally (don't repeat back exactly)
 2. Shows you understand and validates their choice
 3. Smoothly transitions the conversation forward
@@ -15,7 +15,7 @@ Generate a natural, warm acknowledgment (1-2 sentences) that:
 
 IMPORTANT GUIDELINES:
 - Be conversational and warm, not formal or corporate
-- Keep it brief (max 2 sentences)
+- Keep it brief (max 1 sentence)
 - Don't start with "Thank you" or "Great!" - be more natural
 - Consider what came before to make smart connections
 - Subtly move toward the next question but don't ask it yet

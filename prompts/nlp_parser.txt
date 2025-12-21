@@ -1,4 +1,4 @@
-You are parsing natural language input from a real estate agent conversation.
+You are parsing natural language input from a real estate agent conversation about buying or renting properties.
 
 CONVERSATION CONTEXT:
 {conversation_context}
@@ -6,25 +6,27 @@ CONVERSATION CONTEXT:
 CURRENT QUESTION: {current_question}
 USER INPUT: "{user_text}"
 
+IMPORTANT: Be tolerant of typos, abbreviations, and colloquial language. Users may misspell locations, use shorthand (e.g., "1Cr" for "1 crore"), or use informal speech patterns. Try to infer the correct meaning from context.
+
 Parse the user's input and extract the answer. Return a JSON object with:
 1. "answer" - The parsed answer in the appropriate format
 2. "question_id" - The question ID this answers
-3. "confidence" - Confidence 0-1 that this is correct
+3. "confidence" - Confidence 0-1 that this is correct (lower if typos/unclear)
 
 FORMAT GUIDELINES:
 - req_type: Return "buy" or "sell" (single string)
 - proximity_location: Return location name or address (string)
-- budget: Return [min, max] in crores (array of 2 numbers)
-- property_area: Return [min, max] in sq ft (array of 2 numbers)
+- budget: Return [min, max] in crores (array of 2 numbers). If one number is mentioned, add +20% for range
+- property_area: Return [min, max] in sq ft (array of 2 numbers). If one number is mentioned, add +20% for range
 - property_type: Return property type (apartment, house, villa, penthouse, townhouse)
-- special_requests: Return list of features (array of strings like "gym", "pool", "parking")
+- special_requests: Return list of features/requirements (array of strings like "gym", "pool", "parking", "furnished", "study-room", etc.)
 
 EXAMPLES:
-"I want to buy" → {"answer": "buy", "question_id": "req_type", "confidence": 0.95}
-"Near Delhi" → {"answer": "Delhi", "question_id": "proximity_location", "confidence": 0.8}
-"Budget 1 to 2 crore" → {"answer": [1.0, 2.0], "question_id": "budget", "confidence": 0.9}
-"2000 to 3000 square feet" → {"answer": [2000, 3000], "question_id": "property_area", "confidence": 0.85}
-"Apartment with gym" → {"answer": "apartment", "question_id": "property_type", "confidence": 0.8}
-"I need gym, pool and parking" → {"answer": ["gym", "pool", "parking"], "question_id": "special_requests", "confidence": 0.9}
+"I want to buy" → {{"answer": "buy", "question_id": "req_type", "confidence": 0.95}}
+"Near Delhi" → {{"answer": "Delhi", "question_id": "proximity_location", "confidence": 0.8}}
+"Budget 1 to 2 crore" → {{"answer": [1.0, 2.0], "question_id": "budget", "confidence": 0.9}}
+"2000 to 3000 square feet" → {{"answer": [2000, 3000], "question_id": "property_area", "confidence": 0.85}}
+"Apartment with gym" → {{"answer": "apartment", "question_id": "property_type", "confidence": 0.8}}
+"I need gym, pool and parking" → {{"answer": ["gym", "pool", "parking"], "question_id": "special_requests", "confidence": 0.9}}
 
 Return ONLY valid JSON, nothing else.
