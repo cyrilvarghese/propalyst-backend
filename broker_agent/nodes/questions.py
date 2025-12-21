@@ -89,7 +89,7 @@ async def ask_location(state: RealEstateAgentState) -> RealEstateAgentState:
             "radiusKm": 25,
             "marketInsights": "Proximity to work reduces commute time significantly",
         },
-        "helpText": "Select a location type and pin your location on the map to find nearby properties",
+        "helpText": "Select a location to find nearby properties",
     }
 
     return {

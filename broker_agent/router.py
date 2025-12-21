@@ -7,7 +7,8 @@ FastAPI routes for the real estate agent conversation.
 Endpoints:
 - POST /api/broker_agent/sessions - Create new session
 - GET /api/broker_agent/sessions/{session_id} - Get session state
-- POST /api/broker_agent/sessions/{session_id}/answer - Submit answer to question
+- POST /api/broker_agent/sessions/{session_id}/answer - Submit answer (structured or chat, via type flag)
+- GET /api/broker_agent/sessions/{session_id}/summary - Get user preference summary
 """
 
 from fastapi import APIRouter, HTTPException
@@ -40,9 +41,13 @@ class CreateSessionResponse(BaseModel):
 
 class SubmitAnswerRequest(BaseModel):
     """Request to submit an answer to a question"""
-    answer: Any = Field(..., description="The user's answer")
+    answer: Any = Field(..., description="The user's answer or natural language text")
     question_id: Optional[str] = Field(
-        None, description="ID of the question being answered"
+        None, description="ID of the question being answered (required for structured type)"
+    )
+    type: str = Field(
+        default="structured",
+        description="Type of input: 'structured' (UI controls) or 'chat' (natural language)"
     )
 
 
@@ -55,6 +60,12 @@ class ConversationResponse(BaseModel):
     message: str = Field(..., description="Conversational message")
     acknowledgment: Optional[str] = Field(
         None, description="LLM-generated acknowledgment for the last answer"
+    )
+    processed_answer: Optional[Any] = Field(
+        None, description="The answer that was just processed (for UI update)"
+    )
+    processed_question_id: Optional[str] = Field(
+        None, description="Which question was answered (for UI update)"
     )
     completed: bool = Field(False, description="Whether conversation is complete")
     user_summary: Dict[str, Any] = Field(
@@ -186,37 +197,55 @@ async def submit_answer(
     """
     Submit an answer to the current question.
 
+    Supports two types of input:
+    1. **Structured** (UI controls): Pre-structured data with question_id
+    2. **Chat** (Natural language): Free-form text that LLM parses
+
     Updates the conversation state with the user's answer
     and returns the next question to ask.
 
     Args:
         session_id (str): Session identifier
-        request (SubmitAnswerRequest): User's answer and question ID
+        request (SubmitAnswerRequest): User's answer, question ID, and input type
 
     Returns:
         ConversationResponse: Updated conversation state with next question
 
-    Example:
+    Examples:
+        **Structured Input (from UI controls):**
         ```
-        POST /api/broker_agent/sessions/550e8400-e29b-41d4-a716-446655440000/answer
+        POST /api/broker_agent/sessions/{id}/answer
         {
             "answer": "buy",
-            "question_id": "transaction_type"
+            "question_id": "req_type",
+            "type": "structured"
         }
+        ```
 
+        **Chat Input (natural language):**
+        ```
+        POST /api/broker_agent/sessions/{id}/answer
+        {
+            "answer": "I want to buy a property near Delhi",
+            "type": "chat"
+        }
+        ```
+
+        **Response (same for both):**
+        ```
         {
             "session_id": "550e8400-e29b-41d4-a716-446655440000",
             "current_question": {
-                "id": "location",
+                "id": "proximity_location",
                 "question": "Which area or locality are you interested in?",
                 ...
             },
             "message": "Which area or locality are you interested in?",
+            "acknowledgment": "Looking to buy? That's great...",
+            "processed_answer": "Delhi",
+            "processed_question_id": "proximity_location",
             "completed": false,
-            "user_summary": {
-                "transaction_type": "buy",
-                ...
-            },
+            "user_summary": {...},
             "messages": [...]
         }
         ```
@@ -227,10 +256,17 @@ async def submit_answer(
 
         state = _sessions[session_id]
 
-        # Process user input
-        state = await RealEstateAgentService.process_user_input(
-            state, request.answer, request.question_id
-        )
+        # Route based on input type
+        if request.type == "chat":
+            # Natural language input - LLM will parse
+            state = await RealEstateAgentService.process_chat_input(
+                state, request.answer
+            )
+        else:
+            # Structured input - direct processing
+            state = await RealEstateAgentService.process_user_input(
+                state, request.answer, request.question_id
+            )
 
         # Update session
         _sessions[session_id] = state
@@ -242,6 +278,8 @@ async def submit_answer(
             current_question=state.get("current_question"),
             message=state.get("conversational_message", ""),
             acknowledgment=state.get("last_response_text"),
+            processed_answer=state.get("last_processed_answer"),
+            processed_question_id=state.get("last_processed_question_id"),
             completed=state.get("completed", False),
             user_summary=user_summary,
             messages=state.get("messages", []),

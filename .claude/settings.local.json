@@ -23,7 +23,8 @@
       "Bash(rm:*)",
       "Bash(python:*)",
       "Bash(cat:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nUpdate Gemini model to 2.5-flash across LLM calls\n\n- Updated acknowledge.py _get_llm() to use gemini-2.5-flash\n- Updated service.py parse_natural_language_input() to use gemini-2.5-flash\n- Ensures consistent LLM model version across all acknowledgment and NLP parsing operations\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ]
   },
   "enableAllProjectMcpServers": true,

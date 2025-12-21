@@ -12,7 +12,7 @@ This node:
 """
 
 from typing import Dict, Any, Optional
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from pathlib import Path
 import logging
 
@@ -49,9 +49,9 @@ class AcknowledgmentPromptLoader:
 # ============================================================================
 
 def _get_llm():
-    """Get or create ChatOpenAI instance for acknowledgments"""
-    return ChatOpenAI(
-        model="gpt-4o-mini",
+    """Get or create ChatGoogleGenerativeAI instance for acknowledgments"""
+    return ChatGoogleGenerativeAI(
+        model="gemini-2.5-flash",
         temperature=0.7,
         timeout=10,
     )

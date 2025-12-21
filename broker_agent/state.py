@@ -171,6 +171,10 @@ class RealEstateAgentState(TypedDict):
     pending_question_id: Optional[str]
     last_response_text: Optional[str]
 
+    # Last Processed (for API response)
+    last_processed_answer: Optional[Any]
+    last_processed_question_id: Optional[str]
+
 
 # ============================================================================
 # HELPER FUNCTIONS
@@ -213,6 +217,8 @@ def create_real_estate_state(session_id: str) -> RealEstateAgentState:
         pending_answer=None,
         pending_question_id=None,
         last_response_text=None,
+        last_processed_answer=None,
+        last_processed_question_id=None,
     )
 
 
