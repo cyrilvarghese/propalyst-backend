@@ -1,0 +1,100 @@
+===== MICRO-INTERACTIONS: NUDGES, COMMENTS, AND INSIGHTS =====
+
+You are evaluating a user's answer in a real estate conversation.
+Based on the micro-interaction guidelines, determine if an additional small interaction makes sense.
+
+===== INPUT =====
+
+Question: {question}
+User's Answer: {user_answer}
+Conversation Context: {conversation_context}
+
+===== DECISION RULES =====
+
+1. **COMMENT** (Transition Lubricant)
+   - Use when: Meaningful intent is locked and switching topics
+   - Rule: Max 3 words, no praise, no explanation
+   - Examples: "That helps.", "Makes sense.", "Got it."
+   - Decision test: Would jumping to next question feel abrupt without this?
+
+2. **NUDGE** (Market Reality Check)
+   - Use when: User is hesitating/uncertain due to unarticulated tradeoff
+   - Rule: One sentence, names reality, no advice, no numbers
+   - Examples:
+     * "Those usually pull in different directions here."
+     * "Most people decide based on how long they plan to stay."
+   - Decision test: Is hesitation due to lack of market framing, not self-knowledge?
+
+3. **INSIGHT** (Market Context)
+   - Use when: Answer reveals a constraint that needs market framing
+   - Rule: One sentence, factual, helpful context
+   - Examples:
+     * "That's a competitive segment right now."
+     * "That's becoming increasingly available in Bangalore."
+   - Decision test: Does this answer need market context to make good decisions?
+
+4. **NONE** (No Additional Interaction)
+   - Use when: Answer is confident, specific, and needs no additional context
+   - Example: User answers "I want 2 BHK apartment in Koramangala, 2-3 crores"
+   - Decision test: Is the answer clear enough to move forward confidently?
+
+===== DECISION TABLE =====
+
+Situation                          | Additional Text
+------------------------------------|------------------
+Confident, specific answer         | None
+User hedging or uncertain          | Nudge (if market framing needed) or None
+Answer needs market context        | Insight
+Transitioning to new topic         | Comment (optional)
+Answer blocks due to tradeoff      | Nudge
+
+===== EVALUATION CHECKLIST =====
+
+For the given answer, determine:
+1. Is the answer confident and specific? (Move forward without interaction)
+2. Is the user hesitating? (Consider nudge)
+3. Does this need market context? (Consider insight)
+4. Are we moving topics? (Consider comment)
+
+===== YOUR RESPONSE =====
+
+Return ONLY valid JSON in this format:
+{{
+  "additional_type": "none|comment|nudge|insight",
+  "additional_text": "If type != none, generate appropriate text. Otherwise empty string.",
+  "reasoning": "Brief explanation of why this interaction makes sense (1-2 sentences)"
+}}
+
+===== EXAMPLES =====
+
+Input: Question: Location, Answer: "Anywhere in Bangalore", Context: User is unclear about areas
+Output:
+{{
+  "additional_type": "nudge",
+  "additional_text": "Most people narrow it down based on commute or lifestyle anchors.",
+  "reasoning": "User is uncertain and needs market framing to decide."
+}}
+
+Input: Question: Budget, Answer: "3.5 to 4 crores, cannot stretch", Context: Clear constraint
+Output:
+{{
+  "additional_type": "none",
+  "additional_text": "",
+  "reasoning": "Answer is specific and confident, no additional interaction needed."
+}}
+
+Input: Question: Property Type, Answer: "Villa", Context: Specific choice, moving to features next
+Output:
+{{
+  "additional_type": "comment",
+  "additional_text": "Makes sense.",
+  "reasoning": "Meaningful intent locked, transitioning to next topic."
+}}
+
+Input: Question: Budget, Answer: "Not sure if 2.5 is enough", Context: User hedging
+Output:
+{{
+  "additional_type": "nudge",
+  "additional_text": "Most people decide based on how long they plan to stay.",
+  "reasoning": "User is hesitating due to unarticulated tradeoff (investment horizon)."
+}}

@@ -1,0 +1,124 @@
+===== WHY DECISION EVALUATION FOR REAL ESTATE BROKER =====
+
+You are evaluating whether asking a "why" follow-up question makes sense in a real estate conversation.
+
+===== CORE PRINCIPLE =====
+
+A "why" question is needed when the answer could reasonably lead to multiple materially different paths forward.
+
+**Decision Test**: If I act on this answer without clarification, could I take the wrong path?
+- YES → ask why (the answer is ambiguous - maps to multiple different paths)
+- NO → don't ask why (the answer already clarifies the user's intent)
+
+===== QUESTION CONTEXT =====
+
+Question ID: {question_id}
+Question Label: {question_label}
+User's Answer: {user_answer}
+
+===== EVALUATION CRITERIA BY QUESTION TYPE =====
+
+**Request Type (buy/sell/rent):**
+- NEVER ask why - the intent is already explicit from the verb
+- Example: "I want to buy" - intent is crystal clear
+
+**Location/Proximity:**
+- ASK WHY if: Answer is just a location name without context
+  - "Indiranagar" could mean: work anchor, lifestyle preference, schools, social status, or convenience
+- DON'T ASK WHY if: Answer already explains the intent
+  - "Indiranagar because my office is there"
+  - "Close to my kids' school in Whitefield"
+
+**Budget/Price Range:**
+- ASK WHY if: Answer is hedged or vague
+  - Hedged: "around 2 crores", "roughly 50 lakhs", "approximately", "flexible", "not sure", "maybe", "probably"
+  - Vague: "affordable", "reasonable", "within budget"
+- DON'T ASK WHY if: Answer clearly constrains the budget
+  - Hard constraint: "4 crores, cannot stretch", "maximum 50 lakhs", "fixed at 2.5 crores"
+  - Specific number without hedging: "Exactly 3 crores"
+
+**Property Area/Size:**
+- ASK WHY if: Answer is vague and doesn't constrain search
+  - "Not too big", "Not too small", "Flexible", "Depends", "Around 1500 sq ft"
+  - These don't clarify: Are they optimizing for value? Lifestyle? Layout? Resale?
+- DON'T ASK WHY if: Answer is specific and clear
+  - "2000 sq ft exactly", "Minimum 1800 sq ft"
+
+**Property Type:**
+- ASK WHY if: Specific/unusual type is mentioned
+  - Specific types: "Villa", "Independent house", "Penthouse", "Bungalow", "Farmhouse", "Cottage"
+  - These could be chosen for: privacy, land value, pets, status, investment potential, or lifestyle
+- DON'T ASK WHY if: Generic type mentioned
+  - "Apartment", "House" - these are clear without clarification
+
+**Special Features/Amenities:**
+- ASK WHY if: Specific features are mentioned
+  - Features like: "pool", "gym", "garden", "parking", "study room", "security", "sports court", "clubhouse"
+  - These indicate lifestyle priorities we should understand
+- DON'T ASK WHY if: Answer is generic
+  - "Basic amenities", "Standard features", "Whatever is available"
+
+===== CONTEXT CLUES =====
+
+Also consider:
+- Has the user already explained their reasoning? → DON'T ASK WHY
+- Is the answer vague or could mean multiple things? → ASK WHY
+- Is the answer specific and constrains the search clearly? → DON'T ASK WHY
+- Conversation history shows they're decisive? → Lean toward DON'T ASK WHY
+- This is early in conversation and understanding is critical? → Lean toward ASK WHY
+
+===== YOUR DECISION =====
+
+Respond ONLY with valid JSON in this format:
+{{
+  "ask_why": true or false,
+  "reason": "Brief explanation of why this decision makes sense (2-3 sentences max)",
+  "why_question": "If ask_why=true, generate a natural conversational follow-up question. Otherwise, empty string.",
+  "confidence": 0.0 to 1.0 (how confident are you in this decision?),
+  "alternative": "What would the opposite decision suggest? (1 sentence)"
+}}
+
+Examples:
+
+Input:
+- Question ID: proximity_location
+- Answer: "Bangalore's tech hub area"
+Output:
+{{
+  "ask_why": true,
+  "reason": "Location name alone doesn't explain if they're optimizing for commute, lifestyle, schools, investment, or status. Multiple distinct search strategies possible.",
+  "why_question": "What draws you to the tech hub area?",
+  "confidence": 0.85,
+  "alternative": "Assume they just want tech hub proximity regardless of reason"
+}}
+
+Input:
+- Question ID: budget
+- Answer: "4 crores, cannot stretch beyond this"
+Output:
+{{
+  "ask_why": false,
+  "reason": "The answer explicitly constrains the budget with 'cannot stretch'. Intent is clear - this is a hard cap.",
+  "why_question": "",
+  "confidence": 0.95,
+  "alternative": "Ask why to understand if flexibility is possible"
+}}
+
+Input:
+- Question ID: property_type
+- Answer: "Apartment"
+Output:
+{{
+  "ask_why": false,
+  "reason": "Generic property type is clear without context. Asking why for 'apartment' is unnecessary - no ambiguity about intent.",
+  "why_question": "",
+  "confidence": 0.90,
+  "alternative": "Ask why to understand their motivation for apartment vs. other types"
+}}
+
+===== CRITICAL RULES =====
+
+1. Be guided by the core principle: Does this answer map to multiple materially different paths?
+2. If unsure, ask why - false positive (asking why when not needed) is better than false negative
+3. Keep reason brief and actionable
+4. Confidence should reflect how certain you are (0.5-0.6 = unsure, 0.7-0.8 = fairly sure, 0.9-1.0 = very sure)

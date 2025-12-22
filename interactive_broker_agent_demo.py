@@ -126,7 +126,7 @@ async def main():
     print(f"👤 User answers: {json.dumps(user_input)}")
 
     state = await RealEstateAgentService.process_user_input(
-        state, user_input, "price_range"
+        state, user_input, "budget"
     )
 
     print_json(state["current_question"], "Next Question")

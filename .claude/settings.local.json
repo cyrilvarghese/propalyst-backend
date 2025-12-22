@@ -1,31 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(test:*)",
-      "Bash(python providers/scrapers/generate_squareyards_schema.py:*)",
-      "Bash(python -m uvicorn:*)",
-      "Bash(curl:*)",
-      "Bash(timeout /t 3)",
-      "Bash(nul)",
-      "Bash(playwright install:*)",
-      "Bash(chmod:*)",
-      "Bash(python split_chat_file.py:*)",
-      "Bash(python migrate_cache_schema.py:*)",
-      "Bash(__NEW_LINE__ python -m py_compile )",
-      "Bash(services/property_scraping_service.py )",
-      "Bash(services/relevance_scoring_service.py )",
-      "Bash(providers/scrapers/squareyards/squareyards_scraper.py )",
-      "Bash(providers/scrapers/magicbricks/magicbricks_scraper.py )",
-      "Bash(routers/scraping_router.py)",
-      "Bash(docker build:*)",
-      "Bash(git add:*)",
-      "Bash(python -m py_compile:*)",
-      "Bash(rm:*)",
-      "Bash(python:*)",
-      "Bash(cat:*)",
       "Bash(python3:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nUpdate Gemini model to 2.5-flash across LLM calls\n\n- Updated acknowledge.py _get_llm() to use gemini-2.5-flash\n- Updated service.py parse_natural_language_input() to use gemini-2.5-flash\n- Ensures consistent LLM model version across all acknowledgment and NLP parsing operations\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
-    ]
+      "Bash(python -m py_compile:*)",
+      "Bash(python -c:*)",
+      "Bash(python -m ast:*)"
+    ],
+    "deny": [],
+    "ask": []
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [

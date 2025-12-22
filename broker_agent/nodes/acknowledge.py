@@ -15,6 +15,7 @@ from typing import Dict, Any, Optional
 import google.generativeai as genai
 from pathlib import Path
 import logging
+import json
 
 from ..state import RealEstateAgentState
 from ..utils import clean_llm_response
@@ -29,7 +30,8 @@ logger = logging.getLogger(__name__)
 class AcknowledgmentPromptLoader:
     """Loads and caches the acknowledgment prompt template"""
 
-    PROMPT_FILE = Path(__file__).parent.parent.parent / "prompts" / "acknowledgment.txt"
+    # UPDATED: Using v2 prompt with broker persona
+    PROMPT_FILE = Path(__file__).parent.parent.parent / "prompts" / "broker_acknowledgment_v2.txt"
     _cache: Optional[str] = None
 
     @classmethod
@@ -41,7 +43,14 @@ class AcknowledgmentPromptLoader:
                     cls._cache = f.read()
             except FileNotFoundError:
                 logger.error(f"Prompt file not found: {cls.PROMPT_FILE}")
-                raise
+                # Fallback to old prompt if v2 not found
+                try:
+                    fallback_path = Path(__file__).parent.parent.parent / "prompts" / "acknowledgment.txt"
+                    with open(fallback_path, "r") as f:
+                        cls._cache = f.read()
+                        logger.warning("Using fallback acknowledgment.txt prompt")
+                except FileNotFoundError:
+                    raise
         return cls._cache
 
 
@@ -86,74 +95,143 @@ def _format_answer_display(question_id: str, answer: Any) -> str:
     return str(answer)
 
 
+def get_question_id_to_state_key_mapping() -> Dict[str, str]:
+    """
+    Map question IDs (from questions.py) to state field names.
+
+    Question IDs are what appears in current_question["id"].
+    State keys are the fields stored in RealEstateAgentState.
+
+    Returns:
+        Dict mapping question IDs to state keys
+    """
+    return {
+        "req_type": "req_type",
+        "proximity_location": "proximity_location",
+        "budget": "price_min/price_max",  # Special: stores two fields
+        "property_area": "area_min/area_max",  # Special: stores two fields
+        "property_type": "property_type",
+        "special_requests": "special_features",
+    }
+
+
+def build_conversation_context(state: Optional[Dict[str, Any]]) -> str:
+    """
+    Build a formatted conversation context string from state.
+
+    Formats all answered questions in a human-readable way for LLM prompts.
+
+    Args:
+        state (Optional[Dict]): The conversation state
+
+    Returns:
+        str: Formatted context (e.g., "- Transaction: buying\n- Budget: ₹50-100Cr\n...")
+             Returns "(Starting conversation)" if no context available
+    """
+    if not state:
+        return "(Starting conversation)"
+
+    context_parts = []
+
+    # Transaction type
+    if state.get("req_type"):
+        transaction = "buying" if state["req_type"] == "buy" else "renting"
+        context_parts.append(f"- Transaction: {transaction}")
+
+    # Location
+    if state.get("proximity_location"):
+        location = _format_answer_display("proximity_location", state["proximity_location"])
+        context_parts.append(f"- Location preference: {location}")
+
+    # Budget
+    if state.get("price_min") and state.get("price_max"):
+        price = f"₹{state['price_min']:.1f}Cr - ₹{state['price_max']:.1f}Cr"
+        context_parts.append(f"- Budget: {price}")
+
+    # Property area
+    if state.get("area_min") and state.get("area_max"):
+        area = f"{state['area_min']:,} - {state['area_max']:,} sq ft"
+        context_parts.append(f"- Size: {area}")
+
+    # Property type
+    if state.get("property_type"):
+        prop_type = _format_answer_display("property_type", state["property_type"])
+        context_parts.append(f"- Type: {prop_type}")
+
+    # Special features
+    if state.get("special_features"):
+        features = state["special_features"]
+        if isinstance(features, list):
+            features_str = ", ".join([f.replace("_", " ").title() for f in features])
+            context_parts.append(f"- Features: {features_str}")
+
+    if not context_parts:
+        return "(Starting conversation)"
+
+    return "\n".join(context_parts)
+
+
 def _build_acknowledgment_prompt(
     question_id: str,
     answer: Any,
     context: Optional[Dict[str, Any]] = None,
+    next_question: Optional[str] = None,
 ) -> str:
     """
     Build a prompt for the LLM to generate a natural acknowledgment.
 
-    Uses the prompt template from prompts/acknowledgment.txt and fills in
-    the conversation context and answer details.
+    Uses broker persona prompt to generate conversational responses.
+    Generates ONLY the acknowledgment - the next question comes separately.
 
     Args:
         question_id (str): Which question is being acknowledged
         answer (Any): The user's answer
         context (Optional[Dict]): Additional context from state with previous answers
+        next_question (Optional[str]): What the next question will be (for better transitions)
 
     Returns:
         str: Prompt for the LLM
     """
 
-    # Build conversation summary from context
-    conversation_so_far = ""
+    # Format the user's answer for display
+    formatted_answer = _format_answer_display(question_id, answer)
+
+    # Build conversation context summary
+    conversation_context = ""
     if context:
         if context.get("req_type"):
             transaction = "buying" if context["req_type"] == "buy" else "selling"
-            conversation_so_far += f"- Looking to: {transaction}\n"
+            conversation_context += f"- Transaction: {transaction}\n"
 
         if context.get("proximity_location"):
             location = _format_answer_display("proximity_location", context["proximity_location"])
-            conversation_so_far += f"- Proximity preference: {location}\n"
+            conversation_context += f"- Location preference: {location}\n"
 
         if context.get("price_min") and context.get("price_max"):
             price = f"₹{context['price_min']:.1f}Cr - ₹{context['price_max']:.1f}Cr"
-            conversation_so_far += f"- Budget: {price}\n"
+            conversation_context += f"- Budget: {price}\n"
 
         if context.get("area_min") and context.get("area_max"):
             area = f"{context['area_min']:,} - {context['area_max']:,} sq ft"
-            conversation_so_far += f"- Property size: {area}\n"
+            conversation_context += f"- Size: {area}\n"
 
         if context.get("property_type"):
             prop_type = _format_answer_display("property_type", context["property_type"])
-            conversation_so_far += f"- Property type: {prop_type}\n"
+            conversation_context += f"- Type: {prop_type}\n"
 
-    # Default to starting conversation if no history
-    if not conversation_so_far:
-        conversation_so_far = "(Starting conversation)"
+    if not conversation_context:
+        conversation_context = "(Starting conversation)"
 
-    formatted_answer = _format_answer_display(question_id, answer)
+    # Build next question hint for transitions
+    next_hint = f"Next we'll ask about {next_question}." if next_question else ""
 
-    # Question-specific context for natural transitions
-    next_question_hints = {
-        "req_type": "After understanding their transaction intent, the next step is understanding location preferences.",
-        "proximity_location": "After understanding location preference, the next step is discussing budget.",
-        "budget": "After understanding budget, the next step is the property size/area requirements.",
-        "property_area": "After understanding size, the next step is the type of property they prefer.",
-        "property_type": "After understanding property type, the next step is understanding any special features they want.",
-        "special_requests": "All key preferences have been discussed. Time to wrap up and show matching properties.",
-    }
-
-    next_hint = next_question_hints.get(question_id, "")
-
-    # Load prompt template from file
+    # Load broker persona prompt template
     template = AcknowledgmentPromptLoader.load()
 
-    # Fill in template variables
+    # Fill in template with context
     prompt = template.format(
-        conversation_so_far=conversation_so_far,
-        formatted_answer=formatted_answer,
+        user_answer=formatted_answer,
+        conversation_context=conversation_context,
         next_hint=next_hint,
     )
 
@@ -170,8 +248,8 @@ async def generate_acknowledgment(state: RealEstateAgentState) -> RealEstateAgen
 
     This node:
     1. Takes the pending_answer and pending_question_id from state
-    2. Calls ChatOpenAI to generate a dynamic, natural acknowledgment
-    3. Considers all previous answers to make it contextual
+    2. Reads decision_guidance from state (set by router)
+    3. Calls LLM with broker persona to generate natural acknowledgment
     4. Updates conversational_message with the acknowledgment
     5. Stores it in last_response_text
     6. Clears pending fields
@@ -188,16 +266,11 @@ async def generate_acknowledgment(state: RealEstateAgentState) -> RealEstateAgen
         >>> state["pending_question_id"] = "req_type"
         >>> result = await generate_acknowledgment(state)
         >>> print(result["last_response_text"])
-        "Looking to buy? That's great - let's find you something perfect..."
+        "Got it. Where are you looking?"
     """
-
-    print(f"\n🤖 LLM: Generating acknowledgment...")
-    print(f"   Question: {state.get('pending_question_id')}")
-    print(f"   Answer: {state.get('pending_answer')}")
 
     # If no pending answer, just return state as-is
     if not state.get("pending_answer") or not state.get("pending_question_id"):
-        print("   ⚠️ No pending answer to acknowledge, returning as-is")
         return state
 
     try:
@@ -213,25 +286,80 @@ async def generate_acknowledgment(state: RealEstateAgentState) -> RealEstateAgen
             "special_features": state.get("special_features"),
         }
 
-        # Build prompt for LLM with full context
+        # Build prompt for LLM with context
+        formatted_answer = _format_answer_display(state["pending_question_id"], state["pending_answer"])
+
+        # Build conversation context string using shared utility
+        conversation_context = build_conversation_context(context)
+
+        # Get the CURRENT question that's already in state (what will be asked next)
+        current_q = state.get("current_question")
+        next_question = None
+
+        if current_q and current_q.get("id"):
+            q_id = current_q.get("id")
+            # Map question ID (from questions.py) to human-readable text
+            # These IDs must match the "id" field in each question from questions.py
+            question_labels = {
+                "req_type": "transaction type (buy or sell)",
+                "proximity_location": "your preferred location",
+                "budget": "your budget range",
+                "property_area": "the property size or area",
+                "property_type": "the property type you prefer",
+                "special_requests": "special features or amenities",
+            }
+            next_question = question_labels.get(q_id)
+
+        # Log what's being sent to the LLM
+        print(f"\n📝 PROMPT INPUT:")
+        print(f"   User's Answer: {formatted_answer}")
+        print(f"   Context: {conversation_context.strip()}")
+        if next_question:
+            print(f"   Next Question: {next_question}")
+
         prompt = _build_acknowledgment_prompt(
             state["pending_question_id"],
             state["pending_answer"],
             context=context,
+            next_question=next_question,
         )
 
-        # Call LLM to generate acknowledgment
+        # Call LLM to generate acknowledgment and micro-interactions
         model = _get_model()
         response = await model.generate_content_async(prompt)
-        acknowledgment_text = clean_llm_response(response.text, format_type="text")
+        response_text = clean_llm_response(response.text, format_type="json")
 
-        print(f"   ✅ Generated: {acknowledgment_text[:80]}...")
+        # Parse JSON response
+        try:
+            result = json.loads(response_text)
+            acknowledgment_text = result.get("acknowledgment_text", "Got it.")
+            additional_type = result.get("additional_type", "none")
+            additional_text = result.get("additional_text", "")
 
-        # Update state with acknowledgment
+            # Log LLM response
+            print(f"\n✅ LLM RESPONSE:")
+            print(f"   📢 Acknowledgment: {acknowledgment_text}")
+            if additional_type != "none":
+                print(f"   {additional_type.upper()}: {additional_text}")
+
+            # Validate additional_type
+            if additional_type not in ["nudge", "comment", "insight", "none"]:
+                additional_type = "none"
+                additional_text = ""
+
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse LLM JSON response: {e}")
+            acknowledgment_text = "Got it."
+            additional_type = "none"
+            additional_text = ""
+
+        # Update state with acknowledgment and micro-interactions
         state = {
             **state,
             "conversational_message": acknowledgment_text,
             "last_response_text": acknowledgment_text,
+            "additional_type": additional_type,
+            "additional_text": additional_text if additional_type != "none" else None,
             "pending_answer": None,
             "pending_question_id": None,
         }
@@ -243,7 +371,7 @@ async def generate_acknowledgment(state: RealEstateAgentState) -> RealEstateAgen
         print(f"   ❌ Error: {e}")
 
         # Fallback to minimal acknowledgment if LLM fails
-        fallback_text = "Got it! Moving forward..."
+        fallback_text = "Got it. Moving forward..."
         state = {
             **state,
             "conversational_message": fallback_text,
@@ -260,4 +388,8 @@ async def generate_acknowledgment(state: RealEstateAgentState) -> RealEstateAgen
 # EXPORT
 # ============================================================================
 
-__all__ = ["generate_acknowledgment"]
+__all__ = [
+    "generate_acknowledgment",
+    "build_conversation_context",
+    "get_question_id_to_state_key_mapping",
+]

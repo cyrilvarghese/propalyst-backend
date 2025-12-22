@@ -1,0 +1,11 @@
+{
+  "$schema": "https://langgraph.dev/schema.json",
+  "dependencies": ["."],
+  "graphs": {
+    "broker_agent": {
+      "path": "broker_agent.graph:create_real_estate_agent_graph",
+      "name": "Real Estate Broker Agent"
+    }
+  },
+  "env": ".env"
+}

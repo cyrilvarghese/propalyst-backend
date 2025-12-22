@@ -21,8 +21,28 @@ import google.generativeai as genai
 from .state import RealEstateAgentState, create_real_estate_state
 from .graph import create_real_estate_agent_graph
 from .utils import clean_llm_response
+from .nodes.acknowledge import (
+    build_conversation_context,
+    get_question_id_to_state_key_mapping,
+)
 
 logger = logging.getLogger(__name__)
+
+
+# ============================================================================
+# QUESTION ID TO STATE KEY MAPPING
+# ============================================================================
+#
+# Question IDs (from nodes/questions.py) → State Field Names:
+#   "req_type"              → req_type
+#   "proximity_location"    → proximity_location
+#   "budget"                → price_min, price_max
+#   "property_area"         → area_min, area_max
+#   "property_type"         → property_type
+#   "special_requests"      → special_features
+#
+# Use get_question_id_to_state_key_mapping() for programmatic access.
+# ============================================================================
 
 
 # ============================================================================
@@ -33,6 +53,25 @@ class NLPParserPromptLoader:
     """Loads and caches the NLP parser prompt template"""
 
     PROMPT_FILE = Path(__file__).parent.parent / "prompts" / "nlp_parser.txt"
+    _cache: Optional[str] = None
+
+    @classmethod
+    def load(cls) -> str:
+        """Load prompt template from file (with caching)"""
+        if cls._cache is None:
+            try:
+                with open(cls.PROMPT_FILE, "r") as f:
+                    cls._cache = f.read()
+            except FileNotFoundError:
+                logger.error(f"Prompt file not found: {cls.PROMPT_FILE}")
+                raise
+        return cls._cache
+
+
+class InitialQueryParserPromptLoader:
+    """Loads and caches the initial query parser prompt template"""
+
+    PROMPT_FILE = Path(__file__).parent.parent / "prompts" / "initial_query_parser.txt"
     _cache: Optional[str] = None
 
     @classmethod
@@ -197,12 +236,12 @@ class RealEstateAgentService:
                 state = {**state, "special_features": user_input}
                 answer_for_acknowledgment = user_input
 
-        # Mark this question as completed
+        # Mark this question as asked (to prevent repetition in router)
         if current_question_id:
-            completed = list(state.get("questions_completed", []))
-            if current_question_id not in completed:
-                completed.append(current_question_id)
-            state = {**state, "questions_completed": completed}
+            questions_asked = list(state.get("questions_asked", []))
+            if current_question_id not in questions_asked:
+                questions_asked.append(current_question_id)
+            state = {**state, "questions_asked": questions_asked}
 
         # Add user message to conversation history
         messages = list(state.get("messages", []))
@@ -259,6 +298,211 @@ class RealEstateAgentService:
         """
         graph = cls._get_graph()
         return await graph.ainvoke(state)
+
+    @classmethod
+    async def process_initial_query(
+        cls,
+        state: RealEstateAgentState,
+        initial_query: str,
+    ) -> RealEstateAgentState:
+        """
+        Process initial free-form query and extract all answerable fields.
+
+        This method is designed for initial queries that can extract multiple
+        fields at once (e.g., "3bhk in indiranagar" extracts property_type,
+        proximity_location, and property_area).
+
+        Flow:
+        1. Call LLM with initial_query_parser prompt
+        2. Extract all non-null fields from response
+        3. Map to state keys (req_type, proximity_location, price_min/max, etc.)
+        4. Update state with all extracted fields
+        5. Add all answered question_ids to questions_asked list
+        6. Invoke graph to get next unanswered question
+
+        Args:
+            state (RealEstateAgentState): Current conversation state
+            initial_query (str): Free-form query (e.g., "3bhk in indiranagar")
+
+        Returns:
+            RealEstateAgentState: Updated state with extracted fields and next question
+
+        Example:
+            >>> state = RealEstateAgentService.create_initial_state("session-123")
+            >>> state = await RealEstateAgentService.process_initial_query(
+            ...     state, "3bhk in indiranagar"
+            ... )
+            >>> print(state["proximity_location"])
+            "Indiranagar"
+            >>> print(state["questions_asked"])
+            ["proximity_location", "property_area", "property_type"]
+        """
+        try:
+            # Load prompt template
+            prompt_template = InitialQueryParserPromptLoader.load()
+
+            # Fill in template
+            prompt = prompt_template.format(user_query=initial_query)
+
+            # Call LLM
+            model = genai.GenerativeModel(
+                model_name="gemini-2.5-flash",
+                generation_config=genai.types.GenerationConfig(
+                    temperature=0.3,  # Low temp for consistent extraction
+                ),
+            )
+
+            response = await model.generate_content_async(prompt)
+            cleaned_response = clean_llm_response(response.text, format_type="json")
+            extracted_data = json.loads(cleaned_response)
+
+            # Track questions that were answered
+            questions_answered = list(state.get("questions_asked", []))
+
+            # Log what fields were extracted
+            extracted_fields = []
+            if extracted_data.get("req_type"):
+                extracted_fields.append(f"req_type={extracted_data['req_type']}")
+            if extracted_data.get("proximity_location"):
+                extracted_fields.append(f"location={extracted_data['proximity_location']}")
+            if extracted_data.get("budget"):
+                extracted_fields.append(f"budget=₹{extracted_data['budget'][0]:.1f}-{extracted_data['budget'][1]:.1f}Cr")
+            if extracted_data.get("property_area"):
+                extracted_fields.append(f"area={extracted_data['property_area'][0]:,}-{extracted_data['property_area'][1]:,}sqft")
+            if extracted_data.get("property_type"):
+                extracted_fields.append(f"type={extracted_data['property_type']}")
+            if extracted_data.get("special_features"):
+                extracted_fields.append(f"features={extracted_data['special_features']}")
+
+            print(f"✅ Extracted: {', '.join(extracted_fields) if extracted_fields else 'nothing'}")
+
+            # Map extracted fields to state keys
+            if extracted_data.get("req_type"):
+                state = {**state, "req_type": extracted_data["req_type"]}
+                if "req_type" not in questions_answered:
+                    questions_answered.append("req_type")
+
+            if extracted_data.get("proximity_location"):
+                state = {**state, "proximity_location": extracted_data["proximity_location"]}
+                if "proximity_location" not in questions_answered:
+                    questions_answered.append("proximity_location")
+
+            if extracted_data.get("budget"):
+                budget = extracted_data["budget"]
+                state = {
+                    **state,
+                    "price_min": budget[0],
+                    "price_max": budget[1],
+                }
+                if "budget" not in questions_answered:
+                    questions_answered.append("budget")
+
+            if extracted_data.get("property_area"):
+                area = extracted_data["property_area"]
+                state = {
+                    **state,
+                    "area_min": area[0],
+                    "area_max": area[1],
+                }
+                if "property_area" not in questions_answered:
+                    questions_answered.append("property_area")
+
+            if extracted_data.get("property_type"):
+                state = {**state, "property_type": extracted_data["property_type"]}
+                if "property_type" not in questions_answered:
+                    questions_answered.append("property_type")
+
+            if extracted_data.get("special_features"):
+                state = {**state, "special_features": extracted_data["special_features"]}
+                if "special_features" not in questions_answered:
+                    questions_answered.append("special_features")
+
+            # Update questions_asked list
+            state = {**state, "questions_asked": questions_answered}
+
+            # Log state after extraction
+            newly_answered = [q for q in questions_answered if q not in state.get("questions_asked", [])]
+            state_summary = {
+                "req_type": state.get("req_type"),
+                "proximity_location": state.get("proximity_location"),
+                "budget": f"₹{state.get('price_min', 0):.1f}-₹{state.get('price_max', 0):.1f}Cr" if state.get("price_min") else None,
+                "property_area": f"{state.get('area_min', 0):,}-{state.get('area_max', 0):,}sqft" if state.get("area_min") else None,
+                "property_type": state.get("property_type"),
+                "special_features": state.get("special_features"),
+            }
+            # Remove None values from summary
+            state_summary = {k: v for k, v in state_summary.items() if v is not None}
+
+            print(f"📋 State after extraction:")
+            for key, value in state_summary.items():
+                print(f"   • {key}: {value}")
+            print(f"✅ Questions answered: {', '.join(questions_answered) if questions_answered else 'none'}")
+
+            # Add user message to conversation history
+            messages = list(state.get("messages", []))
+            messages.append(
+                {
+                    "role": "user",
+                    "content": initial_query,
+                }
+            )
+            state = {**state, "messages": messages}
+
+            # Store extracted data in state to mark as answered
+            if extracted_data.get("req_type"):
+                state["req_type"] = extracted_data.get("req_type")
+
+            if extracted_data.get("proximity_location"):
+                state["proximity_location"] = extracted_data.get("proximity_location")
+
+            if extracted_data.get("budget"):
+                state["price_min"] = extracted_data["budget"][0]
+                state["price_max"] = extracted_data["budget"][1]
+
+            if extracted_data.get("property_area"):
+                state["area_min"] = extracted_data["property_area"][0]
+                state["area_max"] = extracted_data["property_area"][1]
+
+            if extracted_data.get("property_type"):
+                state["property_type"] = extracted_data.get("property_type")
+
+            if extracted_data.get("special_features"):
+                state["special_features"] = extracted_data.get("special_features")
+
+            # Set pending fields to trigger acknowledge node
+            # This makes the acknowledge node generate a response based on the extracted fields
+            state = {
+                **state,
+                "pending_answer": initial_query,
+                "pending_question_id": "initial_query",
+            }
+
+            # Invoke graph to get next question (router will skip already-asked)
+            print(f"📊 Extracted fields: {', '.join([k for k, v in [('req_type', extracted_data.get('req_type')), ('location', extracted_data.get('proximity_location')), ('budget', extracted_data.get('budget')), ('area', extracted_data.get('property_area')), ('type', extracted_data.get('property_type')), ('features', extracted_data.get('special_features'))] if v])}")
+            graph = cls._get_graph()
+            result = await graph.ainvoke(state)
+
+            # Add agent message to conversation history
+            messages = list(result.get("messages", []))
+            agent_message = result.get("conversational_message", "")
+            if agent_message and (
+                not messages or messages[-1]["role"] != "agent"
+            ):
+                messages.append({"role": "agent", "content": agent_message})
+            result = {**result, "messages": messages}
+
+            return result
+
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse LLM response as JSON: {e}")
+            print(f"   ❌ JSON parse error: {e}")
+            # Fallback: treat as if no initial query and get first question
+            return await cls.get_next_question(state)
+        except Exception as e:
+            logger.error(f"Error processing initial query: {e}")
+            print(f"   ❌ Error: {e}")
+            # Fallback: treat as if no initial query
+            return await cls.get_next_question(state)
 
     @classmethod
     async def process_chat_input(
@@ -320,54 +564,21 @@ class RealEstateAgentService:
         Returns:
             str: Formatted context summary for LLM
         """
-        if not state:
-            return "(No previous answers)"
-
-        context_parts = []
-
-        # Add transaction type if answered
-        if state.get("req_type"):
-            transaction = "Buying" if state["req_type"] == "buy" else "Selling"
-            context_parts.append(f"- Looking to: {transaction}")
-
-        # Add location if answered
-        if state.get("proximity_location"):
-            location = state["proximity_location"]
-            if isinstance(location, str):
-                location = location.replace("_", " ").title()
-            context_parts.append(f"- Proximity preference: {location}")
-
-        # Add budget if answered
-        if state.get("price_min") and state.get("price_max"):
-            price = f"₹{state['price_min']:.1f}Cr - ₹{state['price_max']:.1f}Cr"
-            context_parts.append(f"- Budget: {price}")
-
-        # Add property area if answered
-        if state.get("area_min") and state.get("area_max"):
-            area = f"{state['area_min']:,} - {state['area_max']:,} sq ft"
-            context_parts.append(f"- Property size: {area}")
-
-        # Add property type if answered
-        if state.get("property_type"):
-            prop_type = state["property_type"].title()
-            context_parts.append(f"- Property type: {prop_type}")
-
-        # Add special features if answered
-        if state.get("special_features"):
-            features = state["special_features"]
-            if isinstance(features, list):
-                features_str = ", ".join([f.replace("_", " ").title() for f in features])
-                context_parts.append(f"- Special features: {features_str}")
-
-        if not context_parts:
-            return "(Starting conversation)"
-
-        return "\n".join(context_parts)
+        # Use shared utility function for consistency
+        return build_conversation_context(state)
 
     @staticmethod
     def get_user_summary(state: RealEstateAgentState) -> Dict[str, Any]:
         """
         Get a summary of user's preferences from state.
+
+        Response keys align with question IDs from get_question_id_to_state_key_mapping():
+        - "req_type" → req_type
+        - "proximity_location" → proximity_location
+        - "budget" → price_min, price_max
+        - "property_area" → area_min, area_max
+        - "property_type" → property_type
+        - "special_requests" → special_features
 
         Args:
             state (RealEstateAgentState): Conversation state
@@ -395,16 +606,16 @@ class RealEstateAgentService:
         return {
             "req_type": state.get("req_type"),
             "proximity_location": state.get("proximity_location"),
-            "price_range": {
+            "budget": {
                 "min": state.get("price_min"),
                 "max": state.get("price_max"),
             },
-            "area_range": {
+            "property_area": {
                 "min": state.get("area_min"),
                 "max": state.get("area_max"),
             },
             "property_type": state.get("property_type"),
-            "special_features": state.get("special_features", []),
+            "special_requests": state.get("special_features", []),
         }
 
     @classmethod

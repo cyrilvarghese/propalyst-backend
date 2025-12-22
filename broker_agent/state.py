@@ -13,7 +13,7 @@ The agent probes for:
 6. Special features (preferences and requirements)
 """
 
-from typing import TypedDict, Optional, List, Dict, Any
+from typing import TypedDict, Optional, List, Dict, Any, Callable
 from pydantic import BaseModel, Field
 
 
@@ -27,6 +27,22 @@ class PropertyPreference(BaseModel):
     label: str = Field(..., description="Display label")
     icon: Optional[str] = Field(None, description="Icon name for UI")
     selected: bool = Field(default=False, description="Whether this preference is selected")
+
+
+class QuestionDefinition(BaseModel):
+    """Configuration for a question in the conversation flow"""
+    id: str = Field(..., description="Unique question identifier")
+    order: int = Field(..., description="Order in conversation flow (1-based)")
+    state_field: str = Field(..., description="Name of state field to populate")
+    state_field_min: Optional[str] = Field(None, description="For range questions, min field name")
+    state_field_max: Optional[str] = Field(None, description="For range questions, max field name")
+    question: str = Field(..., description="Question text to ask")
+    label: str = Field(..., description="Short label for the question")
+    control_type: str = Field(..., description="UI control type: radio, range-slider, toggle-group, tags, text, etc.")
+    required: bool = Field(default=True, description="Whether answer is required")
+    control_data: Dict[str, Any] = Field(default_factory=dict, description="Control-specific data (options, ranges, etc.)")
+    help_text: Optional[str] = Field(None, description="Help text for the user")
+    node_fn: Optional[str] = Field(None, description="Name of node function to call (if custom handler needed)")
 
 
 class ConversationalQuestion(BaseModel):
@@ -150,6 +166,7 @@ class RealEstateAgentState(TypedDict):
     price_max: Optional[float]
     area_min: Optional[int]
     area_max: Optional[int]
+    bedroom_count: Optional[int]
     property_type: Optional[str]
     special_features: Optional[List[str]]
 
@@ -171,9 +188,16 @@ class RealEstateAgentState(TypedDict):
     pending_question_id: Optional[str]
     last_response_text: Optional[str]
 
+    # Micro-Interactions (nudges, comments, insights)
+    additional_text: Optional[str]  # Nudge, comment, or insight
+    additional_type: Optional[str]  # 'nudge', 'comment', 'insight', 'none'
+
     # Last Processed (for API response)
     last_processed_answer: Optional[Any]
     last_processed_question_id: Optional[str]
+
+    # Conversational Flow Tracking
+    questions_asked: List[str]  # Track which questions have been asked to prevent repetition
 
 
 # ============================================================================
@@ -205,6 +229,7 @@ def create_real_estate_state(session_id: str) -> RealEstateAgentState:
         price_max=None,
         area_min=None,
         area_max=None,
+        bedroom_count=None,
         property_type=None,
         special_features=None,
         current_question_id=None,
@@ -217,8 +242,14 @@ def create_real_estate_state(session_id: str) -> RealEstateAgentState:
         pending_answer=None,
         pending_question_id=None,
         last_response_text=None,
+        # Micro-Interactions
+        additional_text=None,
+        additional_type=None,
+        # Last Processed
         last_processed_answer=None,
         last_processed_question_id=None,
+        # Conversational Flow Tracking
+        questions_asked=[],
     )
 
 
@@ -228,6 +259,7 @@ def create_real_estate_state(session_id: str) -> RealEstateAgentState:
 
 __all__ = [
     "RealEstateAgentState",
+    "QuestionDefinition",
     "ConversationalQuestion",
     "PropertyPreference",
     "create_real_estate_state",

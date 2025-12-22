@@ -47,7 +47,7 @@ class SubmitAnswerRequest(BaseModel):
     )
     type: str = Field(
         default="structured",
-        description="Type of input: 'structured' (UI controls) or 'chat' (natural language)"
+        description="Type of input: 'structured' (UI controls), 'chat' (natural language), or 'initial_query' (multi-field extraction)"
     )
 
 
@@ -57,15 +57,23 @@ class ConversationResponse(BaseModel):
     current_question: Optional[Dict[str, Any]] = Field(
         None, description="Current question to ask user"
     )
-    message: str = Field(..., description="Conversational message")
     acknowledgment: Optional[str] = Field(
         None, description="LLM-generated acknowledgment for the last answer"
+    )
+    additional_type: Optional[str] = Field(
+        None, description="Type of micro-interaction: 'nudge', 'comment', 'insight', or None"
+    )
+    additional_text: Optional[str] = Field(
+        None, description="Optional nudge, comment, or insight to accompany the acknowledgment"
     )
     processed_answer: Optional[Any] = Field(
         None, description="The answer that was just processed (for UI update)"
     )
     processed_question_id: Optional[str] = Field(
         None, description="Which question was answered (for UI update)"
+    )
+    why_question: bool = Field(
+        False, description="True if the current response is asking a 'why' follow-up question"
     )
     completed: bool = Field(False, description="Whether conversation is complete")
     user_summary: Dict[str, Any] = Field(
@@ -77,13 +85,23 @@ class ConversationResponse(BaseModel):
 
 
 class UserSummaryResponse(BaseModel):
-    """Summary of user's property preferences"""
-    transaction_type: Optional[str]
-    location: Optional[str]
-    price_range: Dict[str, Optional[float]]
-    area_range: Dict[str, Optional[int]]
+    """
+    Summary of user's property preferences.
+
+    Keys align with question IDs from the conversation flow:
+    - req_type → Transaction type (buy/sell)
+    - proximity_location → Location preference
+    - budget → Budget range (min/max)
+    - property_area → Property area range (min/max)
+    - property_type → Property type preference
+    - special_requests → Special features requested
+    """
+    req_type: Optional[str]
+    proximity_location: Optional[str]
+    budget: Dict[str, Optional[float]]
+    property_area: Dict[str, Optional[int]]
     property_type: Optional[str]
-    special_features: List[str]
+    special_requests: List[str]
 
 
 # ============================================================================
@@ -176,8 +194,10 @@ async def get_session(session_id: str) -> ConversationResponse:
         return ConversationResponse(
             session_id=session_id,
             current_question=state.get("current_question"),
-            message=state.get("conversational_message", ""),
             acknowledgment=state.get("last_response_text"),
+            additional_type=state.get("additional_type"),
+            additional_text=state.get("additional_text"),
+            why_question=state.get("is_asking_why", False),
             completed=state.get("completed", False),
             user_summary=user_summary,
             messages=state.get("messages", []),
@@ -197,9 +217,10 @@ async def submit_answer(
     """
     Submit an answer to the current question.
 
-    Supports two types of input:
+    Supports three types of input:
     1. **Structured** (UI controls): Pre-structured data with question_id
-    2. **Chat** (Natural language): Free-form text that LLM parses
+    2. **Chat** (Natural language): Free-form text answering the current question
+    3. **Initial Query** (Multi-field extraction): Free-form query that extracts multiple fields at once
 
     Updates the conversation state with the user's answer
     and returns the next question to ask.
@@ -222,28 +243,35 @@ async def submit_answer(
         }
         ```
 
-        **Chat Input (natural language):**
+        **Chat Input (natural language answer to current question):**
         ```
         POST /api/broker_agent/sessions/{id}/answer
         {
-            "answer": "I want to buy a property near Delhi",
+            "answer": "I prefer locations near my office",
             "type": "chat"
         }
         ```
 
-        **Response (same for both):**
+        **Initial Query Input (multi-field extraction):**
+        ```
+        POST /api/broker_agent/sessions/{id}/answer
+        {
+            "answer": "3bhk in indiranagar",
+            "type": "initial_query"
+        }
+        ```
+
+        **Response (same for all):**
         ```
         {
             "session_id": "550e8400-e29b-41d4-a716-446655440000",
             "current_question": {
-                "id": "proximity_location",
-                "question": "Which area or locality are you interested in?",
+                "id": "budget",
+                "question": "What's your budget range?",
                 ...
             },
-            "message": "Which area or locality are you interested in?",
-            "acknowledgment": "Looking to buy? That's great...",
-            "processed_answer": "Delhi",
-            "processed_question_id": "proximity_location",
+            "message": "Great! I see you're looking for a 3BHK in Indiranagar. What's your budget range?",
+            "acknowledgment": "3BHK in Indiranagar...",
             "completed": false,
             "user_summary": {...},
             "messages": [...]
@@ -257,7 +285,12 @@ async def submit_answer(
         state = _sessions[session_id]
 
         # Route based on input type
-        if request.type == "chat":
+        if request.type == "initial_query":
+            # Initial query with multi-field extraction
+            state = await RealEstateAgentService.process_initial_query(
+                state, request.answer
+            )
+        elif request.type == "chat":
             # Natural language input - LLM will parse
             state = await RealEstateAgentService.process_chat_input(
                 state, request.answer
@@ -276,10 +309,12 @@ async def submit_answer(
         return ConversationResponse(
             session_id=session_id,
             current_question=state.get("current_question"),
-            message=state.get("conversational_message", ""),
             acknowledgment=state.get("last_response_text"),
+            additional_type=state.get("additional_type"),
+            additional_text=state.get("additional_text"),
             processed_answer=state.get("last_processed_answer"),
             processed_question_id=state.get("last_processed_question_id"),
+            why_question=state.get("is_asking_why", False),
             completed=state.get("completed", False),
             user_summary=user_summary,
             messages=state.get("messages", []),
@@ -308,18 +343,18 @@ async def get_user_summary(session_id: str) -> UserSummaryResponse:
         GET /api/broker_agent/sessions/550e8400-e29b-41d4-a716-446655440000/summary
 
         {
-            "transaction_type": "buy",
-            "location": "Indiranagar",
-            "price_range": {
+            "req_type": "buy",
+            "proximity_location": "Indiranagar",
+            "budget": {
                 "min": 50.0,
                 "max": 100.0
             },
-            "area_range": {
+            "property_area": {
                 "min": 1000,
                 "max": 2500
             },
             "property_type": "apartment",
-            "special_features": ["gym", "pool", "parking"]
+            "special_requests": ["gym", "pool", "parking"]
         }
         ```
     """

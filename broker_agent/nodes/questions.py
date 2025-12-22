@@ -196,7 +196,49 @@ async def ask_property_area(state: RealEstateAgentState) -> RealEstateAgentState
 
 
 # ============================================================================
-# Q5: PROPERTY TYPE
+# Q5: BEDROOM COUNT
+# ============================================================================
+
+async def ask_bedroom_count(state: RealEstateAgentState) -> RealEstateAgentState:
+    """
+    Ask how many bedrooms user is looking for.
+
+    Collects bedroom preference as integer (1-5+ BHK).
+    """
+
+    # Skip if already answered
+    if state.get("bedroom_count"):
+        return state
+
+    question = {
+        "id": "bedroom_count",
+        "question": "How many bedrooms are you looking for?",
+        "label": "Bedroom Count",
+        "controlType": "radio",
+        "required": True,
+        "data": {
+            "options": [
+                {"value": 1, "label": "1 BHK", "icon": "Door"},
+                {"value": 2, "label": "2 BHK", "icon": "Doors"},
+                {"value": 3, "label": "3 BHK", "icon": "Building"},
+                {"value": 4, "label": "4 BHK", "icon": "Mansion"},
+                {"value": 5, "label": "5+ BHK", "icon": "Castle"},
+            ],
+        },
+        "helpText": "Select the number of bedrooms you need",
+    }
+
+    return {
+        **state,
+        "current_question": question,
+        "current_question_id": "bedroom_count",
+        "conversational_message": question["question"],
+        "completed": False,
+    }
+
+
+# ============================================================================
+# Q6: PROPERTY TYPE
 # ============================================================================
 
 async def ask_property_type(state: RealEstateAgentState) -> RealEstateAgentState:
@@ -294,6 +336,7 @@ __all__ = [
     "ask_location",
     "ask_price_range",
     "ask_property_area",
+    "ask_bedroom_count",
     "ask_property_type",
     "ask_special_features",
 ]

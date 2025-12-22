@@ -31,16 +31,16 @@ from .nodes import (
 from .nodes.completion import mark_conversation_complete
 
 
+
 # ============================================================================
 # ROUTER FUNCTION
 # ============================================================================
 
-def route_real_estate_agent(state: RealEstateAgentState) -> str:
+async def route_real_estate_agent(state: RealEstateAgentState) -> str:
     """
     Router that decides which question to ask next.
 
-    This is the "brain" of the conversation. It checks what information
-    is missing and routes to the appropriate question node.
+    Simple sequential routing through required questions.
 
     Decision Logic:
     ---------------
@@ -57,64 +57,59 @@ def route_real_estate_agent(state: RealEstateAgentState) -> str:
 
     Returns:
         str: Name of next node to execute
-
-    Examples:
-        >>> state = create_real_estate_state("session-123")
-        >>> route_real_estate_agent(state)
-        "ask_transaction_type"
-
-        >>> state["transaction_type"] = "buy"
-        >>> route_real_estate_agent(state)
-        "ask_location"
     """
 
-    print("\n🎯 ROUTER: Deciding next question...")
-    print(
-        f"   State: req_type={state.get('req_type')}, "
-        f"proximity_location={state.get('proximity_location')}, "
-        f"price={state.get('price_min')}-{state.get('price_max')}, "
-        f"area={state.get('area_min')}-{state.get('area_max')}, "
-        f"type={state.get('property_type')}, "
-        f"features={state.get('special_features')}"
-    )
+    # Get questions_asked list to avoid repetition
+    questions_asked = state.get("questions_asked", [])
 
-    # Q1: Transaction type
-    if not state.get("req_type"):
-        print("   → Missing req_type, asking...")
-        return "ask_transaction_type"
+    # Q1: req_type (buy/sell)
+    if not state.get("req_type") and "req_type" not in questions_asked:
+        next_question_id = "req_type"
+        next_topic = "req_type"
+        route = "ask_transaction_type"
 
     # Q2: Proximity Location
-    if not state.get("proximity_location"):
-        print("   → Missing proximity_location, asking...")
-        return "ask_location"
+    elif not state.get("proximity_location") and "proximity_location" not in questions_asked:
+        next_question_id = "proximity_location"
+        next_topic = "location"
+        route = "ask_location"
 
     # Q3: Budget
-    if not state.get("price_min") or not state.get("price_max"):
-        print("   → Missing budget, asking...")
-        return "ask_price_range"
+    elif (not state.get("price_min") or not state.get("price_max")) and "budget" not in questions_asked:
+        next_question_id = "budget"
+        next_topic = "budget_flexibility"
+        route = "ask_price_range"
 
     # Q4: Property area
-    if not state.get("area_min") or not state.get("area_max"):
-        print("   → Missing area, asking...")
-        return "ask_property_area"
+    elif (not state.get("area_min") or not state.get("area_max")) and "property_area" not in questions_asked:
+        next_question_id = "property_area"
+        next_topic = "property_area"
+        route = "ask_property_area"
 
     # Q5: Property type
-    if not state.get("property_type"):
-        print("   → Missing property_type, asking...")
-        return "ask_property_type"
+    elif not state.get("property_type") and "property_type" not in questions_asked:
+        next_question_id = "property_type"
+        next_topic = "property_type"
+        route = "ask_property_type"
 
     # Q6: Special requests (optional but encouraged)
-    if not state.get("special_features"):
-        print("   → Missing special requests, asking...")
-        return "ask_special_features"
+    elif not state.get("special_features") and "special_features" not in questions_asked:
+        next_question_id = "special_features"
+        next_topic = "special_features"
+        route = "ask_special_features"
 
     # All questions answered - mark complete
-    if not state.get("completed"):
-        print("   → All questions answered! Marking complete...")
+    elif not state.get("completed"):
         return "mark_complete"
 
-    print("   → Conversation complete, going to END")
-    return "end"
+    else:
+        return "end"
+
+    # Track that we're asking this question
+    questions_asked.append(next_question_id)
+    state["questions_asked"] = questions_asked
+
+    return route
 
 
 # ============================================================================

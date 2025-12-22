@@ -1,0 +1,218 @@
+You are parsing a free-form initial query from a real estate buyer/seller. Your job is to extract ALL possible property-related fields from this single query.
+
+IMPORTANT: This is NOT context-aware like the regular NLP parser. This extracts everything you can detect from the query without reference to any previous conversation.
+
+USER QUERY: "{user_query}"
+
+===== EXTRACTION RULES =====
+
+**req_type (buy/sell/rent):**
+- Look for: "buy", "purchase", "invest", "sell", "lease", "rent", "for rent", "to rent"
+- Return: "buy", "sell", "rent", or null if no transaction type mentioned
+- Confidence: High if explicit verb present
+- Rules:
+  - "for rent" / "to rent" / "want to rent" / "looking to rent" = "rent"
+  - "renting out" / "listing for rent" / "lease out" = "sell"
+  - "lease" (as tenant) = "rent"
+
+**proximity_location (location string):**
+- Extract: City, locality, or neighborhood names
+- Examples: "Bangalore", "Indiranagar", "Koramangala", "Mumbai", "Delhi"
+- Return: Cleaned location name (capitalize first letter)
+- Confidence: High if location mentioned explicitly
+
+**budget (array [min, max] in crores):**
+- Look for: Numbers followed by Cr, crore, lakh, Rs, rupees
+- Handle: "1Cr", "2 crores", "50 lakhs", "1.5Cr", "2-3 crores"
+- Convert: Convert lakhs to crores (100 lakhs = 1 crore, so 1 lakh = 0.01 crore)
+- Single value with "around": Add ±20% range
+  - "around 2Cr" → [1.6, 2.4]
+  - "around 50 lakhs" → [0.4, 0.6]
+- Exact single value: Just the value as-is (no range)
+  - "2Cr" → [2, 2]
+- Explicit ranges: Use as stated
+  - "2-3 crores" → [2, 3]
+- Return: null if no numeric budget mentioned
+
+**property_area (array [min, max] in sq ft):**
+- Look for: ONLY explicit numbers followed by "sq ft", "sqft", "square feet"
+- Handle: "2000 sq ft" → [2000, 2000], "2000-3000 sq ft" → [2000, 3000]
+- DO NOT infer from BHK mentions (e.g., "3BHK" does NOT infer area)
+- Single values and ranges: Use exactly as stated, no modifications
+- Return: Array [min, max] in sq ft (or null if not explicitly mentioned)
+
+**property_type (apartment/house/villa/penthouse/townhouse):**
+- Look for: Direct mentions or BHK implications
+- Explicit: "apartment", "flat", "house", "villa", "penthouse", "townhouse", "bungalow", "cottage"
+- BHK implication: BHK almost always means "apartment"
+  - "3BHK" → property_type = "apartment"
+  - "2BHK villa" → property_type = "villa" (explicit overrides)
+- Normalize: Return lowercase singular form
+  - "flats" → "apartment"
+  - "3bhk" → infer "apartment"
+- Return: null if not mentioned
+
+**special_features (array of feature strings):**
+- Look for: Amenities and features
+- Examples: "gym", "pool", "parking", "garden", "terrace", "furnished", "unfurnished", "study-room", "balcony", "ac", "parking", "security", "playground", "community-center"
+- Multiple mentions: Return as array
+  - "gym and pool" → ["gym", "pool"]
+  - "parking and ac" → ["parking", "ac"]
+- Normalize: Lowercase, hyphenated if multi-word
+- Return: null if no features mentioned
+
+===== OUTPUT FORMAT =====
+
+Return ONLY valid JSON with this structure:
+
+{{
+  "req_type": "buy" | "sell" | null,
+  "proximity_location": "location string" | null,
+  "budget": [min, max] | null,
+  "property_area": [min, max] | null,
+  "property_type": "apartment" | "house" | "villa" | "penthouse" | "townhouse" | null,
+  "special_features": ["feature1", "feature2", ...] | null,
+  "confidence": {{
+    "req_type": 0.0-1.0,
+    "proximity_location": 0.0-1.0,
+    "budget": 0.0-1.0,
+    "property_area": 0.0-1.0,
+    "property_type": 0.0-1.0,
+    "special_features": 0.0-1.0
+  }},
+  "notes": "Any special observations"
+}}
+
+===== EXAMPLES =====
+
+**Input:** "3bhk in indiranagar"
+**Output:**
+{{
+  "req_type": null,
+  "proximity_location": "Indiranagar",
+  "budget": null,
+  "property_area": null,
+  "property_type": "apartment",
+  "special_features": null,
+  "confidence": {{
+    "req_type": 0.0,
+    "proximity_location": 0.95,
+    "budget": 0.0,
+    "property_area": 0.0,
+    "property_type": 0.9,
+    "special_features": 0.0
+  }},
+  "notes": "BHK implies apartment type, but area is not explicitly mentioned so null. Location explicitly stated."
+}}
+
+**Input:** "Looking to buy a 3BHK apartment in Koramangala around 2 crores with gym and pool"
+**Output:**
+{{
+  "req_type": "buy",
+  "proximity_location": "Koramangala",
+  "budget": [1.6, 2.4],
+  "property_area": null,
+  "property_type": "apartment",
+  "special_features": ["gym", "pool"],
+  "confidence": {{
+    "req_type": 0.95,
+    "proximity_location": 0.95,
+    "budget": 0.85,
+    "property_area": 0.0,
+    "property_type": 0.9,
+    "special_features": 0.9
+  }},
+  "notes": "req_type, location, and features explicitly mentioned. 'around 2 crores' treated as ±20% range. BHK does not infer area."
+}}
+
+**Input:** "Villa with swimming pool in Mumbai, around 50 lakhs"
+**Output:**
+{{
+  "req_type": null,
+  "proximity_location": "Mumbai",
+  "budget": [0.4, 0.6],
+  "property_area": null,
+  "property_type": "villa",
+  "special_features": ["pool"],
+  "confidence": {{
+    "req_type": 0.0,
+    "proximity_location": 0.95,
+    "budget": 0.85,
+    "property_area": 0.0,
+    "property_type": 0.9,
+    "special_features": 0.85
+  }},
+  "notes": "Property type and feature explicitly mentioned. Location explicit. 'around 50 lakhs' (0.5 crores) treated as ±20% range [0.4, 0.6]."
+}}
+
+**Input:** "2000 sq ft apartment"
+**Output:**
+{{
+  "req_type": null,
+  "proximity_location": null,
+  "budget": null,
+  "property_area": [2000, 2000],
+  "property_type": "apartment",
+  "special_features": null,
+  "confidence": {{
+    "req_type": 0.0,
+    "proximity_location": 0.0,
+    "budget": 0.0,
+    "property_area": 1.0,
+    "property_type": 0.9,
+    "special_features": 0.0
+  }},
+  "notes": "Area explicitly specified as single value. Property type explicitly mentioned. No location or budget provided."
+}}
+
+**Input:** "Villa in Koramangala for rent"
+**Output:**
+{{
+  "req_type": "rent",
+  "proximity_location": "Koramangala",
+  "budget": null,
+  "property_area": null,
+  "property_type": "villa",
+  "special_features": null,
+  "confidence": {{
+    "req_type": 0.95,
+    "proximity_location": 0.95,
+    "budget": 0.0,
+    "property_area": 0.0,
+    "property_type": 0.9,
+    "special_features": 0.0
+  }},
+  "notes": "User is looking to rent a villa. 'for rent' is treated as explicit rent intent."
+}}
+
+===== CRITICAL RULES =====
+
+1. **Return ONLY JSON** - Nothing else, no markdown, no explanation
+
+2. **PARSE EXPLICITLY MENTIONED DATA - NO HIDDEN INFERENCE**:
+   - "around X" is valid: add ±20% range (e.g., "around 2 crores" → [1.6, 2.4])
+   - DO NOT infer budget or area from BHK (e.g., "3BHK" → area is null, budget is null)
+   - DO NOT infer area from property type alone
+   - DO NOT add ranges to single exact values (e.g., "2 crores" → [2, 2], not a range)
+
+3. **Confidence scores**: Be honest
+   - 1.0 = explicit, unambiguous mention
+   - 0.8-0.95 = explicit mention with minor interpretation (e.g., "flat" → "apartment")
+   - 0.0 = not mentioned
+
+4. **What counts as explicit**:
+   - "2000 sq ft" = explicit (single value → [2000, 2000])
+   - "2000-3000 sq ft" = explicit (range as stated → [2000, 3000])
+   - "around 2000 sq ft" = NOT explicit area (no area inferred)
+   - "3BHK" = explicit property type ONLY, NOT area or budget
+   - "2 crores" = explicit budget → [2, 2]
+   - "around 2 crores" = explicit budget with ±20% → [1.6, 2.4]
+   - "2-3 crores" = explicit budget range → [2, 3]
+
+**KEY PRINCIPLE**: Do NOT infer budget or area from BHK. Only extract what's explicitly stated.
+
+5. **Typos & Variations**: Be tolerant
+   - "3bhk" = "3BHK" = "3 BHK" = "3bed" = "three bedroom"
+   - "cror" = "crore"
+   - "lacs" = "lakhs"
+   - "mumbai" = "Mumbai"
