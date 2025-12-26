@@ -508,16 +508,26 @@ class WhatsAppParserService:
         limit: int = 100
     ) -> List[Dict[str, Any]]:
         """
-        Get raw messages that haven't been processed by LLM yet (from last 4 months)
+        Get raw messages that haven't been processed by LLM yet.
+
+        **IMPORTANT - Hard Safety Constraint**:
+        This method applies a HARD config constraint (RECENT_MESSAGES_CUTOFF_DAYS) that
+        CANNOT be bypassed by upload-time filtering. This is a security measure to ensure
+        only recent messages are sent to LLM processing.
+
+        - Stage 1 (upload): User controls cutoff_days_from_ui (can be "all")
+        - Stage 2 (retrieval): Config enforces maximum age (e.g., 120 days)
+        - Result: Even if "all" messages are uploaded, only recent ones are processed
 
         Args:
             limit: Maximum number of messages to return
 
         Returns:
-            List of unprocessed message dictionaries
+            List of unprocessed message dictionaries from last RECENT_MESSAGES_CUTOFF_DAYS
         """
         try:
-            # Calculate cutoff date using configured threshold
+            # Apply config constraint - HARD LIMIT that overrides upload-time filtering
+            # This ensures LLM processing is limited to recent messages only
             cutoff_date = (datetime.now() - timedelta(days=RECENT_MESSAGES_CUTOFF_DAYS)).isoformat()
 
             client = SupabaseService._get_client()

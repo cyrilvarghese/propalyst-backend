@@ -52,6 +52,11 @@ async def upload_file(
     - User controls when to start Stage 2
     - "all" mode bypasses date filtering for bulk imports
 
+    **Important - Two-Stage Filtering**:
+    - This endpoint (Stage 1) filters by `cutoff_days_from_ui` before inserting into database
+    - Stage 2 (LLM processing) applies ADDITIONAL config constraint: only processes last N days (RECENT_MESSAGES_CUTOFF_DAYS)
+    - Example: Upload "all" messages → insert all → but only process last 120 days
+
     **Response**: JSON (not streaming)
     ```json
     {
@@ -114,14 +119,17 @@ async def upload_file(
 
         print(f"[WhatsAppRaw] Inserted {insert_result['messages_inserted']} new, found {insert_result['messages_skipped']} duplicates")
 
-        # Get count of unprocessed messages ready for LLM (last 4 months only)
+        # Get count of unprocessed messages ready for LLM
+        # NOTE: get_unprocessed_raw_messages() enforces RECENT_MESSAGES_CUTOFF_DAYS config constraint
+        # This means only messages from the last N days will be retrieved for LLM processing,
+        # regardless of cutoff_days_from_ui used during upload. This is a safety constraint.
         unprocessed_messages = await WhatsAppParserService.get_unprocessed_raw_messages(limit=10000)
         ready_for_llm_count = len(unprocessed_messages)
 
         return {
             "success": True,
             "messages_parsed": messages_before_cutoff,
-            "messages_filtered": messages_filtered_out,
+                "messages_filtered": messages_filtered_out,
             "cutoff_days": cutoff_days_from_ui,
             "cutoff_date": cutoff_date.date().isoformat() if cutoff_date else None,
             "messages_inserted": insert_result['messages_inserted'],
