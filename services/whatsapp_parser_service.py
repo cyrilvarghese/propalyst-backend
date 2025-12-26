@@ -21,6 +21,7 @@ class WhatsAppFormatType(str, Enum):
     """Enum for WhatsApp export format types"""
     IOS = "ios"           # [DD/MM/YY, HH:MM:SS AM/PM] Sender: Message
     ANDROID = "android"   # DD/MM/YYYY, HH:MM - Sender: Message
+    WEB = "web"           # DD/MM/YYYY, HH:MM AM/PM - [Sender:] Message (Web/HTML export, sender optional)
     UNKNOWN = "unknown"
 
 
@@ -49,6 +50,18 @@ class WhatsAppParserService:
         re.MULTILINE
     )
 
+    # Web/HTML format: DD/MM/YYYY, HH:MM AM/PM - [Sender:] Message
+    # Similar to Android but with optional sender (supports system messages)
+    # Supports:
+    # - 1-2 digit day/month (e.g., 12/11 or 12/11)
+    # - 2 or 4 digit year (e.g., 25 or 2025)
+    # - 12-hour format with AM/PM (case insensitive: 10:14 PM, 5:16 pm)
+    # - Optional sender followed by colon, or no sender for system messages
+    WEB_BOUNDARY_PATTERN = re.compile(
+        r'^(\d{1,2}/\d{1,2}/\d{2,4}),\s*(\d{1,2}:\d{2}(?:\s*[AP]M)?)\s*-\s*(?:([^:]+?):\s*)?(.+)',
+        re.MULTILINE | re.IGNORECASE
+    )
+
     # Legacy alias for backward compatibility
     BOUNDARY_PATTERN = IOS_BOUNDARY_PATTERN
 
@@ -68,11 +81,12 @@ class WhatsAppParserService:
             content: String content of WhatsApp export file
 
         Returns:
-            WhatsAppFormatType enum (ios, android, or unknown)
+            WhatsAppFormatType enum (ios, android, web, or unknown)
         """
         lines = content.split('\n')
         ios_count = 0
         android_count = 0
+        web_count = 0
 
         # Sample first 50 lines to detect format
         for line in lines[:50]:
@@ -82,12 +96,16 @@ class WhatsAppParserService:
                 ios_count += 1
             elif cls.ANDROID_BOUNDARY_PATTERN.match(line_cleaned):
                 android_count += 1
+            elif cls.WEB_BOUNDARY_PATTERN.match(line_cleaned):
+                web_count += 1
 
-        # Return format with most matches
-        if ios_count > android_count and ios_count > 0:
+        # Return format with most matches (priority: iOS > Android > Web)
+        if ios_count > android_count and ios_count > web_count and ios_count > 0:
             return WhatsAppFormatType.IOS
-        elif android_count > ios_count and android_count > 0:
+        elif android_count > ios_count and android_count > web_count and android_count > 0:
             return WhatsAppFormatType.ANDROID
+        elif web_count > 0:
+            return WhatsAppFormatType.WEB
         else:
             return WhatsAppFormatType.UNKNOWN
 
@@ -105,7 +123,7 @@ class WhatsAppParserService:
         Args:
             content: String content of WhatsApp export file
             source_file: Optional name of source file for tracking
-            format: Optional format override (ios or android). Auto-detected if None.
+            format: Optional format override (ios, android, or web). Auto-detected if None.
             date_format_preference: Date format in export - "DD/MM/YY" (default) or "MM/DD/YY" (US format)
 
         Returns:
@@ -121,11 +139,22 @@ class WhatsAppParserService:
         if format == WhatsAppFormatType.UNKNOWN:
             raise ValueError("Unable to detect WhatsApp export format. Supported formats:\n"
                            "  iOS: [DD/MM/YY, HH:MM:SS AM/PM] or [DD/MM/YYYY, HH:MM:SS]\n"
-                           "  Android: DD/MM/YY, HH:MM AM/PM or DD/MM/YYYY, HH:MM")
+                           "  Android: DD/MM/YY, HH:MM AM/PM or DD/MM/YYYY, HH:MM\n"
+                           "  Web: DD/MM/YYYY, HH:MM AM/PM - [Sender:] Message")
 
         # Select pattern based on format
-        boundary_pattern = cls.IOS_BOUNDARY_PATTERN if format == WhatsAppFormatType.IOS else cls.ANDROID_BOUNDARY_PATTERN
-        is_ios_format = format == WhatsAppFormatType.IOS
+        if format == WhatsAppFormatType.IOS:
+            boundary_pattern = cls.IOS_BOUNDARY_PATTERN
+            is_ios_format = True
+            is_web_format = False
+        elif format == WhatsAppFormatType.WEB:
+            boundary_pattern = cls.WEB_BOUNDARY_PATTERN
+            is_ios_format = False
+            is_web_format = True
+        else:  # ANDROID
+            boundary_pattern = cls.ANDROID_BOUNDARY_PATTERN
+            is_ios_format = False
+            is_web_format = False
 
         messages = []
         lines = content.split('\n')
@@ -149,7 +178,15 @@ class WhatsAppParserService:
                     messages.append(current_message)
 
                 # Parse new message
-                date_str, time_str, sender, text = match.groups()
+                groups = match.groups()
+                date_str = groups[0]
+                time_str = groups[1]
+                sender = groups[2] if is_web_format and len(groups) == 4 else groups[2]
+                text = groups[3] if is_web_format and len(groups) == 4 else groups[3]
+
+                # Handle optional sender in Web format (system messages have None sender)
+                if sender is None:
+                    sender = "System"
 
                 try:
                     # Determine datetime format based on format type
@@ -170,6 +207,23 @@ class WhatsAppParserService:
                                 datetime_format = "%m/%d/%Y %I:%M:%S %p" if has_am_pm else "%m/%d/%Y %H:%M:%S"
                             else:  # DD/MM/YY (default)
                                 datetime_format = "%d/%m/%Y %I:%M:%S %p" if has_am_pm else "%d/%m/%Y %H:%M:%S"
+                    elif is_web_format:
+                        # Web: 12-hour format with AM/PM, no seconds (similar to Android but always has AM/PM)
+                        year_part = date_str.split('/')[-1]
+                        has_am_pm = 'AM' in time_str.upper() or 'PM' in time_str.upper()
+
+                        if len(year_part) == 2:
+                            # 2-digit year - apply user date format preference
+                            if date_format_preference == "MM/DD/YY":
+                                datetime_format = "%m/%d/%y %I:%M %p"
+                            else:  # DD/MM/YY (default)
+                                datetime_format = "%d/%m/%y %I:%M %p"
+                        else:
+                            # 4-digit year - apply user date format preference
+                            if date_format_preference == "MM/DD/YY":
+                                datetime_format = "%m/%d/%Y %I:%M %p"
+                            else:  # DD/MM/YY (default)
+                                datetime_format = "%d/%m/%Y %I:%M %p"
                     else:
                         # Android: detect year format (2-digit vs 4-digit) and time format (12-hour vs 24-hour)
                         year_part = date_str.split('/')[-1]
