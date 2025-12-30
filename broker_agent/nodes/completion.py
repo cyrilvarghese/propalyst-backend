@@ -45,7 +45,12 @@ async def mark_conversation_complete(state: RealEstateAgentState) -> RealEstateA
     if features:
         features_text = f"\n\nYour preferred features: {', '.join(features)}"
 
-    final_message = f"Perfect! {summary}{features_text}\n\nOur team will search for properties matching your criteria and get back to you soon!"
+    taste = state.get("taste_preference", [])
+    taste_text = ""
+    if taste:
+        taste_text = f"\n\nWe've noted your taste preferences from the properties you liked."
+
+    final_message = f"Perfect! {summary}{features_text}{taste_text}\n\nOur team will search for properties matching your criteria and get back to you soon!"
 
     return {
         **state,

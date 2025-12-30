@@ -328,6 +328,48 @@ async def ask_special_features(state: RealEstateAgentState) -> RealEstateAgentSt
 
 
 # ============================================================================
+# Q7: TASTE PREFERENCE
+# ============================================================================
+
+async def ask_taste_preference(state: RealEstateAgentState) -> RealEstateAgentState:
+    """
+    Ask user to rate properties to understand their taste preferences.
+
+    Uses swipe/taste-selection control to show sample properties and collect
+    preference data (thumbs up/down or ratings).
+    """
+
+    # Skip if already answered
+    if state.get("taste_preference"):
+        return state
+
+    # Get the question config to access the property data
+    from broker_agent.questions_config import get_question_by_id
+    taste_question_config = get_question_by_id("taste_preference")
+
+    if not taste_question_config:
+        return state
+
+    question = {
+        "id": "taste_preference",
+        "question": taste_question_config.question,
+        "label": taste_question_config.label,
+        "controlType": "taste-selection",
+        "required": False,
+        "data": taste_question_config.control_data,
+        "helpText": taste_question_config.help_text or "Indicate thumbs up/down on properties to help us understand your preferences",
+    }
+
+    return {
+        **state,
+        "current_question": question,
+        "current_question_id": "taste_preference",
+        "conversational_message": question["question"],
+        "completed": False,
+    }
+
+
+# ============================================================================
 # EXPORT
 # ============================================================================
 

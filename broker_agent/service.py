@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 #   "property_area"         → area_min, area_max
 #   "property_type"         → property_type
 #   "special_requests"      → special_features
+#   "taste_preference"      → taste_preference
 #
 # Use get_question_id_to_state_key_mapping() for programmatic access.
 # ============================================================================
@@ -220,6 +221,11 @@ class RealEstateAgentService:
                 }
                 answer_for_acknowledgment = user_input
 
+        elif current_question_id == "bedroom_count":
+            # Expect integer (1-5)
+            state = {**state, "bedroom_count": user_input}
+            answer_for_acknowledgment = user_input
+
         elif current_question_id == "property_type":
             state = {**state, "property_type": user_input}
             answer_for_acknowledgment = user_input
@@ -235,6 +241,14 @@ class RealEstateAgentService:
             if isinstance(user_input, list):
                 state = {**state, "special_features": user_input}
                 answer_for_acknowledgment = user_input
+
+        elif current_question_id == "taste_preference":
+            # Expect list of property preferences with ratings
+            if isinstance(user_input, list):
+                # Enrich with full property details from config
+                enriched_preferences = cls._enrich_taste_preferences(user_input)
+                state = {**state, "taste_preference": enriched_preferences}
+                answer_for_acknowledgment = enriched_preferences
 
         # Mark this question as asked (to prevent repetition in router)
         if current_question_id:
@@ -371,6 +385,8 @@ class RealEstateAgentService:
                 extracted_fields.append(f"area={extracted_data['property_area'][0]:,}-{extracted_data['property_area'][1]:,}sqft")
             if extracted_data.get("property_type"):
                 extracted_fields.append(f"type={extracted_data['property_type']}")
+            if extracted_data.get("bedroom_count"):
+                extracted_fields.append(f"bedrooms={extracted_data['bedroom_count']}BHK")
             if extracted_data.get("special_features"):
                 extracted_fields.append(f"features={extracted_data['special_features']}")
 
@@ -407,6 +423,11 @@ class RealEstateAgentService:
                 if "property_area" not in questions_answered:
                     questions_answered.append("property_area")
 
+            if extracted_data.get("bedroom_count"):
+                state = {**state, "bedroom_count": extracted_data["bedroom_count"]}
+                if "bedroom_count" not in questions_answered:
+                    questions_answered.append("bedroom_count")
+
             if extracted_data.get("property_type"):
                 state = {**state, "property_type": extracted_data["property_type"]}
                 if "property_type" not in questions_answered:
@@ -427,6 +448,7 @@ class RealEstateAgentService:
                 "proximity_location": state.get("proximity_location"),
                 "budget": f"₹{state.get('price_min', 0):.1f}-₹{state.get('price_max', 0):.1f}Cr" if state.get("price_min") else None,
                 "property_area": f"{state.get('area_min', 0):,}-{state.get('area_max', 0):,}sqft" if state.get("area_min") else None,
+                "bedroom_count": f"{state.get('bedroom_count')}BHK" if state.get("bedroom_count") else None,
                 "property_type": state.get("property_type"),
                 "special_features": state.get("special_features"),
             }
@@ -463,6 +485,9 @@ class RealEstateAgentService:
                 state["area_min"] = extracted_data["property_area"][0]
                 state["area_max"] = extracted_data["property_area"][1]
 
+            if extracted_data.get("bedroom_count"):
+                state["bedroom_count"] = extracted_data.get("bedroom_count")
+
             if extracted_data.get("property_type"):
                 state["property_type"] = extracted_data.get("property_type")
 
@@ -478,7 +503,7 @@ class RealEstateAgentService:
             }
 
             # Invoke graph to get next question (router will skip already-asked)
-            print(f"📊 Extracted fields: {', '.join([k for k, v in [('req_type', extracted_data.get('req_type')), ('location', extracted_data.get('proximity_location')), ('budget', extracted_data.get('budget')), ('area', extracted_data.get('property_area')), ('type', extracted_data.get('property_type')), ('features', extracted_data.get('special_features'))] if v])}")
+            print(f"📊 Extracted fields: {', '.join([k for k, v in [('req_type', extracted_data.get('req_type')), ('location', extracted_data.get('proximity_location')), ('budget', extracted_data.get('budget')), ('area', extracted_data.get('property_area')), ('bedrooms', extracted_data.get('bedroom_count')), ('type', extracted_data.get('property_type')), ('features', extracted_data.get('special_features'))] if v])}")
             graph = cls._get_graph()
             result = await graph.ainvoke(state)
 
@@ -568,6 +593,45 @@ class RealEstateAgentService:
         return build_conversation_context(state)
 
     @staticmethod
+    def _enrich_taste_preferences(preferences: list) -> list:
+        """
+        Enrich taste preference data with full property details from config.
+
+        Takes preference data (with propertyId, liked, reason) and adds complete
+        property details from the taste_preference question configuration.
+
+        Args:
+            preferences: List of preference dicts with propertyId, liked, etc.
+
+        Returns:
+            List of enriched preference dicts with full property details
+        """
+        from .questions_config import get_question_by_id
+
+        taste_config = get_question_by_id("taste_preference")
+        if not taste_config:
+            return preferences
+
+        # Create a map of property ID to property data
+        property_map = {}
+        for prop in taste_config.control_data.get("properties", []):
+            property_map[prop["id"]] = prop
+
+        # Enrich each preference with property details
+        enriched = []
+        for pref in preferences:
+            property_id = pref.get("propertyId") or pref.get("property_id")
+            if property_id and property_id in property_map:
+                enriched_pref = {
+                    **property_map[property_id],  # Include all property details
+                    "liked": pref.get("liked"),   # Add user's preference
+                    "reason": pref.get("reason"),  # Add optional reason
+                }
+                enriched.append(enriched_pref)
+
+        return enriched if enriched else preferences
+
+    @staticmethod
     def get_user_summary(state: RealEstateAgentState) -> Dict[str, Any]:
         """
         Get a summary of user's preferences from state.
@@ -577,8 +641,10 @@ class RealEstateAgentService:
         - "proximity_location" → proximity_location
         - "budget" → price_min, price_max
         - "property_area" → area_min, area_max
+        - "bedroom_count" → bedroom_count
         - "property_type" → property_type
         - "special_requests" → special_features
+        - "taste_preference" → taste_preference
 
         Args:
             state (RealEstateAgentState): Conversation state
@@ -596,6 +662,7 @@ class RealEstateAgentService:
             ...     "price_max": 100.0,
             ...     "area_min": 1000,
             ...     "area_max": 2500,
+            ...     "bedroom_count": 3,
             ...     "property_type": "apartment",
             ...     "special_features": ["gym", "pool"],
             ... }
@@ -614,8 +681,10 @@ class RealEstateAgentService:
                 "min": state.get("area_min"),
                 "max": state.get("area_max"),
             },
+            "bedroom_count": state.get("bedroom_count"),
             "property_type": state.get("property_type"),
             "special_requests": state.get("special_features", []),
+            "taste_preference": state.get("taste_preference", []),
         }
 
     @classmethod

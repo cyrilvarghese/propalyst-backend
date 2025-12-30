@@ -169,6 +169,7 @@ class RealEstateAgentState(TypedDict):
     bedroom_count: Optional[int]
     property_type: Optional[str]
     special_features: Optional[List[str]]
+    taste_preference: Optional[List[str]]
 
     # Agent State
     current_question_id: Optional[str]
@@ -232,6 +233,7 @@ def create_real_estate_state(session_id: str) -> RealEstateAgentState:
         bedroom_count=None,
         property_type=None,
         special_features=None,
+        taste_preference=None,
         current_question_id=None,
         questions_completed=[],
         messages=[],

@@ -92,6 +92,10 @@ def _format_answer_display(question_id: str, answer: Any) -> str:
         if isinstance(answer, list):
             return ", ".join([item.replace("_", " ").title() for item in answer])
         return str(answer)
+    elif question_id == "taste_preference":
+        if isinstance(answer, list):
+            return f"{len(answer)} properties selected"
+        return str(answer)
     return str(answer)
 
 
@@ -112,6 +116,7 @@ def get_question_id_to_state_key_mapping() -> Dict[str, str]:
         "property_area": "area_min/area_max",  # Special: stores two fields
         "property_type": "property_type",
         "special_requests": "special_features",
+        "taste_preference": "taste_preference",
     }
 
 

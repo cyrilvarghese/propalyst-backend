@@ -11,6 +11,7 @@ The agent asks questions in order:
 4. Property area
 5. Property type
 6. Special features
+7. Taste preference (optional - swipe through properties)
 
 Uses conditional routing to determine which question to ask next.
 """
@@ -26,6 +27,7 @@ from .nodes import (
     ask_property_area,
     ask_property_type,
     ask_special_features,
+    ask_taste_preference,
     generate_acknowledgment,
 )
 from .nodes.completion import mark_conversation_complete
@@ -50,7 +52,8 @@ async def route_real_estate_agent(state: RealEstateAgentState) -> str:
     4. Check area_min/max - if missing, ask
     5. Check property_type - if missing, ask
     6. Check special_features (special requests) - if missing, ask
-    7. If all answered → mark complete
+    7. Check taste_preference (optional) - if missing, ask
+    8. If all answered → mark complete
 
     Args:
         state (RealEstateAgentState): Current conversation state
@@ -98,16 +101,18 @@ async def route_real_estate_agent(state: RealEstateAgentState) -> str:
         next_topic = "special_features"
         route = "ask_special_features"
 
+    # Q7: Taste preference (optional - understand user preferences)
+    elif not state.get("taste_preference") and "taste_preference" not in questions_asked:
+        next_question_id = "taste_preference"
+        next_topic = "taste_preference"
+        route = "ask_taste_preference"
+
     # All questions answered - mark complete
     elif not state.get("completed"):
         return "mark_complete"
 
     else:
         return "end"
-
-    # Track that we're asking this question
-    questions_asked.append(next_question_id)
-    state["questions_asked"] = questions_asked
 
     return route
 
@@ -165,6 +170,7 @@ def create_real_estate_agent_graph() -> Callable:
     workflow.add_node("ask_property_area", ask_property_area)
     workflow.add_node("ask_property_type", ask_property_type)
     workflow.add_node("ask_special_features", ask_special_features)
+    workflow.add_node("ask_taste_preference", ask_taste_preference)
 
     # Add acknowledgment and completion nodes
     workflow.add_node("acknowledge", generate_acknowledgment)
@@ -181,6 +187,7 @@ def create_real_estate_agent_graph() -> Callable:
             "ask_property_area": "ask_property_area",
             "ask_property_type": "ask_property_type",
             "ask_special_features": "ask_special_features",
+            "ask_taste_preference": "ask_taste_preference",
             "mark_complete": "mark_complete",
             "end": END,
         },
@@ -193,6 +200,7 @@ def create_real_estate_agent_graph() -> Callable:
     workflow.add_edge("ask_property_area", "acknowledge")
     workflow.add_edge("ask_property_type", "acknowledge")
     workflow.add_edge("ask_special_features", "acknowledge")
+    workflow.add_edge("ask_taste_preference", "acknowledge")
 
     # Acknowledgment and completion go to END
     workflow.add_edge("acknowledge", END)
