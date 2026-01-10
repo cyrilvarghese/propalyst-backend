@@ -33,14 +33,14 @@ async def ask_transaction_type(state: RealEstateAgentState) -> RealEstateAgentSt
 
     question = {
         "id": "req_type",
-        "question": "Are you looking to buy or sell a property?",
+        "question": "Are you looking to buy, rent or sell a property?",
         "label": "Transaction Type",
         "controlType": "radio",
         "required": True,
         "data": {
             "options": [
                 {"value": "buy", "label": "Buy", "icon": "ShoppingCart"},
-                {"value": "sell", "label": "Sell", "icon": "Tag"},
+                {"value": "rent", "label": "Rent", "icon": "Key"},
             ],
         },
         "helpText": "Select whether you want to buy or sell a property",

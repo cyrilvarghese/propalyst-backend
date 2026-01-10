@@ -72,10 +72,27 @@ def _get_model():
 # ACKNOWLEDGMENT PROMPT
 # ============================================================================
 
+def _get_transaction_string(req_type: str, capitalize: bool = False) -> str:
+    """
+    Convert req_type to human-readable transaction string.
+
+    Args:
+        req_type: "buy" or "rent"
+        capitalize: If True, returns "Buying"/"Renting", else "buying"/"renting"
+
+    Returns:
+        Human-readable transaction string
+    """
+    if req_type == "buy":
+        return "Buying" if capitalize else "buying"
+    else:  # "rent"
+        return "Renting" if capitalize else "renting"
+
+
 def _format_answer_display(question_id: str, answer: Any) -> str:
     """Format an answer for display in conversation context."""
     if question_id == "req_type":
-        return "Buying" if answer == "buy" else "Selling"
+        return _get_transaction_string(answer, capitalize=True)
     elif question_id == "proximity_location":
         return answer.replace("_", " ").title()
     elif question_id == "budget":
@@ -140,7 +157,7 @@ def build_conversation_context(state: Optional[Dict[str, Any]]) -> str:
 
     # Transaction type
     if state.get("req_type"):
-        transaction = "buying" if state["req_type"] == "buy" else "renting"
+        transaction = _get_transaction_string(state["req_type"], capitalize=False)
         context_parts.append(f"- Transaction: {transaction}")
 
     # Location
@@ -205,7 +222,7 @@ def _build_acknowledgment_prompt(
     conversation_context = ""
     if context:
         if context.get("req_type"):
-            transaction = "buying" if context["req_type"] == "buy" else "selling"
+            transaction = _get_transaction_string(context["req_type"], capitalize=False)
             conversation_context += f"- Transaction: {transaction}\n"
 
         if context.get("proximity_location"):
